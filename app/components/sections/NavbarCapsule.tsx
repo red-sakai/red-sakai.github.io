@@ -23,9 +23,9 @@ type NavbarCapsuleProps = {
 
 const defaultItems: NavbarCapsuleItem[] = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/#about" },
-  { label: "Projects", href: "/#projects" },
-  { label: "Contact", href: "/#contact" },
+  { label: "About", href: "/about" },
+  { label: "Projects", href: "/projects" },
+  { label: "Contact", href: "/contact" },
 ];
 
 function normalizePathname(pathname: string): string {
