@@ -1,9 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #111111;
+  --light-background: #ffffff;
+  --light-foreground: #111111;
+  --dark-background: #0b0b0c;
+  --dark-foreground: #f4f4f5;
+
+  --mid-background: color-mix(in oklab, var(--light-background) 50%, var(--dark-background) 50%);
+
+  --background: var(--light-background);
+  --foreground: var(--light-foreground);
+  --page-bg: var(--background);
   color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  --background: var(--dark-background);
+  --foreground: var(--dark-foreground);
+  --page-bg: var(--background);
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -14,13 +29,137 @@
 }
 
 html {
-  background-color: var(--background) !important;
+  background-color: var(--page-bg) !important;
   color: var(--foreground) !important;
 }
 
 body {
   min-height: 100dvh;
-  background-color: var(--background) !important;
+  background-color: transparent !important;
   color: var(--foreground) !important;
   font-family: var(--font-sans);
+  isolation: isolate;
+}
+
+/* Slow theme transition (no @keyframes): only active during toggles */
+html[data-theme-transition="1"],
+html[data-theme-transition="1"] body,
+html[data-theme-transition="1"] body * {
+  transition-property: background-color, color, border-color, fill, stroke, box-shadow;
+  transition-duration: 2500ms;
+  transition-timing-function: ease;
+}
+
+/* Gradient background + smooth theme cross-fade (no @keyframes).
+   We use 3 layers (light/gray/dark) and sequence opacity in JS. */
+html::before,
+html::after,
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 2500ms ease;
+}
+
+/* Light layer */
+html::before {
+  opacity: 1;
+  background:
+    radial-gradient(900px 500px at 15% 10%, color-mix(in oklab, var(--light-foreground) 10%, transparent), transparent 60%),
+    radial-gradient(700px 420px at 85% 20%, color-mix(in oklab, var(--light-foreground) 7%, transparent), transparent 55%),
+    linear-gradient(180deg, var(--light-background), var(--light-background));
+}
+
+/* Dark layer */
+html::after {
+  opacity: 0;
+  background:
+    radial-gradient(900px 500px at 15% 10%, color-mix(in oklab, var(--dark-foreground) 12%, transparent), transparent 60%),
+    radial-gradient(700px 420px at 85% 20%, color-mix(in oklab, var(--dark-foreground) 9%, transparent), transparent 55%),
+    linear-gradient(180deg, var(--dark-background), var(--dark-background));
+}
+
+/* Gray midpoint layer */
+body::before {
+  opacity: 0;
+  background:
+    radial-gradient(
+      900px 500px at 15% 10%,
+      color-mix(in oklab, color-mix(in oklab, var(--light-foreground) 40%, var(--dark-foreground) 60%) 10%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      700px 420px at 85% 20%,
+      color-mix(in oklab, color-mix(in oklab, var(--light-foreground) 40%, var(--dark-foreground) 60%) 7%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--light-background) 50%, var(--dark-background) 50%),
+      color-mix(in oklab, var(--light-background) 50%, var(--dark-background) 50%)
+    );
+}
+
+/* Default state (no staged transition): show layer by theme */
+html[data-theme="dark"]::before {
+  opacity: 0;
+}
+
+html[data-theme="dark"]::after {
+  opacity: 1;
+}
+
+/* Stage 1: fade current → gray */
+html[data-bg-stage="to-gray"] {
+  --page-bg: var(--mid-background);
+}
+
+html[data-bg-stage="to-gray"][data-theme="light"]::before {
+  opacity: 0;
+}
+
+html[data-bg-stage="to-gray"][data-theme="dark"]::after {
+  opacity: 0;
+}
+
+html[data-bg-stage="to-gray"] body::before {
+  opacity: 1;
+}
+
+/* Stage 2: fade gray → target */
+html[data-bg-stage="to-target"] {
+  --page-bg: var(--background);
+}
+
+html[data-bg-stage="to-target"][data-theme="light"]::before {
+  opacity: 1;
+}
+
+html[data-bg-stage="to-target"][data-theme="dark"]::after {
+  opacity: 1;
+}
+
+html[data-bg-stage="to-target"] body::before {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body {
+    transition: none;
+  }
+
+  html[data-theme-transition="1"],
+  html[data-theme-transition="1"] body,
+  html[data-theme-transition="1"] body * {
+    transition: none;
+  }
+
+  html::before,
+  html::after,
+  body::before {
+    transition: none;
+  }
 }
