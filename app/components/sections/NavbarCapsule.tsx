@@ -134,11 +134,18 @@ export function NavbarCapsule({
     return () => window.removeEventListener("resize", onResize);
   }, [activeIndex, hoverIndex, moveIndicatorToIndex, parsedItems.length]);
 
-  const knobPositionClass = isDark ? "translate-x-[40px]" : "translate-x-0";
+  const knobPositionClass = isDark ? "translate-x-[36px]" : "translate-x-0";
 
   return (
     <nav aria-label="Primary" className={className}>
-      <div className="relative inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/70 px-2 py-1.5 shadow-sm backdrop-blur-md">
+      <div
+        className={
+          "relative inline-flex items-center gap-2 rounded-full px-2 py-1.5 shadow-sm backdrop-blur-md transition-colors " +
+          (isDark
+            ? "border-white/15 bg-white/10 text-white"
+            : "border-black/10 bg-white/80 text-[#0f172a]")
+        }
+      >
         <div
           ref={containerRef}
           className="relative flex items-center gap-1 rounded-full px-1"
@@ -180,7 +187,11 @@ export function NavbarCapsule({
                 }}
                 className={
                   "relative z-10 rounded-full px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
-                  (isActive ? "text-white" : "text-foreground/70 hover:text-white")
+                  (isActive
+                    ? "text-white"
+                    : isDark
+                    ? "text-white/70 hover:text-white"
+                    : "text-[#0f172a]/70 hover:text-[#0f172a]")
                 }
               >
                 {item.label}
@@ -196,10 +207,13 @@ export function NavbarCapsule({
           aria-label={isDark ? "Activate light mode" : "Activate dark mode"}
           aria-pressed={isDark}
           onClick={() => onThemeToggle?.(isDark ? "light" : "dark")}
-          className="relative inline-flex h-9 w-20 items-center overflow-hidden rounded-full border border-black/10 px-2 text-sm font-medium shadow-sm transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30"
+          className={
+            "relative inline-flex h-9 w-20 items-center overflow-hidden rounded-full px-2 text-sm font-medium shadow-sm transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
+            (isDark ? "border border-white/20" : "border border-black/10")
+          }
           style={{
             background: isDark
-              ? "linear-gradient(135deg, #1f2937, #0b1325)"
+              ? "linear-gradient(135deg, #111827, #0b1220)"
               : "linear-gradient(135deg, #f5f5f5, #dcdcdc)",
           }}
         >
