@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import { NavbarCapsule } from "./components/sections/NavbarCapsule";
 
@@ -44,12 +45,14 @@ export default function Home() {
 
   const [sunAnim, setSunAnim] = useState(ON_SCREEN);
   const [moonAnim, setMoonAnim] = useState(OFF_SOUTHWEST);
+  const [showPrompt, setShowPrompt] = useState(true);
 
   const [bgColor, setBgColor] = useState(isDark ? "#0b1220" : "#ffffff");
   const didMountRef = useRef(false);
   const rafRef = useRef<number | null>(null);
-  const sunRef = useRef<any>(null);
-  const moonRef = useRef<any>(null);
+  const previousBgColorRef = useRef(bgColor);
+  const sunRef = useRef<HTMLElement | null>(null);
+  const moonRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (isDark) {
@@ -78,7 +81,7 @@ export default function Home() {
   }, [isDark]);
 
   useEffect(() => {
-    const attachPause = (el: any) => {
+    const attachPause = (el: (HTMLElement & { autoRotate?: boolean }) | null) => {
       if (!el) return () => {};
 
       const handleStart = () => {
@@ -114,10 +117,21 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 40) setShowPrompt(false);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
     // Skip transitional sequence on the first render.
     if (!didMountRef.current) {
       didMountRef.current = true;
-      setBgColor(isDark ? "#0b1220" : "#ffffff");
       return undefined;
     }
 
@@ -125,7 +139,7 @@ export default function Home() {
       cancelAnimationFrame(rafRef.current);
     }
 
-    const from = bgColor;
+    const from = previousBgColorRef.current;
     const to = isDark ? "#0b1220" : "#ffffff";
     const duration = 550;
     const start = performance.now();
@@ -136,6 +150,8 @@ export default function Home() {
 
       if (t < 1) {
         rafRef.current = requestAnimationFrame(tick);
+      } else {
+        previousBgColorRef.current = to;
       }
     };
 
@@ -152,6 +168,41 @@ export default function Home() {
     0.92
   )} 45%, ${hexToRgba(bgColor, 0)} 75%)`;
   const foreground = isDark ? "#f8fafc" : "#0f172a";
+
+  const [starField, setStarField] = useState<string>("");
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      if (!isDark) {
+        setStarField("");
+        return;
+      }
+
+      const stars = Array.from({ length: 42 }).map(() => {
+        const size = (Math.random() * 0.8 + 0.3).toFixed(2);
+        const blur = (Math.random() * 1.8 + 0.4).toFixed(2);
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const opacity = (0.45 + Math.random() * 0.45).toFixed(2);
+
+        return `radial-gradient(${size}px ${size}px at ${x.toFixed(2)}% ${y.toFixed(2)}%, rgba(255,255,255,${opacity}) 0, rgba(255,255,255,0) ${blur}px)`;
+      });
+
+      setStarField(stars.join(", "));
+    });
+
+    return () => cancelAnimationFrame(raf);
+  }, [isDark]);
+
+  const starLayerStyle: CSSProperties | undefined = isDark && starField
+    ? {
+        backgroundImage: starField,
+        backgroundSize: "100% 100%",
+        mixBlendMode: "screen" as CSSProperties["mixBlendMode"],
+        opacity: 0.85,
+        animation: "starTwinkle 9s ease-in-out infinite alternate",
+      }
+    : undefined;
 
   const sunGlowStyle = isDark
     ? {
@@ -187,6 +238,14 @@ export default function Home() {
         style={{ background: gradientMask }}
       />
 
+      {isDark && starLayerStyle?.backgroundImage && (
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden
+          style={starLayerStyle}
+        />
+      )}
+
       <div className="relative z-10 flex min-h-screen flex-col">
         <div className="flex w-full justify-center px-6 py-6 sm:px-10">
           <NavbarCapsule theme={theme} onThemeToggle={setTheme} />
@@ -207,7 +266,8 @@ export default function Home() {
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <a
-                href="/cv.pdf"
+                href="/REPUBLICA-CV.pdf"
+                download="REPUBLICA-CV.pdf"
                 className="inline-flex items-center gap-2 rounded-full border border-amber-500 bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-900 shadow-md backdrop-blur-sm transition hover:-translate-y-[1px] hover:bg-amber-400 hover:border-amber-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60"
               >
                 View Curriculum Vitae
@@ -264,6 +324,30 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {showPrompt && (
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center"
+          aria-hidden
+        >
+          <div
+            className="flex flex-col items-center gap-1 px-4 py-2 text-xs font-medium uppercase tracking-[0.3em]"
+            style={{
+              color: isDark ? "rgba(255,255,255,0.78)" : "rgba(15,23,42,0.7)",
+              background: "transparent",
+              boxShadow: "none",
+              borderRadius: 0,
+              border: "none",
+                animation: "floatPulse 3.8s ease-in-out infinite",
+            }}
+          >
+            <span>Learn More</span>
+            <span style={{ letterSpacing: "0.1em", fontSize: "0.9rem" }} aria-hidden>
+              ↓
+            </span>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
