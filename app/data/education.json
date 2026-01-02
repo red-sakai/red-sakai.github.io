@@ -1,0 +1,22 @@
+[
+  {
+    "title": "BS Computer Engineering",
+    "school": "Polytechnic University of the Philippines",
+    "location": "Sta. Mesa, Manila",
+    "years": "2024-Present",
+    "blurb": "Currently having an interest in networking as a specialization in college.",
+    "tags": ["Programming", "Web Development", "Computer Networks"],
+    "accent": "from-blue-500/80 to-indigo-500/80",
+    "logo": "/images/education/pup-logo.png"
+  },
+  {
+    "title": "Science, Technology, Engineering, and Mathematics (STEM)",
+    "school": "Rizal High School",
+    "location": "Pasig City",
+    "years": "2018-2024",
+    "blurb": "Collaborated on a research that converts water into electrical energy by the use of a DC motor. 3D modelled the main parts to be used like the cases wheels and axles.",
+    "tags": ["STEM", "3D Modeling", "AutoCAD", "Research"],
+    "accent": "from-amber-500/80 to-orange-500/80",
+    "logo": "/images/education/rhs-logo.png"
+  }
+]
