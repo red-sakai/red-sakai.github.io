@@ -19,6 +19,238 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Force legible Education section text in light mode; lighter tones in dark mode */
+:root:not(.dark) #education .edu-card,
+:root:not(.dark) #education .edu-card * {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #education .edu-neutral {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #education .edu-blurb {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #education .edu-meta {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #education .edu-meta {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #education .edu-tag {
+  color: #0f172a !important;
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+:root.dark #education .edu-card,
+:root.dark #education .edu-card * {
+  color: #e2e8f0 !important;
+}
+
+:root.dark #education .edu-neutral {
+  color: #f8fafc !important;
+}
+
+/* Experience section: force dark text in light mode */
+:root:not(.dark) #experience .exp-neutral {
+  color: #0f172a !important;
+}
+
+:root.dark #experience .exp-neutral {
+  color: #e2e8f0 !important;
+}
+
+:root:not(.dark) #experience .exp-card,
+:root:not(.dark) #experience .exp-card * {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #experience .exp-tag {
+  color: #0f172a !important;
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+:root.dark #experience .exp-card,
+:root.dark #experience .exp-card * {
+  color: #e2e8f0 !important;
+}
+
+:root.dark #experience .exp-tag {
+  color: #f8fafc !important;
+}
+
+:root:not(.dark) #experience .exp-tab {
+  color: #0f172a !important;
+}
+
+:root.dark #experience .exp-tab {
+  color: #f8fafc !important;
+}
+
+/* Projects section: force readable text */
+:root:not(.dark) #projects {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #projects a,
+:root:not(.dark) #projects button,
+:root:not(.dark) #projects p,
+:root:not(.dark) #projects h1,
+:root:not(.dark) #projects h2,
+:root:not(.dark) #projects h3,
+:root:not(.dark) #projects h4,
+:root:not(.dark) #projects h5,
+:root:not(.dark) #projects h6,
+:root:not(.dark) #projects span,
+:root:not(.dark) #projects li,
+:root:not(.dark) #projects strong,
+:root:not(.dark) #projects em {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #projects .proj-neutral {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #projects .proj-accent {
+  color: #d97706 !important;
+}
+
+:root.dark #projects .proj-accent {
+  color: #fbbf24 !important;
+}
+
+:root:not(.dark) #projects .proj-heading {
+  color: #0f172a !important;
+}
+
+:root.dark #projects .proj-heading {
+  color: #ffffff !important;
+}
+
+:root:not(.dark) #projects .proj-filter:not(.proj-filter-active) {
+  color: #0f172a !important;
+  border-color: #0f172a !important;
+  background-color: #ffffff !important;
+}
+
+:root:not(.dark) #projects .proj-filter.proj-filter-active {
+  color: #ffffff !important;
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25) !important;
+}
+
+/* Certifications: force readable text in light mode */
+:root:not(.dark) #certifications {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #certifications a,
+:root:not(.dark) #certifications button,
+:root:not(.dark) #certifications p,
+:root:not(.dark) #certifications h1,
+:root:not(.dark) #certifications h2,
+:root:not(.dark) #certifications h3,
+:root:not(.dark) #certifications h4,
+:root:not(.dark) #certifications h5,
+:root:not(.dark) #certifications h6,
+:root:not(.dark) #certifications span,
+:root:not(.dark) #certifications li,
+:root:not(.dark) #certifications strong,
+:root:not(.dark) #certifications em {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #certifications .cert-neutral {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #certifications .cert-card,
+:root:not(.dark) #certifications .cert-card * {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #certifications .cert-card {
+  background-color: #ffffff !important;
+}
+
+:root:not(.dark) #certifications .cert-tag {
+  color: #0f172a !important;
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+:root.dark #certifications .cert-neutral {
+  color: #e2e8f0 !important;
+}
+
+:root.dark #certifications .cert-card,
+:root.dark #certifications .cert-card * {
+  color: #e2e8f0 !important;
+}
+
+:root.dark #certifications .cert-tag {
+  color: #f8fafc !important;
+}
+
+/* Keep Certifications label amber */
+:root:not(.dark) #certifications .cert-accent {
+  color: #d97706 !important;
+}
+
+:root.dark #certifications .cert-accent {
+  color: #fbbf24 !important;
+}
+
+:root:not(.dark) #projects .proj-card,
+:root:not(.dark) #projects .proj-card * {
+  color: #0f172a !important;
+}
+
+:root:not(.dark) #projects .proj-card {
+  background-color: #ffffff !important;
+}
+
+:root:not(.dark) #projects .proj-tag {
+  color: #0f172a !important;
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+:root.dark #projects .proj-neutral {
+  color: #f8fafc !important;
+}
+
+:root.dark #projects .proj-card,
+:root.dark #projects .proj-card * {
+  color: #e2e8f0 !important;
+}
+
+:root.dark #projects .proj-card {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+:root.dark #projects .proj-tag {
+  color: #f8fafc !important;
+}
+
+/* Repo/demo link borders in light mode */
+:root:not(.dark) #projects .proj-link-repo,
+:root:not(.dark) #projects .proj-link-demo {
+  border-color: #0f172a !important;
+}
+
+:root.dark #education .edu-tag {
+  color: #f8fafc !important;
+}
+
 body {
   min-height: 100dvh;
   margin: 0;

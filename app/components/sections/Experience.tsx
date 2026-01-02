@@ -22,13 +22,13 @@ type ExperienceItem = {
 };
 
 const experienceTabs = [
-  { key: "professional" as const, label: "Professional" },
   { key: "organizational" as const, label: "Organizational" },
   { key: "competitive" as const, label: "Competitive" },
+  { key: "professional" as const, label: "Professional" },
 ];
 
 export function ExperienceSection() {
-  const [experienceTab, setExperienceTab] = useState<ExperienceCategory>("professional");
+  const [experienceTab, setExperienceTab] = useState<ExperienceCategory>("organizational");
   const { ref, visible } = useRevealOnScroll<HTMLElement>();
 
   const filtered = (experienceData as ExperienceItem[]).filter((item) => item.category === experienceTab);
@@ -49,7 +49,7 @@ export function ExperienceSection() {
     if (orgType === "leadership") return "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-500/15 dark:text-amber-200 dark:border-amber-500/30";
     if (orgType === "membership") return "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-500/15 dark:text-blue-200 dark:border-blue-500/30";
     if (orgType === "volunteering") return "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-200 dark:border-emerald-500/30";
-    return "bg-slate-100 text-slate-700 border-slate-200 dark:bg-white/10 dark:text-white/80 dark:border-white/15";
+    return "bg-slate-100 text-black border-slate-200 dark:bg-white/10 dark:text-white/80 dark:border-white/15";
   };
 
   const ImageCarousel = ({ images }: { images: string[] }) => {
@@ -129,7 +129,7 @@ export function ExperienceSection() {
       <div className="flex flex-col items-center gap-3 text-center">
         <p className="text-xs uppercase tracking-[0.3em] text-amber-600">Experience</p>
         <h2 className="text-2xl font-semibold sm:text-3xl">Hands-on work</h2>
-        <p className="max-w-3xl text-base leading-relaxed text-slate-700 dark:text-slate-200/80">
+        <p className="exp-neutral max-w-3xl text-base leading-relaxed text-slate-800 dark:text-slate-200/80">
           A mix of professional builds, organizational leadership, and competitive development settings.
         </p>
         <div className="inline-flex items-center gap-1 rounded-full bg-blue-50 p-1 text-sm font-semibold text-slate-800 shadow-sm ring-1 ring-blue-100 dark:bg-white/5 dark:text-white dark:ring-white/10">
@@ -138,10 +138,10 @@ export function ExperienceSection() {
               key={tab.key}
               type="button"
               onClick={() => setExperienceTab(tab.key)}
-              className={`rounded-full px-4 py-2 transition ${
+              className={`exp-tab rounded-full px-4 py-2 transition ${
                 experienceTab === tab.key
                   ? "bg-blue-600 text-white shadow"
-                  : "text-slate-700 hover:bg-blue-100 dark:text-white dark:hover:bg-white/10"
+                  : "text-black hover:bg-blue-100 dark:text-white dark:hover:bg-white/10"
               }`}
             >
               {tab.label}
@@ -154,21 +154,21 @@ export function ExperienceSection() {
         {filtered.map((item) => (
           <article
             key={item.title}
-            className="relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/85 p-5 shadow-md transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
+            className="exp-card relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/85 p-5 shadow-md transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
           >
             <div className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${accentByCategory[experienceTab]}`} aria-hidden />
             <ImageCarousel images={item.images ?? (item.image ? [item.image] : [])} />
 
             <div className="flex flex-col items-center text-center gap-1">
-              <h3 className="text-lg font-semibold leading-snug text-slate-900 dark:text-white">{item.title}</h3>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-600 dark:text-slate-300">{entityLabel(item)}</p>
+              <h3 className="exp-neutral text-lg font-semibold leading-snug text-slate-900 dark:text-white">{item.title}</h3>
+              <p className="exp-neutral text-xs font-semibold uppercase tracking-[0.16em] text-slate-800 dark:text-slate-300">{entityLabel(item)}</p>
               {experienceTab === "organizational" && item.orgType && (
                 <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
                   <span className={`inline-flex items-center justify-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] ${orgBadgeClass(item.orgType)}`}>
                     {item.orgType}
                   </span>
                   {item.date && (
-                    <span className="inline-flex items-center justify-center rounded-full border border-slate-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-600 shadow-sm dark:border-white/15 dark:text-slate-200">
+                    <span className="exp-neutral inline-flex items-center justify-center rounded-full border border-slate-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-900 shadow-sm dark:border-white/15 dark:text-slate-200">
                       {item.date}
                     </span>
                   )}
@@ -182,21 +182,21 @@ export function ExperienceSection() {
                     </span>
                   )}
                   {item.date && (
-                    <span className="inline-flex items-center justify-center rounded-full border border-slate-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-600 shadow-sm dark:border-white/15 dark:text-slate-200">
+                    <span className="exp-neutral inline-flex items-center justify-center rounded-full border border-slate-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-900 shadow-sm dark:border-white/15 dark:text-slate-200">
                       {item.date}
                     </span>
                   )}
                 </div>
               )}
             </div>
-            <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200/80 text-center sm:text-left">{item.blurb}</p>
+            <p className="exp-neutral text-sm leading-relaxed text-slate-900 dark:text-slate-200/80 text-center sm:text-left">{item.blurb}</p>
 
             {Array.isArray(item.tags) && item.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
                 {item.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm dark:border-white/10 dark:bg-white/10 dark:text-white/90"
+                    className="exp-tag exp-neutral rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-900 shadow-sm dark:border-white/10 dark:bg-white/10 dark:text-white/90"
                   >
                     {tag}
                   </span>
@@ -207,9 +207,9 @@ export function ExperienceSection() {
         ))}
 
         {experienceTab === "professional" && filtered.length === 0 && (
-          <article className="col-span-full flex flex-col items-center gap-2 rounded-2xl border border-dashed border-slate-200/70 bg-white/60 p-6 text-center text-slate-700 shadow-none dark:border-white/15 dark:bg-white/5 dark:text-slate-200/80">
-            <h3 className="text-lg font-semibold">No professional experience yet</h3>
-            <p className="text-sm leading-relaxed">
+          <article className="exp-card col-span-full flex flex-col items-center gap-2 rounded-2xl border border-dashed border-slate-200/70 bg-white/60 p-6 text-center text-black shadow-none dark:border-white/15 dark:bg-white/5 dark:text-slate-200/80">
+            <h3 className="exp-neutral text-lg font-semibold">No professional experience yet</h3>
+            <p className="exp-neutral text-sm leading-relaxed">
               I&apos;m currently seeking my first professional opportunity. Open to internships, apprenticeships, and entry-level roles.
             </p>
           </article>

@@ -1,0 +1,249 @@
+[
+  {
+    "title": "Lunti",
+    "summary": "ESG compliance tracker for construction teams with field-friendly checklists, offline capture, and automated reports.",
+    "category": "web",
+    "projectType": "hackathon",
+    "status": "in-progress",
+    "period": "2025",
+    "stack": ["Next.js", "PostgreSQL", "Supabase", "AI Integrated"],
+    "image": "/images/projects/lunti/lunti.png",
+    "highlights": [
+      "Field-friendly ESG checklists with offline capture and sync",
+      "Compliance dashboards tailored for construction teams",
+      "Automated reports and PDFs for audits"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "https://github.com/red-sakai/Luntimeter", "type": "repo" },
+      { "label": "Live Demo", "href": "https://lunti.vercel.app", "type": "demo" }
+    ]
+  },
+  {
+    "title": "BlockBayan",
+    "summary": "Blockchain-backed donation ledger designed for transparent relief operations and tamper-evident receipts.",
+    "category": "security",
+    "projectType": "hackathon",
+    "status": "shipped",
+    "period": "2025",
+    "stack": ["Next.js", "JavaScript", "AI Integrated"],
+    "image": "/images/projects/blockbayan/blockbayan.png",
+    "highlights": [
+      "Transparent donation ledger with tamper-evident receipts",
+      "Blockchain-backed audit trails for relief operations",
+      "Real-time updates for donors and coordinators"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "https://github.com/Carlthegreatt/blockbayan", "type": "repo" },
+      { "label": "Live Demo", "href": "https://blockbayan.vercel.app/", "type": "demo" }
+    ]
+  },
+  {
+    "title": "QuestBoard",
+    "summary": "Gamified project board that turns sprints into quests with XP, streaks, and team-visible momentum.",
+    "category": "web",
+    "projectType": "hackathon",
+    "status": "discontinued",
+    "period": "2025",
+    "stack": ["React.js", "JavaScript"],
+    "image": "/images/projects/questboard/questboard.png",
+    "highlights": [
+      "Turns sprint tasks into quests with XP and streaks",
+      "Live team momentum through real-time updates",
+      "Motivates shipping without breaking focus"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "#", "type": "repo" },
+      { "label": "Live Demo", "href": "#", "type": "demo" }
+    ]
+  },
+  {
+    "title": "Algohub",
+    "summary": "Gamified way of learning data structures and algorithms. Earn achievements and enjoy algohub.",
+    "category": "learning",
+    "projectType": "personal",
+    "status": "shipped",
+    "period": "2025",
+    "stack": ["Next.js", "PostgreSQL", "Supabase", "AI Integrated"],
+    "image": "/images/projects/algohub/algohub.png",
+    "highlights": [
+      "Gamified DSA practice with achievements",
+      "Focus on learning data structures and algorithms",
+      "Progression that rewards consistent study"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "https://github.com/red-sakai/Algohub", "type": "repo" },
+      { "label": "Live Demo", "href": "https://algohub-dsa.vercel.app/", "type": "demo" }
+    ]
+  },
+  {
+    "title": "TapCARE",
+    "summary": "Emergency response app for a local high school requirement for capstone research.",
+    "category": "emergency",
+    "projectType": "commissioned",
+    "status": "shipped",
+    "period": "2025",
+    "stack": ["Flutter", "MySQL", "DigitalOcean"],
+    "image": "/images/projects/tapcare/tapcare.png",
+    "highlights": [
+      "Mobile emergency response built for a school rollout",
+      "Guides users to report incidents and get help fast",
+      "Created as a capstone research requirement"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "#", "type": "repo" },
+      { "label": "Live Demo", "href": "https://tapcaredownload.vercel.app/", "type": "demo" }
+    ]
+  },
+  {
+    "title": "BatchMail",
+    "summary": "Automated mass sending of emails.",
+    "category": "web",
+    "projectType": "personal",
+    "status": "beta",
+    "period": "2025",
+    "stack": ["Next.js"],
+    "image": "/images/projects/batchmail/batchmail.png",
+    "highlights": [
+      "Automates bulk email sending flows",
+      "Template-based messages for quick outreach",
+      "Queues batches to send reliably"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "#", "type": "repo" },
+      { "label": "Live Demo", "href": "https://batchmail2.vercel.app/", "type": "demo" }
+    ]
+  },
+  {
+    "title": "Connexa",
+    "summary": "Event management and RSVP platform where users can use this in order to get updated with live events happening with organizations inside PUP.",
+    "category": "web",
+    "projectType": "personal",
+    "status": "discontinued",
+    "period": "2025",
+    "stack": ["Next.js"],
+    "image": "/images/projects/connexa/connexa.png",
+    "highlights": [
+      "Event hub for PUP orgs to publish updates",
+      "RSVP and announcements for live campus events",
+      "Keeps members informed on what is happening"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "#", "type": "repo" },
+      { "label": "Live Demo", "href": "#", "type": "demo" }
+    ]
+  },
+  {
+    "title": "ICPEP SE - PUP CRM Website",
+    "summary": "A modern web application built with React and Vite that gets to know what ICPEP SE PUP Manila really is about.",
+    "category": "web",
+    "projectType": "personal",
+    "status": "shipped",
+    "period": "2025",
+    "stack": ["React.js"],
+    "image": "/images/projects/icpep-crm-website/icpep-crm.png",
+    "highlights": [
+      "Modern ICPEP SE PUP profile site on React/Vite",
+      "Showcases org information and activities",
+      "Built for fast, clean browsing"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "#", "type": "repo" },
+      { "label": "Live Demo", "href": "https://icpepsepup.vercel.app/", "type": "demo" }
+    ]
+  },
+  {
+    "title": "ICPEP SE - NCR Digital Passport",
+    "summary": "A website built using Next.js that is for ICPEP.se NCR students that they can use in order to gain badges by attending live events and scanning their QR codes.",
+    "category": "web",
+    "projectType": "personal",
+    "status": "shipped",
+    "period": "2024",
+    "stack": ["Next.js"],
+    "image": "/images/projects/icpep-ncr-passport/icpep-passport.png",
+    "highlights": [
+      "Digital passport for ICPEP.se NCR students",
+      "Badge collection by scanning event QR codes",
+      "Keeps event attendance history in one place"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "#", "type": "repo" },
+      { "label": "Live Demo", "href": "#", "type": "demo" }
+    ]
+  },
+  {
+    "title": "LogistIQ",
+    "summary": "A full-stack web application built with Flask. Features user authentication, real-time updates, and responsive design.",
+    "category": "web",
+    "projectType": "personal",
+    "status": "discontinued",
+    "period": "2025",
+    "stack": ["Flask", "Python", "MySQL", "DigitalOcean"],
+    "image": "/images/projects/logistiq/logistiq.png",
+    "highlights": [
+      "Flask-based full-stack logistics dashboard",
+      "User authentication with real-time updates",
+      "Responsive UI for operations tracking"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "https://github.com/red-sakai/LogistIQ", "type": "repo" },
+      { "label": "Live Demo", "href": "#", "type": "demo" }
+    ]
+  },
+  {
+    "title": "Pixie",
+    "summary": "An AI interviewer for organizations in PUP where it can converse via voice chat and live follow up questions feedback.",
+    "category": "web",
+    "projectType": "personal",
+    "status": "in-progress",
+    "period": "2025",
+    "stack": ["Next.js", "PostgreSQL", "Supabase", "AI Integrated"],
+    "image": "/images/projects/pixie/pixie.png",
+    "highlights": [
+      "AI interviewer that runs voice-based screenings",
+      "Live follow-up questions with immediate feedback",
+      "Designed for PUP org interview workflows"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "https://github.com/red-sakai/Pixie", "type": "repo" },
+      { "label": "Live Demo", "href": "#", "type": "demo" }
+    ]
+  },
+  {
+    "title": "Static Mind",
+    "summary": "A game made using Unity Engine and C#, you suddenly wake up in a dark room where you are suddenly being experimented on by Dr. Red. Find a way out before you lose your sanity.",
+    "category": "game",
+    "projectType": "personal",
+    "status": "in-progress",
+    "period": "2025",
+    "stack": ["C#", "Unity Engine"],
+    "image": "/images/projects/static-mind/static-mind.png",
+    "highlights": [
+      "Unity horror escape set in a lab",
+      "Find a way out before sanity drops",
+      "Story of experiments by Dr. Red"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "#", "type": "repo" },
+      { "label": "Live Demo", "href": "#", "type": "demo" }
+    ]
+  },
+  {
+    "title": "Shelldon",
+    "summary": "A discord bot used in CyberPH PUP's discord server as well as CyberPH main discord server. Shelldon is a digital assistant for the server and manages announcements, members, and roles.",
+    "category": "bot",
+    "projectType": "personal",
+    "status": "shipped",
+    "period": "2025",
+    "stack": ["JavaScript"],
+    "image": "/images/projects/shelldon/shelldon.png",
+    "highlights": [
+      "Discord bot assistant for CyberPH servers",
+      "Automates announcements and member management",
+      "Handles roles and server housekeeping"
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "https://github.com/red-sakai/shelldon", "type": "repo" },
+      { "label": "Live Demo", "href": "#", "type": "demo" }
+    ]
+  }
+]

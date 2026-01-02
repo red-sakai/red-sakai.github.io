@@ -29,7 +29,7 @@ const defaultItems: NavbarCapsuleItem[] = [
   { label: "Experience", href: "/#experience" },
   { label: "Projects", href: "/#projects" },
   { label: "Certifications", href: "/#certifications" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/#footer" },
 ];
 
 function normalizePathname(pathname: string): string {
