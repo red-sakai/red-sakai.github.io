@@ -1,0 +1,125 @@
+[
+  {
+    "title": "Vice Chief Executive Officer",
+    "blurb": "Supporting organizational leadership, coordinating technical initiatives, and helping drive student engagement in networking and cybersecurity activities.",
+    "category": "organizational",
+    "organization": "Cisco NetConnect PUP - Manila",
+    "orgType": "Leadership",
+    "date": "2025 - Present",
+    "tags": ["Leadership", "Networking", "Cybersecurity", "Strategic Planning"],
+    "images": [
+      "/images/organizational/cisco/cisco-logo.jpg",
+      "/images/organizational/cisco/cisco1.jpg",
+      "/images/organizational/cisco/cisco2.jpg",
+      "/images/organizational/cisco/cisco3.jpg",
+      "/images/organizational/cisco/cisco4.jpg",
+      "/images/organizational/cisco/cisco5.jpg"
+    ]
+  },
+  {
+    "title": "Head of Engineering",
+    "blurb": "Leading technical teams, overseeing engineering projects, and guiding members in developing practical engineering and problem-solving skills.",
+    "category": "organizational",
+    "organization": "ICPEP SE - PUP Manila",
+    "orgType": "Leadership",
+    "date": "2025 - Present",
+    "tags": ["Leadership", "Programming", "Mentorship", "Web Development"],
+    "images": [
+      "/images/organizational/icpep/icpep-logo.jpg",
+      "/images/organizational/icpep/icpep1.jpg",
+      "/images/organizational/icpep/icpep2.png"
+    ]
+  },
+  {
+    "title": "Cybersecurity Cadet",
+    "blurb": "Actively learning and applying security fundamentals, best practices, and real-world defensive techniques within a collaborative developer community.",
+    "category": "organizational",
+    "organization": "Google Developer Groups",
+    "orgType": "Membership",
+    "date": "2025 - Present",
+    "tags": ["Cybersecurity", "Incident Response", "Identity and Access Management"],
+    "images": [
+      "/images/organizational/gdg/gdg-logo.jpg"
+    ]
+  },
+  {
+    "title": "Backend Developer",
+    "blurb": "Building and maintaining server-side systems, APIs, and cloud-based solutions using AWS technologies.",
+    "category": "organizational",
+    "organization": "AWS Cloud Club PUP",
+    "orgType": "Membership",
+    "date": "2025 - Present",
+    "tags": ["Programming", "API"],
+    "images": [
+      "/images/organizational/aws/aws-logo.jpg"
+    ]
+  },
+  {
+    "title": "Research and Development",
+    "blurb": "Contributing to cybersecurity research, technical initiatives, and innovation through collaborative analysis and hands-on experimentation.",
+    "category": "organizational",
+    "organization": "CyberPH",
+    "orgType": "Membership",
+    "date": "2025 - Present",
+    "tags": ["Cybersecurity", "Research"],
+    "images": [
+      "/images/organizational/cyberph/cyberph-logo.jpg"
+    ]
+  },
+  {
+    "title": "Technical Member",
+    "blurb": "Supporting technical operations and contributing to hands-on projects, system development, and engineering initiatives within the organization.",
+    "category": "organizational",
+    "organization": "PUP Hygears",
+    "orgType": "Membership",
+    "date": "2025 - Present",
+    "tags": ["AutoCAD", "Web Development", "Prototyping"],
+    "images": [
+      "/images/organizational/hygears/hygears-logo.jpg"
+    ]
+  },
+  {
+    "title": "Fullstack Developer",
+    "blurb": "Developed Lunti, an ESG tracking app where it aims construction companies to follow ESG guidelines.",
+    "category": "competitive",
+    "competition": "PUP Uthack ang Puhunan",
+    "placement": "1st Runner Up",
+    "date": "NOVEMBER 2025",
+    "tags": ["Programming", "Frontend", "Backend", "CI/CD", "DevOps"],
+    "images": [
+      "/images/competitive/pup-uthack/uthack1.jpg",
+      "/images/competitive/pup-uthack/uthack2.jpg",
+      "/images/competitive/pup-uthack/uthack3.jpg",
+      "/images/competitive/pup-uthack/uthack4.jpg",
+      "/images/competitive/pup-uthack/uthack5.jpg",
+      "/images/competitive/pup-uthack/uthack6.jpg"
+    ]
+  },
+  {
+    "title": "Backend Developer",
+    "blurb": "Developed BlockBayan, a blockchain based donation system with the goal of transparent donation system for disasters.",
+    "category": "competitive",
+    "competition": "PUP ICTO Technology Fest",
+    "placement": "TOP 8",
+    "date": "OCTOBER 2025",
+    "tags": ["Programming", "Backend"],
+    "images": [
+      "/images/competitive/pup-icto/icto1.jpg",
+      "/images/competitive/pup-icto/icto2.jpg"
+    ]
+  },
+  {
+    "title": "Frontend Developer",
+    "blurb": "Developed QuestBoard, a gamified project management tool with the goal to improve productivity.",
+    "category": "competitive",
+    "competition": "FEU: Create & Conquer Hackathon",
+    "placement": "Participant",
+    "date": "JULY 2025",
+    "tags": ["Programming", "UI/UX"],
+    "images": [
+      "/images/competitive/feu-conquer/feu1.jpg",
+      "/images/competitive/feu-conquer/feu2.jpg",
+      "/images/competitive/feu-conquer/feu3.jpg"
+    ]
+  }
+]

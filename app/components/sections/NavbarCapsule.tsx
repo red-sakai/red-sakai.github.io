@@ -25,9 +25,11 @@ type NavbarCapsuleProps = {
 
 const defaultItems: NavbarCapsuleItem[] = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Projects", href: "/projects" },
-  { label: "Contact", href: "/contact" },
+  { label: "Education", href: "/#education" },
+  { label: "Experience", href: "/#experience" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Certifications", href: "/#certifications" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 function normalizePathname(pathname: string): string {
@@ -78,16 +80,14 @@ export function NavbarCapsule({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const update = () => setCurrentHash(window.location.hash || "");
+    const update = () => {
+      setCurrentHash(window.location.hash || "");
+      setIsMobileMenuOpen(false);
+    };
     update();
     window.addEventListener("hashchange", update);
     return () => window.removeEventListener("hashchange", update);
   }, []);
-
-  useEffect(() => {
-    // Close mobile menu on route/hash change or when switching sections
-    setIsMobileMenuOpen(false);
-  }, [currentPath, currentHash]);
 
   useEffect(() => {
     const onResize = () => {

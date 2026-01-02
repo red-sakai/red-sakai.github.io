@@ -2,7 +2,10 @@
 
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
-import { NavbarCapsule } from "./components/sections/NavbarCapsule";
+import { EducationSection } from "./components/sections/Education";
+import { ExperienceSection } from "./components/sections/Experience";
+import { Hero } from "./components/sections/Hero";
+import { useRevealOnScroll } from "./hooks/useRevealOnScroll";
 
 function hexToRgba(hex: string, alpha: number): string {
   const value = hex.replace("#", "");
@@ -36,85 +39,25 @@ export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const isDark = theme === "dark";
 
-  const baseModelClass =
-    "absolute inset-0 block h-full w-full transition-transform transition-opacity duration-[2000ms] ease-out";
+  const { ref: projectsRef, visible: projectsVisible } = useRevealOnScroll<HTMLElement>();
+  const { ref: certsRef, visible: certsVisible } = useRevealOnScroll<HTMLElement>();
+  const { ref: contactRef, visible: contactVisible } = useRevealOnScroll<HTMLElement>();
 
-  const ON_SCREEN = "translate-x-[0vw] translate-y-0 opacity-100";
-  const OFF_NORTHEAST = "translate-x-[180vw] -translate-y-[140vh] opacity-0 pointer-events-none";
-  const OFF_SOUTHWEST = "-translate-x-[180vw] translate-y-[140vh] opacity-0 pointer-events-none";
+  const navItems = [
+    { label: "Home", href: "/" },
+    { label: "Education", href: "/#education" },
+    { label: "Experience", href: "/#experience" },
+    { label: "Projects", href: "/#projects" },
+    { label: "Certifications", href: "/#certifications" },
+    { label: "Contact", href: "/#contact" },
+  ];
 
-  const [sunAnim, setSunAnim] = useState(ON_SCREEN);
-  const [moonAnim, setMoonAnim] = useState(OFF_SOUTHWEST);
   const [showPrompt, setShowPrompt] = useState(true);
 
   const [bgColor, setBgColor] = useState(isDark ? "#0b1220" : "#ffffff");
   const didMountRef = useRef(false);
   const rafRef = useRef<number | null>(null);
   const previousBgColorRef = useRef(bgColor);
-  const sunRef = useRef<HTMLElement | null>(null);
-  const moonRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (isDark) {
-      requestAnimationFrame(() => {
-        // Stage: keep sun centered, park moon offscreen to the southwest (diagonal in).
-        setSunAnim(ON_SCREEN);
-        setMoonAnim(OFF_SOUTHWEST);
-        requestAnimationFrame(() => {
-          // Animate: sun exits toward the arrow direction (northeast), moon glides in along the diagonal.
-          setSunAnim(OFF_NORTHEAST);
-          setMoonAnim(ON_SCREEN);
-        });
-      });
-    } else {
-      requestAnimationFrame(() => {
-        // Stage: keep moon centered, park sun offscreen to the northeast.
-        setMoonAnim(ON_SCREEN);
-        setSunAnim(OFF_NORTHEAST);
-        requestAnimationFrame(() => {
-          // Animate: moon exits toward the southwest, sun glides in along the arrow line.
-          setMoonAnim(OFF_SOUTHWEST);
-          setSunAnim(ON_SCREEN);
-        });
-      });
-    }
-  }, [isDark]);
-
-  useEffect(() => {
-    const attachPause = (el: (HTMLElement & { autoRotate?: boolean }) | null) => {
-      if (!el) return () => {};
-
-      const handleStart = () => {
-        el.autoRotate = false;
-      };
-
-      const handleEnd = () => {
-        el.autoRotate = true;
-      };
-
-      el.addEventListener("pointerdown", handleStart);
-      el.addEventListener("pointerup", handleEnd);
-      el.addEventListener("pointerleave", handleEnd);
-      el.addEventListener("touchstart", handleStart);
-      el.addEventListener("touchend", handleEnd);
-
-      return () => {
-        el.removeEventListener("pointerdown", handleStart);
-        el.removeEventListener("pointerup", handleEnd);
-        el.removeEventListener("pointerleave", handleEnd);
-        el.removeEventListener("touchstart", handleStart);
-        el.removeEventListener("touchend", handleEnd);
-      };
-    };
-
-    const cleanupSun = attachPause(sunRef.current);
-    const cleanupMoon = attachPause(moonRef.current);
-
-    return () => {
-      cleanupSun?.();
-      cleanupMoon?.();
-    };
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -162,7 +105,6 @@ export default function Home() {
     };
   }, [isDark]);
 
-  const surfaceBg = "transparent";
   const gradientMask = `linear-gradient(90deg, ${bgColor} 0%, ${hexToRgba(
     bgColor,
     0.92
@@ -204,22 +146,6 @@ export default function Home() {
       }
     : undefined;
 
-  const sunGlowStyle = isDark
-    ? {
-        filter: "drop-shadow(0 0 36px rgba(255, 198, 120, 0.95)) drop-shadow(0 0 96px rgba(255, 170, 70, 0.55))",
-      }
-    : {
-        filter: "drop-shadow(0 0 28px rgba(255, 200, 120, 0.9)) drop-shadow(0 0 72px rgba(255, 190, 120, 0.45))",
-      };
-
-  const moonGlowStyle = isDark
-    ? {
-        filter: "drop-shadow(0 0 28px rgba(185, 210, 255, 0.95)) drop-shadow(0 0 80px rgba(140, 175, 255, 0.55))",
-      }
-    : {
-        filter: "drop-shadow(0 0 18px rgba(175, 195, 230, 0.9)) drop-shadow(0 0 44px rgba(160, 185, 225, 0.4))",
-      };
-
   return (
     <main
       className={
@@ -247,87 +173,141 @@ export default function Home() {
       )}
 
       <div className="relative z-10 flex min-h-screen flex-col">
-        <div className="flex w-full justify-center px-6 py-6 sm:px-10">
-          <NavbarCapsule theme={theme} onThemeToggle={setTheme} />
-        </div>
+        <Hero navItems={navItems} theme={theme} onThemeToggle={setTheme} />
 
-        <div className="flex flex-1 flex-col gap-10 px-6 pb-12 sm:px-10 lg:flex-row lg:items-center lg:gap-16 lg:pl-24 xl:pl-36">
-          <section className="flex-1 max-w-3xl space-y-4 lg:space-y-6 lg:pl-16 xl:pl-24">
-            <p className="text-sm uppercase tracking-[0.35em] text-amber-600/90">Hi, I&apos;m</p>
-            <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
-              Jhered Miguel Republica
-            </h1>
-            <p
-              className="text-lg sm:text-xl leading-relaxed text-justify dark:text-slate-100"
-              style={{ color: isDark ? "#f8fafc" : "#000000" }}
-            >
-              A Computer Engineering student with a strong interest in software development and cybersecurity. I enjoy building practical, user-focused applications using modern web technologies, while continuously sharpening my problem-solving and algorithmic skills. I’m passionate about learning, experimenting, and turning ideas into secure, efficient solutions.
-            </p>
+        <div className="relative z-10 bg-transparent px-6 pb-16 pt-4 sm:px-10">
+          <div className="mx-auto flex w-full max-w-6xl flex-col space-y-16 lg:px-6">
+        <EducationSection />
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <a
-                href="/REPUBLICA-CV.pdf"
-                download="REPUBLICA-CV.pdf"
-                className="inline-flex items-center gap-2 rounded-full border border-amber-500 bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-900 shadow-md backdrop-blur-sm transition hover:-translate-y-[1px] hover:bg-amber-400 hover:border-amber-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60"
-              >
-                View Curriculum Vitae
-              </a>
-              <a
-                href="mailto:jhered@example.com"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-500/40 px-5 py-3 text-sm font-semibold text-current backdrop-blur-sm transition hover:-translate-y-[1px] hover:border-slate-500/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
-              >
-                Let&apos;s Collaborate
-              </a>
+        <ExperienceSection />
+
+        <section
+          id="projects"
+          ref={projectsRef}
+          className={
+            "scroll-mt-28 space-y-6 transition-all duration-700 will-change-transform " +
+            (projectsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")
+          }
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-amber-600">Projects</p>
+              <h2 className="text-2xl font-semibold sm:text-3xl">Selected work</h2>
             </div>
-          </section>
+            <a
+              href="/projects"
+              className="hidden rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold transition hover:-translate-y-[1px] dark:border-white/20 dark:text-white sm:inline-flex"
+            >
+              View all
+            </a>
+          </div>
+          <div className="grid gap-4 lg:grid-cols-3">
+            {[{
+              title: "IoT Security Dashboard",
+              blurb: "Realtime MQTT ingestion, anomaly flags, and ops-focused UX for device fleets.",
+              stack: "Next.js · MQTT · Python",
+            }, {
+              title: "Cyber Range Assistant",
+              blurb: "Guided lab scripts, scoring hooks, and fast feedback for blue-team drills.",
+              stack: "Node.js · Scripting",
+            }, {
+              title: "Algo Practice Vault",
+              blurb: "Documented patterns for graph search, DP, and greedy solutions.",
+              stack: "TypeScript · C++",
+            }].map((project) => (
+              <article
+                key={project.title}
+                className="flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-md transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
+              >
+                <h3 className="text-lg font-semibold">{project.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200/80">{project.blurb}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-600">{project.stack}</p>
+              </article>
+            ))}
+          </div>
+          <a
+            href="/projects"
+            className="inline-flex items-center rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold transition hover:-translate-y-[1px] dark:border-white/20 dark:text-white sm:hidden"
+          >
+            View all projects
+          </a>
+        </section>
 
-          <div className="relative flex-1 min-h-[60vh] lg:min-h-[75vh]">
-            <div className="absolute inset-0 translate-x-[0vw] sm:translate-x-[0vw] lg:translate-x-[0vw] pointer-events-auto">
-              {/* @ts-expect-error Custom element is declared globally */}
-              <model-viewer
-                ref={sunRef}
-                src="/3d-models/low_poly_sun.glb"
-                alt="Low poly sun in motion"
-                camera-controls
-                auto-rotate
-                interaction-prompt="none"
-                exposure="1"
-                shadow-intensity="0"
-                className={`${baseModelClass} ${sunAnim}`}
-                style={{
-                  background: surfaceBg,
-                  objectFit: "cover",
-                  cursor: "grab",
-                  ...sunGlowStyle,
-                }}
-              />
-
-              {/* @ts-expect-error Custom element is declared globally */}
-              <model-viewer
-                ref={moonRef}
-                src="/3d-models/low_poly_moon.glb"
-                alt="Low poly moon in motion"
-                camera-controls
-                auto-rotate
-                interaction-prompt="none"
-                exposure="1"
-                shadow-intensity="0"
-                className={`${baseModelClass} ${moonAnim}`}
-                style={{
-                  background: surfaceBg,
-                  objectFit: "cover",
-                  cursor: "grab",
-                  ...moonGlowStyle,
-                }}
-              />
+        <section
+          id="certifications"
+          ref={certsRef}
+          className={
+            "scroll-mt-28 space-y-6 transition-all duration-700 will-change-transform " +
+            (certsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")
+          }
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-amber-600">Certifications</p>
+              <h2 className="text-2xl font-semibold sm:text-3xl">Proof of practice</h2>
             </div>
           </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[{
+              title: "Cisco CyberOps (Student Track)",
+              body: "Intro SOC workflows, packet analysis, and alert triage foundations.",
+            }, {
+              title: "Google Cybersecurity Certificate",
+              body: "Security controls, SIEM basics, and incident response scenarios.",
+            }, {
+              title: "AWS Cloud Quest: Cloud Practitioner",
+              body: "Hands-on labs for IAM, networking, and resilient architectures.",
+            }].map((cert) => (
+              <article
+                key={cert.title}
+                className="flex flex-col gap-2 rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/5"
+              >
+                <h3 className="text-lg font-semibold">{cert.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200/80">{cert.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section
+          id="contact"
+          ref={contactRef}
+          className={
+            "scroll-mt-28 rounded-3xl border border-slate-200/60 bg-white/85 p-6 shadow-lg backdrop-blur-lg transition-all duration-700 will-change-transform dark:border-white/10 dark:bg-white/5 sm:p-8 " +
+            (contactVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")
+          }
+        >
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-2">
+              <p className="text-xs uppercase tracking-[0.3em] text-amber-600">Contact</p>
+              <h2 className="text-2xl font-semibold sm:text-3xl">Let&apos;s collaborate</h2>
+              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200/80">
+                Need a resilient prototype, a security-minded review, or a teammate who documents as they build? I&apos;d love to help.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="mailto:jhered@example.com"
+                className="inline-flex items-center justify-center rounded-full bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-900 shadow-lg transition hover:translate-y-[-1px] hover:bg-amber-400"
+              >
+                Email me
+              </a>
+              <a
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold transition hover:-translate-y-[1px] dark:border-white/20 dark:text-white"
+              >
+                Contact page
+              </a>
+            </div>
+          </div>
+        </section>
         </div>
+      </div>
       </div>
 
       {showPrompt && (
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center"
+          className="pointer-events-none fixed inset-x-0 bottom-8 z-[2500] flex justify-center"
           aria-hidden
         >
           <div
@@ -338,13 +318,15 @@ export default function Home() {
               boxShadow: "none",
               borderRadius: 0,
               border: "none",
-                animation: "floatPulse 3.8s ease-in-out infinite",
+              animation: "floatPulse 3.8s ease-in-out infinite",
             }}
           >
-            <span>Learn More</span>
-            <span style={{ letterSpacing: "0.1em", fontSize: "0.9rem" }} aria-hidden>
-              ↓
-            </span>
+            <a href="#about" className="pointer-events-auto text-current">
+              <span>Learn More</span>
+              <span style={{ letterSpacing: "0.1em", fontSize: "0.9rem" }} aria-hidden>
+                ↓
+              </span>
+            </a>
           </div>
         </div>
       )}
