@@ -2,10 +2,12 @@
 
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
+import { CertificationsSection } from "./components/sections/Certifications";
 import { EducationSection } from "./components/sections/Education";
 import { ExperienceSection } from "./components/sections/Experience";
+import { Footer } from "./components/sections/Footer";
 import { Hero } from "./components/sections/Hero";
-import { useRevealOnScroll } from "./hooks/useRevealOnScroll";
+import { ProjectsSection } from "./components/sections/Projects";
 
 function hexToRgba(hex: string, alpha: number): string {
   const value = hex.replace("#", "");
@@ -39,9 +41,16 @@ export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const isDark = theme === "dark";
 
-  const { ref: projectsRef, visible: projectsVisible } = useRevealOnScroll<HTMLElement>();
-  const { ref: certsRef, visible: certsVisible } = useRevealOnScroll<HTMLElement>();
-  const { ref: contactRef, visible: contactVisible } = useRevealOnScroll<HTMLElement>();
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add("dark");
+      root.style.colorScheme = "dark";
+    } else {
+      root.classList.remove("dark");
+      root.style.colorScheme = "light";
+    }
+  }, [isDark]);
 
   const navItems = [
     { label: "Home", href: "/" },
@@ -49,7 +58,7 @@ export default function Home() {
     { label: "Experience", href: "/#experience" },
     { label: "Projects", href: "/#projects" },
     { label: "Certifications", href: "/#certifications" },
-    { label: "Contact", href: "/#contact" },
+    { label: "Contact", href: "/#footer" },
   ];
 
   const [showPrompt, setShowPrompt] = useState(true);
@@ -105,10 +114,7 @@ export default function Home() {
     };
   }, [isDark]);
 
-  const gradientMask = `linear-gradient(90deg, ${bgColor} 0%, ${hexToRgba(
-    bgColor,
-    0.92
-  )} 45%, ${hexToRgba(bgColor, 0)} 75%)`;
+  const gradientMask = `linear-gradient(90deg, ${bgColor} 0%, ${hexToRgba(bgColor, 0.92)} 45%, ${hexToRgba(bgColor, 0)} 75%)`;
   const foreground = isDark ? "#f8fafc" : "#0f172a";
 
   const [starField, setStarField] = useState<string>("");
@@ -177,133 +183,18 @@ export default function Home() {
 
         <div className="relative z-10 bg-transparent px-6 pb-16 pt-4 sm:px-10">
           <div className="mx-auto flex w-full max-w-6xl flex-col space-y-16 lg:px-6">
-        <EducationSection />
+            <EducationSection />
 
-        <ExperienceSection />
+            <ExperienceSection />
 
-        <section
-          id="projects"
-          ref={projectsRef}
-          className={
-            "scroll-mt-28 space-y-6 transition-all duration-700 will-change-transform " +
-            (projectsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")
-          }
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-amber-600">Projects</p>
-              <h2 className="text-2xl font-semibold sm:text-3xl">Selected work</h2>
-            </div>
-            <a
-              href="/projects"
-              className="hidden rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold transition hover:-translate-y-[1px] dark:border-white/20 dark:text-white sm:inline-flex"
-            >
-              View all
-            </a>
-          </div>
-          <div className="grid gap-4 lg:grid-cols-3">
-            {[{
-              title: "IoT Security Dashboard",
-              blurb: "Realtime MQTT ingestion, anomaly flags, and ops-focused UX for device fleets.",
-              stack: "Next.js · MQTT · Python",
-            }, {
-              title: "Cyber Range Assistant",
-              blurb: "Guided lab scripts, scoring hooks, and fast feedback for blue-team drills.",
-              stack: "Node.js · Scripting",
-            }, {
-              title: "Algo Practice Vault",
-              blurb: "Documented patterns for graph search, DP, and greedy solutions.",
-              stack: "TypeScript · C++",
-            }].map((project) => (
-              <article
-                key={project.title}
-                className="flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-md transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
-              >
-                <h3 className="text-lg font-semibold">{project.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200/80">{project.blurb}</p>
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-600">{project.stack}</p>
-              </article>
-            ))}
-          </div>
-          <a
-            href="/projects"
-            className="inline-flex items-center rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold transition hover:-translate-y-[1px] dark:border-white/20 dark:text-white sm:hidden"
-          >
-            View all projects
-          </a>
-        </section>
+            <ProjectsSection />
 
-        <section
-          id="certifications"
-          ref={certsRef}
-          className={
-            "scroll-mt-28 space-y-6 transition-all duration-700 will-change-transform " +
-            (certsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")
-          }
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-amber-600">Certifications</p>
-              <h2 className="text-2xl font-semibold sm:text-3xl">Proof of practice</h2>
-            </div>
+            <CertificationsSection />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[{
-              title: "Cisco CyberOps (Student Track)",
-              body: "Intro SOC workflows, packet analysis, and alert triage foundations.",
-            }, {
-              title: "Google Cybersecurity Certificate",
-              body: "Security controls, SIEM basics, and incident response scenarios.",
-            }, {
-              title: "AWS Cloud Quest: Cloud Practitioner",
-              body: "Hands-on labs for IAM, networking, and resilient architectures.",
-            }].map((cert) => (
-              <article
-                key={cert.title}
-                className="flex flex-col gap-2 rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/5"
-              >
-                <h3 className="text-lg font-semibold">{cert.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200/80">{cert.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section
-          id="contact"
-          ref={contactRef}
-          className={
-            "scroll-mt-28 rounded-3xl border border-slate-200/60 bg-white/85 p-6 shadow-lg backdrop-blur-lg transition-all duration-700 will-change-transform dark:border-white/10 dark:bg-white/5 sm:p-8 " +
-            (contactVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")
-          }
-        >
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs uppercase tracking-[0.3em] text-amber-600">Contact</p>
-              <h2 className="text-2xl font-semibold sm:text-3xl">Let&apos;s collaborate</h2>
-              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200/80">
-                Need a resilient prototype, a security-minded review, or a teammate who documents as they build? I&apos;d love to help.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="mailto:jhered@example.com"
-                className="inline-flex items-center justify-center rounded-full bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-900 shadow-lg transition hover:translate-y-[-1px] hover:bg-amber-400"
-              >
-                Email me
-              </a>
-              <a
-                href="/contact"
-                className="inline-flex items-center justify-center rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold transition hover:-translate-y-[1px] dark:border-white/20 dark:text-white"
-              >
-                Contact page
-              </a>
-            </div>
-          </div>
-        </section>
         </div>
       </div>
-      </div>
+
+      <Footer />
 
       {showPrompt && (
         <div

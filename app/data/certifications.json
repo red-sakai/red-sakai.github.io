@@ -1,0 +1,19 @@
+[
+  {
+    "title": "Google Cybersecurity Professional Certificate",
+    "issuer": "Google | Coursera",
+    "date": "2025",
+    "description": "Security controls, SIEM workflows, and end-to-end response drills with log analysis and detection engineering basics.",
+    "credentialUrl": "https://www.credly.com/badges/4d6eca38-669f-442f-8394-2f44b3159fef/public_url",
+    "image": "/images/certifications/google-cybersecurity-badge.png",
+    "imageAlt": "Google Cybersecurity Professional Certificate badge",
+    "certificateImage": "/images/certifications/google-cybersecurity-certificate.png",
+    "certificateAlt": "Google Cybersecurity Professional Certificate document",
+    "tags": [
+      "SIEM",
+      "Detection",
+      "Security Controls",
+      "Logging"
+    ]
+  }
+]
