@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,6 +28,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script
+          src="https://unpkg.com/@google/model-viewer@4/dist/model-viewer.min.js"
+          type="module"
+          strategy="afterInteractive"
+        />
         {children}
       </body>
     </html>
