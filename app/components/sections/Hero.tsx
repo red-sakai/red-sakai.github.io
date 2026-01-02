@@ -88,6 +88,19 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
 
   const surfaceBg = "transparent";
 
+  const baseModelSurfaceStyle: CSSProperties & {
+    "--progress-bar-color"?: string;
+    "--progress-bar-height"?: string;
+    "--progress-mask"?: string;
+  } = {
+    background: surfaceBg,
+    objectFit: "cover",
+    cursor: "grab",
+    "--progress-bar-color": "transparent",
+    "--progress-bar-height": "0px",
+    "--progress-mask": "none",
+  };
+
   const sunGlowStyle: CSSProperties = isDark
     ? {
         filter: "drop-shadow(0 0 36px rgba(255, 198, 120, 0.95)) drop-shadow(0 0 96px rgba(255, 170, 70, 0.55))",
@@ -164,9 +177,7 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
               shadow-intensity="0"
               className={`${baseModelClass} ${sunAnim}`}
               style={{
-                background: surfaceBg,
-                objectFit: "cover",
-                cursor: "grab",
+                ...baseModelSurfaceStyle,
                 ...sunGlowStyle,
               }}
             />
@@ -184,9 +195,7 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
               shadow-intensity="0"
               className={`${baseModelClass} ${moonAnim}`}
               style={{
-                background: surfaceBg,
-                objectFit: "cover",
-                cursor: "grab",
+                ...baseModelSurfaceStyle,
                 ...moonGlowStyle,
               }}
             />
