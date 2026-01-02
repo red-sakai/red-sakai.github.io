@@ -1,4 +1,4 @@
-# jhered.me
+# red-sakai.github.io
 
 Personal portfolio built with Next.js 16 (App Router) and Tailwind CSS 4. The site highlights experience, projects, certifications, and contact information, with content driven by JSON data and assets in `public`.
 
