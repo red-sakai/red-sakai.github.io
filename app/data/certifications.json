@@ -32,5 +32,17 @@
       "Threat Analysis",
       "Security Operations"
     ]
+  },
+  {
+    "title": "IBM Full Stack Software Developer Professional Certificate",
+    "issuer": "IBM | Coursera",
+    "date": "Coming Soon",
+    "description": "Coming soon: a full-stack track covering modern web app fundamentals across front-end, back-end, and practical development workflows.",
+    "tags": [
+      "Full Stack",
+      "Web Development",
+      "Front End",
+      "Back End"
+    ]
   }
 ]
