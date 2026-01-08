@@ -15,5 +15,22 @@
       "Security Controls",
       "Logging"
     ]
+  },
+  {
+    "title": "IBM Cybersecurity Analyst Professional Certificate",
+    "issuer": "IBM | Coursera",
+    "date": "2026",
+    "description": "Threat analysis fundamentals, incident response workflows, and security operations concepts with hands-on labs across common tools and techniques.",
+    "credentialUrl": "https://www.coursera.org/account/accomplishments/professional-cert/EMVEN54PYS86",
+    "image": "/images/certifications/ibm-cybersecurity-analyst-badge.png",
+    "imageAlt": "IBM Cybersecurity Analyst Professional Certificate badge",
+    "certificateImage": "/images/certifications/ibm-cybersecurity-analyst.png",
+    "certificateAlt": "IBM Cybersecurity Analyst Professional Certificate document",
+    "tags": [
+      "SOC",
+      "Incident Response",
+      "Threat Analysis",
+      "Security Operations"
+    ]
   }
 ]
