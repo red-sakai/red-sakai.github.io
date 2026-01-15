@@ -147,8 +147,8 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <a
-              href="/REPUBLICA-CV.pdf"
-              download="REPUBLICA-CV.pdf"
+              href="/JHERED_MIGUEL_REPUBLICA.pdf"
+              download="JHERED_MIGUEL_REPUBLICA.pdf"
               className="inline-flex items-center gap-2 rounded-full border border-amber-500 bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-900 shadow-md backdrop-blur-sm transition hover:-translate-y-[1px] hover:bg-amber-400 hover:border-amber-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60"
             >
               View Curriculum Vitae

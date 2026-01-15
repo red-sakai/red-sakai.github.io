@@ -243,8 +243,8 @@ export default function AboutPage() {
 								Start a conversation
 							</a>
 							<a
-								href="/REPUBLICA-CV.pdf"
-								download="REPUBLICA-CV.pdf"
+								href="/JHERED_MIGUEL_REPUBLICA.pdf"
+								download="JHERED_MIGUEL_REPUBLICA.pdf"
 								className={`inline-flex items-center justify-center rounded-full border px-5 py-3 text-sm font-semibold transition hover:-translate-y-[1px] ${
 									isDark ? "border-white/20 bg-white/10" : "border-slate-300 bg-white"
 								}`}
