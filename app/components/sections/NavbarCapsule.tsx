@@ -68,6 +68,7 @@ export function NavbarCapsule({
   const [currentHash, setCurrentHash] = useState<string>("");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  const currentHashRef = useRef<string>("");
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [indicator, setIndicator] = useState<{
     x: number;
@@ -78,6 +79,13 @@ export function NavbarCapsule({
     ready: boolean;
   }>({ x: 0, w: 0, insetLeft: 0, insetTop: 0, height: 0, ready: false });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const parsedItems = useMemo(() => {
+    return items.map((item) => ({
+      ...item,
+      parsed: parseHref(item.href),
+    }));
+  }, [items]);
 
   useEffect(() => {
     const update = () => {
@@ -90,6 +98,83 @@ export function NavbarCapsule({
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    setCurrentHash(window.location.hash || "");
+  }, [currentPath]);
+
+  useEffect(() => {
+    currentHashRef.current = currentHash;
+  }, [currentHash]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const sectionItems = parsedItems
+      .filter((item) => item.parsed.pathname === currentPath && item.parsed.hash)
+      .map((item) => {
+        const hash = item.parsed.hash;
+        const id = hash.replace("#", "");
+        const el = document.getElementById(id);
+        return el ? { hash, el } : null;
+      })
+      .filter((value): value is { hash: string; el: HTMLElement } => Boolean(value));
+
+    if (sectionItems.length === 0) return;
+
+    const entriesByHash = new Map<string, IntersectionObserverEntry>();
+    let rafId: number | null = null;
+
+    const updateActiveHash = () => {
+      const intersecting = Array.from(entriesByHash.values()).filter((entry) => entry.isIntersecting);
+
+      if (intersecting.length === 0) {
+        if (window.scrollY < 120) {
+          setCurrentHash("");
+        }
+        return;
+      }
+
+      intersecting.sort((a, b) => {
+        if (b.intersectionRatio !== a.intersectionRatio) {
+          return b.intersectionRatio - a.intersectionRatio;
+        }
+        return a.boundingClientRect.top - b.boundingClientRect.top;
+      });
+
+      const best = intersecting[0];
+      const targetId = (best.target as HTMLElement).id;
+      const nextHash = targetId ? `#${targetId}` : "";
+      if (nextHash && nextHash !== currentHashRef.current) {
+        setCurrentHash(nextHash);
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const targetId = (entry.target as HTMLElement).id;
+          if (!targetId) return;
+          entriesByHash.set(`#${targetId}`, entry);
+        });
+
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(updateActiveHash);
+      },
+      {
+        rootMargin: "-35% 0px -55% 0px",
+        threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
+      }
+    );
+
+    sectionItems.forEach(({ el }) => observer.observe(el));
+
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      observer.disconnect();
+    };
+  }, [currentPath, parsedItems]);
+
+  useEffect(() => {
     const onResize = () => {
       if (window.innerWidth >= 640) {
         setIsMobileMenuOpen(false);
@@ -98,13 +183,6 @@ export function NavbarCapsule({
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-
-  const parsedItems = useMemo(() => {
-    return items.map((item) => ({
-      ...item,
-      parsed: parseHref(item.href),
-    }));
-  }, [items]);
 
   const activeIndex = useMemo(() => {
     const idx = parsedItems.findIndex((item) => {
@@ -189,6 +267,8 @@ export function NavbarCapsule({
 
           {parsedItems.map((item, index) => {
             const isActive = index === activeIndex;
+            const focusIndex = hoverIndex ?? (activeIndex >= 0 ? activeIndex : -1);
+            const isFocused = index === focusIndex;
 
             return (
               <Link
@@ -204,7 +284,7 @@ export function NavbarCapsule({
                 }}
                 className={
                   "relative z-10 rounded-full px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
-                  (isActive
+                  (isFocused
                     ? "text-white"
                     : isDark
                     ? "text-white/70 hover:text-white"
