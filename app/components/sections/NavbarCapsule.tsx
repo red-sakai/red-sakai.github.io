@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 
 export type NavbarCapsuleItem = {
   label: string;
@@ -63,6 +64,7 @@ export function NavbarCapsule({
   onThemeToggle,
 }: NavbarCapsuleProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const currentPath = normalizePathname(pathname);
   const isDark = theme === "dark";
   const [currentHash, setCurrentHash] = useState<string>("");
@@ -79,6 +81,8 @@ export function NavbarCapsule({
     ready: boolean;
   }>({ x: 0, w: 0, insetLeft: 0, insetTop: 0, height: 0, ready: false });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isShuttingDown, setIsShuttingDown] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   const parsedItems = useMemo(() => {
     return items.map((item) => ({
@@ -98,8 +102,15 @@ export function NavbarCapsule({
   }, []);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
     if (typeof window === "undefined") return;
-    setCurrentHash(window.location.hash || "");
+    const timer = window.setTimeout(() => {
+      setCurrentHash(window.location.hash || "");
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [currentPath]);
 
   useEffect(() => {
@@ -230,6 +241,15 @@ export function NavbarCapsule({
 
   const knobPositionClass = isDark ? "translate-x-[36px]" : "translate-x-0";
 
+  const handleBootloaderClick = useCallback(() => {
+    if (isShuttingDown) return;
+    setIsMobileMenuOpen(false);
+    setIsShuttingDown(true);
+    window.setTimeout(() => {
+      router.push("/grub-bootloader");
+    }, 850);
+  }, [isShuttingDown, router]);
+
   return (
     <nav aria-label="Primary" className={`${className ?? ""} relative`}>
       {/* Desktop navigation */}
@@ -241,6 +261,32 @@ export function NavbarCapsule({
             : "border-black/10 bg-white/80 text-[#0f172a]")
         }
       >
+        <button
+          type="button"
+          aria-label="Open boot menu"
+          onClick={handleBootloaderClick}
+          className={
+            "inline-flex h-9 w-9 items-center justify-center rounded-full border shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
+            (isDark ? "border-white/15 bg-white/5 text-white" : "border-black/10 bg-white text-[#0f172a]")
+          }
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <path d="m7 10 2 2-2 2" />
+            <path d="M11 14h4" />
+          </svg>
+        </button>
+
         <div
           ref={containerRef}
           className="relative flex items-center gap-1 rounded-full px-1"
@@ -340,6 +386,32 @@ export function NavbarCapsule({
 
       {/* Mobile navigation */}
       <div className="flex items-center gap-3 sm:hidden">
+        <button
+          type="button"
+          aria-label="Open boot menu"
+          onClick={handleBootloaderClick}
+          className={
+            "inline-flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
+            (isDark ? "border-white/20 bg-white/10 text-white" : "border-slate-300 bg-white text-[#0f172a]")
+          }
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <path d="m7 10 2 2-2 2" />
+            <path d="M11 14h4" />
+          </svg>
+        </button>
+
         <button
           type="button"
           aria-label={isDark ? "Activate light mode" : "Activate dark mode"}
@@ -449,6 +521,17 @@ export function NavbarCapsule({
           </div>
         </div>
       )}
+
+      {isShuttingDown && isClient &&
+        createPortal(
+          <>
+            <div className="shutdown-backdrop" aria-hidden="true" />
+            <div className="shutdown-overlay" aria-hidden="true">
+              <div className="shutdown-flash" />
+            </div>
+          </>,
+          document.body
+        )}
     </nav>
   );
 }

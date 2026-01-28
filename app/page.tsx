@@ -40,6 +40,7 @@ function mixHex(start: string, end: string, t: number): string {
 export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const isDark = theme === "dark";
+  const audioPlayedRef = useRef(false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -51,6 +52,14 @@ export default function Home() {
       root.style.colorScheme = "light";
     }
   }, [isDark]);
+
+  useEffect(() => {
+    if (audioPlayedRef.current) return;
+    audioPlayedRef.current = true;
+    const audio = new Audio("/audio/windows_startup.mp3");
+    audio.volume = 0.6;
+    audio.play().catch(() => {});
+  }, []);
 
   const navItems = [
     { label: "Home", href: "/" },

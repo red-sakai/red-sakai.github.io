@@ -200,6 +200,69 @@ html {
   color: #f8fafc !important;
 }
 
+.shutdown-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  animation: shutdown-screen 0.9s ease-in forwards;
+  transform-origin: center;
+}
+
+.shutdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: #000000;
+  pointer-events: none;
+}
+
+.shutdown-flash {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 50%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 22px rgba(255, 255, 255, 0.8), 0 0 48px rgba(255, 255, 255, 0.35);
+  transform: translateY(-50%);
+  animation: shutdown-flash 0.9s ease-in forwards;
+}
+
+@keyframes shutdown-screen {
+  0% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+  12% {
+    opacity: 1;
+  }
+  40% {
+    transform: scaleY(0.18);
+  }
+  70% {
+    transform: scaleY(0.04);
+  }
+  100% {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes shutdown-flash {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0.1);
+  }
+  28% {
+    opacity: 1;
+    transform: translateY(-50%) scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0.02);
+  }
+}
+
 /* Keep Certifications label amber */
 :root:not(.dark) #certifications .cert-accent {
   color: #d97706 !important;
