@@ -200,6 +200,48 @@ html {
   color: #f8fafc !important;
 }
 
+.terminal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.6) rgba(15, 23, 42, 0.35);
+  scrollbar-gutter: stable;
+}
+
+.terminal-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.terminal-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.45) !important;
+  border-radius: 999px;
+}
+
+.terminal-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.75) !important;
+  border-radius: 999px;
+  border: 2px solid rgba(15, 23, 42, 0.45) !important;
+}
+
+.terminal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(203, 213, 225, 0.85) !important;
+}
+
+.terminal-pop {
+  animation: terminal-pop 0.35s ease-out;
+  transform-origin: top center;
+}
+
+@keyframes terminal-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .shutdown-overlay {
   position: fixed;
   inset: 0;

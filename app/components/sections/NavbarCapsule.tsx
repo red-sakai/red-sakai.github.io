@@ -82,7 +82,7 @@ export function NavbarCapsule({
   }>({ x: 0, w: 0, insetLeft: 0, insetTop: 0, height: 0, ready: false });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShuttingDown, setIsShuttingDown] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const isClient = typeof window !== "undefined";
 
   const parsedItems = useMemo(() => {
     return items.map((item) => ({
@@ -99,10 +99,6 @@ export function NavbarCapsule({
     update();
     window.addEventListener("hashchange", update);
     return () => window.removeEventListener("hashchange", update);
-  }, []);
-
-  useEffect(() => {
-    setIsClient(true);
   }, []);
 
   useEffect(() => {
