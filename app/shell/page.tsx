@@ -4,11 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import TerminalNavbar from "../components/ui/TerminalNavbar";
+import ShapeBlur from "../components/ui/ShapeBlur";
 
 type TerminalEntryMap = {
   input: { text: string };
   output: { text: string };
-  profile: object;
+  profile: { revealKey?: number };
 };
 
 type TerminalEntry = {
@@ -34,12 +35,23 @@ export default function ShellPage() {
   const [history, setHistory] = useState<TerminalEntry[]>([
     { id: 1, type: "output", text: "Booting Shell Mode..." },
     { id: 2, type: "output", text: "Type 'help' to list commands." },
-    { id: 3, type: "profile" },
+    { id: 3, type: "profile", revealKey: 1 },
   ]);
   const [nextId, setNextId] = useState(4);
   const [hasMounted, setHasMounted] = useState(false);
+  const [profileRevealKey, setProfileRevealKey] = useState(1);
+  const [isProfileImageReady, setIsProfileImageReady] = useState(false);
+  const [showPixelCanvas, setShowPixelCanvas] = useState(true);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const profileImageRef = useRef<HTMLImageElement | null>(null);
+  const pixelCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const pixelBufferRef = useRef<HTMLCanvasElement | null>(null);
+  const cursorInnerRef = useRef<HTMLDivElement | null>(null);
+  const cursorOuterRef = useRef<HTMLDivElement | null>(null);
+  const cursorTargetRef = useRef({ x: 0, y: 0 });
+  const cursorOuterPosRef = useRef({ x: 0, y: 0 });
+  const profileFrameRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -58,9 +70,123 @@ export default function ShellPage() {
   }, []);
 
   useEffect(() => {
+    const handleMove = (event: MouseEvent) => {
+      const { clientX, clientY } = event;
+      cursorTargetRef.current = { x: clientX, y: clientY };
+
+      if (cursorInnerRef.current) {
+        cursorInnerRef.current.style.transform = `translate(${clientX}px, ${clientY}px)`;
+      }
+    };
+
+    let rafId = 0;
+    const follow = () => {
+      const target = cursorTargetRef.current;
+      const current = cursorOuterPosRef.current;
+      const lerp = 0.14;
+
+      const nextX = current.x + (target.x - current.x) * lerp;
+      const nextY = current.y + (target.y - current.y) * lerp;
+
+      cursorOuterPosRef.current = { x: nextX, y: nextY };
+      if (cursorOuterRef.current) {
+        cursorOuterRef.current.style.transform = `translate(${nextX}px, ${nextY}px)`;
+      }
+
+      rafId = window.requestAnimationFrame(follow);
+    };
+
+    window.addEventListener("mousemove", handleMove);
+    rafId = window.requestAnimationFrame(follow);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!scrollRef.current) return;
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [history]);
+
+  useEffect(() => {
+    if (profileRevealKey === 0 || !isProfileImageReady) return;
+
+    const image = profileImageRef.current;
+    const canvas = pixelCanvasRef.current;
+    if (!image || !canvas) return;
+
+    const buffer = pixelBufferRef.current ?? document.createElement("canvas");
+    pixelBufferRef.current = buffer;
+
+    const drawPixelated = (pixelSize: number, tintAlpha: number) => {
+      const width = image.naturalWidth || image.width || 176;
+      const height = image.naturalHeight || image.height || 176;
+      if (!width || !height) return;
+
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+      }
+
+      const scaledWidth = Math.max(1, Math.floor(width / pixelSize));
+      const scaledHeight = Math.max(1, Math.floor(height / pixelSize));
+      buffer.width = scaledWidth;
+      buffer.height = scaledHeight;
+
+      const bufferCtx = buffer.getContext("2d");
+      const ctx = canvas.getContext("2d");
+      if (!bufferCtx || !ctx) return;
+
+      bufferCtx.imageSmoothingEnabled = false;
+      bufferCtx.clearRect(0, 0, scaledWidth, scaledHeight);
+      bufferCtx.drawImage(image, 0, 0, scaledWidth, scaledHeight);
+
+      ctx.imageSmoothingEnabled = false;
+      ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(buffer, 0, 0, scaledWidth, scaledHeight, 0, 0, width, height);
+
+      if (tintAlpha > 0) {
+        ctx.save();
+        ctx.globalCompositeOperation = "source-atop";
+        ctx.fillStyle = `rgba(16,185,129,${tintAlpha})`;
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.globalCompositeOperation = "source-atop";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.12)";
+      for (let y = 0; y < height; y += 3) {
+        ctx.fillRect(0, y, width, 1);
+      }
+      ctx.restore();
+    };
+
+    let rafId = 0;
+    let startTime: number | null = null;
+    const duration = 1700;
+    const maxPixel = 32;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min(1, (timestamp - startTime) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const pixelSize = Math.max(1, Math.round(maxPixel * (1 - Math.pow(eased, 0.8))));
+      const tintAlpha = 0.65 * (1 - eased * 0.75);
+
+      drawPixelated(pixelSize, tintAlpha);
+
+      if (progress < 1) {
+        rafId = window.requestAnimationFrame(animate);
+      } else {
+        setShowPixelCanvas(false);
+      }
+    };
+
+    rafId = window.requestAnimationFrame(animate);
+    return () => window.cancelAnimationFrame(rafId);
+  }, [profileRevealKey, isProfileImageReady]);
 
   const appendEntry = (entry: TerminalEntryInput) => {
     setHistory((prev) => [...prev, { ...entry, id: nextId }]);
@@ -97,9 +223,13 @@ export default function ShellPage() {
           text: "Sakai Shell v1.0 • Minimal boot console environment.",
         });
         break;
-      case "cat about.profile":
-        appendEntry({ type: "profile" });
+      case "cat about.profile": {
+        const nextRevealKey = profileRevealKey + 1;
+        setShowPixelCanvas(true);
+        setProfileRevealKey(nextRevealKey);
+        appendEntry({ type: "profile", revealKey: nextRevealKey });
         break;
+      }
       default:
         appendEntry({
           type: "output",
@@ -111,7 +241,7 @@ export default function ShellPage() {
 
   return (
     <main
-      className="h-screen overflow-hidden text-emerald-100"
+      className="h-screen overflow-hidden text-emerald-100 cursor-none"
       style={{
         backgroundImage: "url('/images/terminal_images/terminal_dark.png')",
         backgroundSize: "cover",
@@ -119,6 +249,14 @@ export default function ShellPage() {
       }}
       onClick={() => inputRef.current?.focus()}
     >
+      <div
+        ref={cursorOuterRef}
+        className="pointer-events-none fixed left-0 top-0 z-50 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-300/70 bg-emerald-300/5 shadow-[0_0_20px_rgba(16,185,129,0.35)]"
+      />
+      <div
+        ref={cursorInnerRef}
+        className="pointer-events-none fixed left-0 top-0 z-50 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.6)]"
+      />
       <div className="h-full bg-black/70">
         <div className="flex h-full w-full flex-col px-6 py-6 font-mono">
           <div
@@ -152,20 +290,72 @@ export default function ShellPage() {
                     >
                       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.16),transparent_55%)]" />
                       <div className="relative flex flex-col gap-6 lg:flex-row">
-                        <div className="flex w-full justify-center lg:w-56">
-                          <div className="relative h-44 w-44 overflow-hidden rounded-lg border border-emerald-200/30 bg-emerald-200/10">
+                        <div className="flex w-full justify-center lg:w-64">
+                          <div
+                            ref={profileFrameRef}
+                            className="relative h-52 w-52 overflow-hidden rounded-lg border border-emerald-200/30 bg-emerald-200/10"
+                            style={{
+                              ["--cursor-x" as never]: "50%",
+                              ["--cursor-y" as never]: "50%",
+                              ["--cursor-alpha" as never]: "0",
+                            }}
+                            onMouseMove={(event) => {
+                              const rect = event.currentTarget.getBoundingClientRect();
+                              const x = event.clientX - rect.left;
+                              const y = event.clientY - rect.top;
+                              event.currentTarget.style.setProperty("--cursor-x", `${x}px`);
+                              event.currentTarget.style.setProperty("--cursor-y", `${y}px`);
+                            }}
+                            onMouseEnter={(event) => {
+                              event.currentTarget.style.setProperty("--cursor-alpha", "1");
+                            }}
+                            onMouseLeave={(event) => {
+                              event.currentTarget.style.setProperty("--cursor-alpha", "0");
+                            }}
+                          >
                             <Image
                               src="/jhered-image.jpg"
                               alt="Jhered profile portrait"
-                              width={176}
-                              height={176}
-                              className="h-full w-full object-cover"
+                              width={208}
+                              height={208}
+                              className={
+                                "h-full w-full object-cover transition-opacity duration-500 " +
+                                (showPixelCanvas ? "opacity-0" : "opacity-100")
+                              }
                               priority
+                              onLoad={(event) => {
+                                const image = event.currentTarget;
+                                profileImageRef.current = image;
+                                setIsProfileImageReady(true);
+                              }}
+                              onLoadingComplete={(image) => {
+                                profileImageRef.current = image;
+                                setIsProfileImageReady(true);
+                              }}
                             />
-                            <div className="absolute inset-0 rounded-lg border border-emerald-200/10" />
-                            <div className="absolute inset-x-0 bottom-0 bg-black/60 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-emerald-200/80">
-                              Identity Verified
+                            <canvas
+                              ref={pixelCanvasRef}
+                              className={
+                                "pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-500 " +
+                                (showPixelCanvas ? "opacity-100" : "opacity-0")
+                              }
+                              style={{ imageRendering: "pixelated" }}
+                            />
+                            <div
+                              className="pointer-events-none absolute inset-0 opacity-[var(--cursor-alpha)] transition-opacity duration-150"
+                            >
+                              <ShapeBlur
+                                className="h-full w-full"
+                                variation={0}
+                                shapeSize={2.1}
+                                roundness={0.9}
+                                borderSize={0.03}
+                                circleSize={0.18}
+                                circleEdge={1}
+                              />
                             </div>
+                            <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(180deg,rgba(0,0,0,0.2)_0px,rgba(0,0,0,0.2)_1px,rgba(0,0,0,0)_3px,rgba(0,0,0,0)_4px)]" />
+                            <div className="absolute inset-0 rounded-lg border border-emerald-200/10" />
                           </div>
                         </div>
                         <div className="flex-1">
@@ -179,7 +369,7 @@ export default function ShellPage() {
 
                           <div className="grid gap-x-6 gap-y-3 text-[15px] sm:grid-cols-[130px_1fr]">
                             <span className="text-cyan-300">OS</span>
-                            <span className="text-emerald-100">NixOS 24.05 (Gnome) x86_64</span>
+                            <span className="text-emerald-100">SakaiOS 24.05 (Gnome) x86_64</span>
                             <span className="text-cyan-300">Host</span>
                             <span className="text-emerald-100">Jhered&apos;s Portfolio</span>
                             <span className="text-cyan-300">Kernel</span>
