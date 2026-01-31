@@ -243,7 +243,7 @@ export default function ShellPage() {
     <main
       className="h-screen overflow-hidden text-emerald-100 cursor-none"
       style={{
-        backgroundImage: "url('/images/terminal_images/terminal_dark.png')",
+        backgroundImage: "url('/images/terminal_images/terminal_dark_inverted.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
