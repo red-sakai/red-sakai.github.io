@@ -20,6 +20,17 @@ type TerminalEntryInput = {
   [Key in keyof TerminalEntryMap]: { type: Key } & TerminalEntryMap[Key];
 }[keyof TerminalEntryMap];
 
+const COMMAND_LIST = [
+  "help",
+  "clear",
+  "exit",
+  "shutdown",
+  "about",
+  "cat about.profile",
+  "ls",
+  "man",
+];
+
 const HELP_TEXT = [
   "Available commands:",
   "  help   - show this help message",
@@ -27,6 +38,9 @@ const HELP_TEXT = [
   "  exit   - return to GUI",
   "  shutdown - return to bootloader",
   "  about  - short system info",
+  "  cat about.profile - show profile card",
+  "  ls     - list commands",
+  "  man [command] - show command help",
 ].join("\n");
 
 export default function ShellPage() {
@@ -202,7 +216,8 @@ export default function ShellPage() {
       return;
     }
 
-    switch (command.toLowerCase()) {
+    const normalizedCommand = command.toLowerCase();
+    switch (normalizedCommand) {
       case "help":
         appendEntry({ type: "output", text: HELP_TEXT });
         break;
@@ -223,6 +238,12 @@ export default function ShellPage() {
           text: "Sakai Shell v1.0 • Minimal boot console environment.",
         });
         break;
+      case "ls":
+        appendEntry({
+          type: "output",
+          text: COMMAND_LIST.join("\n"),
+        });
+        break;
       case "cat about.profile": {
         const nextRevealKey = profileRevealKey + 1;
         setShowPixelCanvas(true);
@@ -231,6 +252,44 @@ export default function ShellPage() {
         break;
       }
       default:
+        if (normalizedCommand.startsWith("man")) {
+          const target = normalizedCommand.replace(/^man\s*/, "").trim();
+          if (!target) {
+            appendEntry({
+              type: "output",
+              text: "Usage: man [command]. Example: man help",
+            });
+            break;
+          }
+
+          const manPages: Record<string, string> = {
+            help: "help - show the list of commands",
+            clear: "clear - clear the terminal output",
+            exit: "exit - return to GUI",
+            shutdown: "shutdown - return to bootloader",
+            about: "about - short system info",
+            "cat about.profile": "cat about.profile - show profile card",
+            ls: "ls - list all available commands",
+            man: "man [command] - show command help",
+          };
+
+          const resolvedKey =
+            manPages[target]
+              ? target
+              : manPages[normalizedCommand.slice(4)]
+                ? normalizedCommand.slice(4)
+                : "";
+
+          if (resolvedKey && manPages[resolvedKey]) {
+            appendEntry({ type: "output", text: manPages[resolvedKey] });
+          } else {
+            appendEntry({
+              type: "output",
+              text: `No manual entry for ${target}. Try 'ls' for commands.`,
+            });
+          }
+          break;
+        }
         appendEntry({
           type: "output",
           text: `Command not found: ${command}. Type 'help' for options.`,
