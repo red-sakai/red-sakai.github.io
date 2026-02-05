@@ -9,6 +9,15 @@ export default function GrubBootloaderPage() {
   const [hasInteracted, setHasInteracted] = useState(false);
   const router = useRouter();
 
+  const handleSelect = (mode: "GUI" | "Shell") => {
+    setHasInteracted(true);
+    if (mode === selection) {
+      router.push(mode === "GUI" ? "/gui-loading" : "/shell");
+      return;
+    }
+    setSelection(mode);
+  };
+
   const selectedHref = useMemo(() => {
     return selection === "GUI" ? "/gui-loading" : "/shell";
   }, [selection]);
@@ -53,10 +62,7 @@ export default function GrubBootloaderPage() {
         <div className="border border-white/20 bg-black/60 p-2">
           <button
             type="button"
-            onClick={() => {
-              setHasInteracted(true);
-              setSelection("GUI");
-            }}
+            onClick={() => handleSelect("GUI")}
             className={
               "flex w-full items-center px-2 py-1 text-sm " +
               (selection === "GUI" ? "bg-white text-black" : "text-white/70")
@@ -66,10 +72,7 @@ export default function GrubBootloaderPage() {
           </button>
           <button
             type="button"
-            onClick={() => {
-              setHasInteracted(true);
-              setSelection("Shell");
-            }}
+            onClick={() => handleSelect("Shell")}
             className={
               "flex w-full items-center px-2 py-1 text-sm " +
               (selection === "Shell" ? "bg-white text-black" : "text-white/70")
@@ -79,9 +82,20 @@ export default function GrubBootloaderPage() {
           </button>
         </div>
 
+        <button
+          type="button"
+          onClick={() => {
+            setHasInteracted(true);
+            router.push(selectedHref);
+          }}
+          className="mt-3 w-full border border-white/20 bg-white/10 px-3 py-2 text-xs uppercase tracking-[0.3em] text-white/80 transition hover:bg-white/20"
+        >
+          Boot selected entry
+        </button>
+
         <div className="mt-4 text-xs text-white/50">
           {hasInteracted
-            ? "Press Enter to boot selected entry."
+            ? "Tap the selected entry or press Enter to boot."
             : `The highlighted entry will be booted automatically in ${countdown} seconds.`}
         </div>
 
@@ -89,7 +103,8 @@ export default function GrubBootloaderPage() {
           Use the ↑ and ↓ keys to select which entry is highlighted.
         </div>
         <div className="text-xs text-white/45">
-          Press Enter to boot the selected OS, &#39;e&#39; to edit, or &#39;c&#39; for a command line.
+          Tap the highlighted entry to boot, press Enter to boot, &#39;e&#39; to edit, or &#39;c&#39; for a
+          command line.
         </div>
       </div>
     </main>
