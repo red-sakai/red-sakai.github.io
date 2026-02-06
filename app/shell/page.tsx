@@ -56,6 +56,7 @@ export default function ShellPage() {
   const [profileRevealKey, setProfileRevealKey] = useState(1);
   const [isProfileImageReady, setIsProfileImageReady] = useState(false);
   const [showPixelCanvas, setShowPixelCanvas] = useState(true);
+  const [isExitModalOpen, setIsExitModalOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const profileImageRef = useRef<HTMLImageElement | null>(null);
@@ -326,9 +327,50 @@ export default function ShellPage() {
           >
             <TerminalNavbar
               className="mb-5"
-              onClose={() => router.push("/grub-bootloader")}
+              onClose={() => setIsExitModalOpen(true)}
             />
           </div>
+
+          {isExitModalOpen && (
+            <div
+              className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 px-6"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Exit confirmation"
+              onClick={() => setIsExitModalOpen(false)}
+            >
+              <div
+                className="terminal-pop w-full max-w-md rounded-xl border border-emerald-200/30 bg-black/90 p-6 text-emerald-100 shadow-[0_0_40px_rgba(16,185,129,0.18)]"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <h2 className="text-lg font-semibold text-emerald-100">
+                  Are you sure you want to exit?
+                </h2>
+                <p className="mt-2 text-sm text-emerald-200/70">
+                  You will be returned to the bootloader.
+                </p>
+                <div className="mt-5 flex flex-wrap justify-end gap-3">
+                  <button
+                    type="button"
+                    className="rounded-md border border-emerald-200/30 px-4 py-2 text-sm text-emerald-100 transition hover:border-emerald-200/60 hover:bg-emerald-200/10"
+                    onClick={() => setIsExitModalOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-md bg-red-500/90 px-4 py-2 text-sm font-semibold text-white shadow-[0_0_12px_rgba(239,68,68,0.5)] transition hover:bg-red-500"
+                    onClick={() => {
+                      setIsExitModalOpen(false);
+                      router.push("/grub-bootloader");
+                    }}
+                  >
+                    Exit
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div
             ref={scrollRef}
