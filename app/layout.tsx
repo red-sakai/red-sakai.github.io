@@ -17,9 +17,56 @@ const jetBrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const siteUrl = "https://jhered.me";
+
 export const metadata: Metadata = {
-  title: "Jhered | Portfolio",
-  description: "My Portfolio",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Jhered Miguel Republica | Portfolio",
+    template: "%s | Jhered Miguel Republica",
+  },
+  description:
+    "Jhered Miguel Republica portfolio featuring projects, experience, certifications, and contact details.",
+  keywords: [
+    "Jhered",
+    "Jhered Republica",
+    "Jhered Miguel Republica",
+    "portfolio",
+    "software engineer",
+    "web developer",
+    "projects",
+    "experience",
+    "certifications",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Jhered Miguel Republica | Portfolio",
+    description:
+      "Jhered Miguel Republica portfolio featuring projects, experience, certifications, and contact details.",
+    url: siteUrl,
+    siteName: "Jhered Miguel Republica",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Jhered Miguel Republica | Portfolio",
+    description:
+      "Jhered Miguel Republica portfolio featuring projects, experience, certifications, and contact details.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
