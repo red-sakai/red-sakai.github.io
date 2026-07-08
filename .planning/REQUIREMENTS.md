@@ -32,6 +32,17 @@
 - **LENIS-06**: Custom speed/easing per section
 - **LENIS-07**: Scroll progress indicator driven by Lenis
 
+### Retro Desktop Mode
+
+- [ ] **DESKTOP-01**: GRUB bootloader redesigned with CRT scanline effects, offering "Normal Mode" and "Retro Desktop Mode" as two boot options
+- [ ] **DESKTOP-02**: `/desktop` route renders a Windows 98-inspired desktop with classic teal wallpaper (#008080), desktop icons, taskbar, and start menu
+- [ ] **DESKTOP-03**: Taskbar displays at bottom with Start button, open window buttons, system tray with clock
+- [ ] **DESKTOP-04**: Start menu opens on Start button click with program list and "Shut Down..." option; closes on outside click
+- [ ] **DESKTOP-05**: Desktop icons (My Computer, Projects, About Me, Paint, Control Panel) open corresponding programs on double-click
+- [ ] **DESKTOP-06**: Windows are draggable, resizable (via southeast handle), with minimize/maximize/close buttons; z-order management on focus
+- [ ] **DESKTOP-07**: Four programs functional: About Me (notepad with bio), File Explorer (browses portfolio data), Paint (canvas drawing with colors), Control Panel (appearance settings)
+- [ ] **DESKTOP-08**: Retro sound effects via Web Audio API — startup chime, window open/close, click, error beep; responsive adaptation for mobile
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -45,25 +56,35 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| LENIS-01 | Phase 1 | Pending |
-| LENIS-02 | Phase 1 | Pending |
-| LENIS-03 | Phase 1 | Pending |
-| LENIS-04 | Phase 1 | Pending |
-| REVEAL-01 | Phase 1 | Pending |
-| REVEAL-02 | Phase 1 | Pending |
-| REVEAL-03 | Phase 1 | Pending |
-| REVEAL-04 | Phase 1 | Pending |
-| COMPAT-01 | Phase 1 | Pending |
-| COMPAT-02 | Phase 1 | Pending |
-| COMPAT-03 | Phase 1 | Pending |
-| COMPAT-04 | Phase 1 | Pending |
-| COMPAT-05 | Phase 1 | Pending |
+| LENIS-01 | Phase 1 | Complete |
+| LENIS-02 | Phase 1 | Complete |
+| LENIS-03 | Phase 1 | Complete |
+| LENIS-04 | Phase 1 | Complete |
+| REVEAL-01 | Phase 1 | Complete |
+| REVEAL-02 | Phase 1 | Complete |
+| REVEAL-03 | Phase 1 | Complete |
+| REVEAL-04 | Phase 1 | Complete |
+| COMPAT-01 | Phase 1 | Complete |
+| COMPAT-02 | Phase 1 | Complete |
+| COMPAT-03 | Phase 1 | Complete |
+| COMPAT-04 | Phase 1 | Complete |
+| COMPAT-05 | Phase 1 | Complete |
+| DESKTOP-01 | Phase 2 | Pending |
+| DESKTOP-02 | Phase 2 | Pending |
+| DESKTOP-03 | Phase 2 | Pending |
+| DESKTOP-04 | Phase 2 | Pending |
+| DESKTOP-05 | Phase 2 | Pending |
+| DESKTOP-06 | Phase 2 | Pending |
+| DESKTOP-07 | Phase 2 | Pending |
+| DESKTOP-08 | Phase 2 | Pending |
 
 **Coverage:**
 - v1 requirements: 13 total
-- Mapped to phases: 13
+- v2 requirements: 2 total (carried forward)
+- v2 phase requirements: 8 total
+- Mapped to phases: 23
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-07-08*
-*Last updated: 2026-07-08 after initial definition*
+*Last updated: 2026-07-08 — Phase 2 added*
