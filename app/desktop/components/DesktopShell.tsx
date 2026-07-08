@@ -12,6 +12,7 @@ import AboutMeWindow from "./programs/AboutMeWindow";
 import FileExplorer from "./programs/FileExplorer";
 import PaintClone from "./programs/PaintClone";
 import ControlPanel from "./programs/ControlPanel";
+import { JH_LOGO } from "../data/jhered-os-logo";
 import "../desktop.css";
 
 const programList = [
@@ -175,9 +176,9 @@ export default function DesktopShell() {
           }}
         />
         <div style={{ position: "relative", zIndex: 2, width: 520, maxWidth: "90vw" }}>
-          <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: 4, textAlign: "center", marginBottom: 20, color: "#00cc33" }}>
-            JHERE<span style={{ color: "#00ff41" }}>D OS</span>
-          </div>
+          <pre style={{ fontSize: 10, lineHeight: 1.25, marginBottom: 20, color: "#00cc33", textAlign: "center" }}>
+            {JH_LOGO}
+          </pre>
           <div style={{ border: "1px solid rgba(0,255,65,0.15)", padding: "16px 20px", background: "rgba(0,255,65,0.02)" }}>
             {biosLine >= 1 && (
               <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>

@@ -2,13 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { JH_LOGO } from "../desktop/data/jhered-os-logo";
 import "../desktop/desktop.css";
-
-  const JH_LOGO = [
-  "╔══════════════════════════════════════╗",
-  "║         JHERED OS  v1.0              ║",
-  "╚══════════════════════════════════════╝",
-];
 
 export default function DesktopLoadingPage() {
   const router = useRouter();
@@ -72,7 +67,7 @@ export default function DesktopLoadingPage() {
       />
       <div style={{ position: "relative", zIndex: 2, width: 520, maxWidth: "90vw" }}>
         <pre style={{ fontSize: 10, lineHeight: 1.25, marginBottom: 20, color: "#00cc33", textAlign: "center" }}>
-          {JH_LOGO.join("\n")}
+          {JH_LOGO}
         </pre>
 
         <div style={{ border: "1px solid rgba(0,255,65,0.15)", padding: "16px 20px", background: "rgba(0,255,65,0.02)" }}>
