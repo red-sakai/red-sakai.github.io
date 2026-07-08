@@ -6,7 +6,7 @@ export interface WindowState {
   id: string;
   title: string;
   icon: string;
-  component: "about" | "explorer" | "paint" | "controlpanel";
+  component: "about" | "portfolio" | "explorer" | "paint" | "controlpanel";
   x: number;
   y: number;
   width: number;
@@ -24,26 +24,30 @@ export function useWindowManager() {
   const openWindow = useCallback(
     (component: WindowState["component"]) => {
       const id = `win-${++idCounter.current}`;
-      const offsets = { about: 0, explorer: 30, paint: 60, controlpanel: 90 };
+      const offsets: Record<string, number> = { about: 0, portfolio: 15, explorer: 30, paint: 60, controlpanel: 90 };
       const offset = offsets[component];
       const newWin: WindowState = {
         id,
         title:
           component === "about"
             ? "About Me - Notepad"
-            : component === "explorer"
-              ? "File Explorer"
-              : component === "paint"
-                ? "Paint"
-                : "Control Panel",
+            : component === "portfolio"
+              ? "My Portfolio"
+              : component === "explorer"
+                ? "File Explorer"
+                : component === "paint"
+                  ? "Paint"
+                  : "Control Panel",
         icon:
           component === "about"
             ? "📄"
-            : component === "explorer"
-              ? "📁"
-              : component === "paint"
-                ? "🎨"
-                : "⚙️",
+            : component === "portfolio"
+              ? "🏠"
+              : component === "explorer"
+                ? "📁"
+                : component === "paint"
+                  ? "🎨"
+                  : "⚙️",
         component,
         x: 50 + offset,
         y: 30 + offset,

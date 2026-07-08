@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Sora, JetBrains_Mono } from "next/font/google";
+import { Sora, JetBrains_Mono, Press_Start_2P } from "next/font/google";
 import Script from "next/script";
 import { LenisProvider } from "./components/providers/LenisProvider";
 import "./globals.css";
@@ -15,6 +15,13 @@ const jetBrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const pressStart2P = Press_Start_2P({
+  variable: "--font-pixel",
+  subsets: ["latin"],
+  weight: ["400"],
   display: "swap",
 });
 
@@ -78,7 +85,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${sora.variable} ${jetBrainsMono.variable} antialiased`}
+        className={`${sora.variable} ${jetBrainsMono.variable} ${pressStart2P.variable} antialiased`}
       >
         <Script
           src="https://unpkg.com/@google/model-viewer@4/dist/model-viewer.min.js"

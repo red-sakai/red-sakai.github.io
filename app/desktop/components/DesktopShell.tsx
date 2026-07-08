@@ -14,17 +14,20 @@ import AboutMeWindow from "./programs/AboutMeWindow";
 import FileExplorer from "./programs/FileExplorer";
 import PaintClone from "./programs/PaintClone";
 import ControlPanel from "./programs/ControlPanel";
+import PortfolioViewer from "./programs/PortfolioViewer";
 import { JH_LOGO } from "../data/jhered-os-logo";
 import "../desktop.css";
 
 const programList = [
   { id: "about", icon: "📄", label: "About Me" },
+  { id: "portfolio", icon: "🏠", label: "My Portfolio" },
   { id: "explorer", icon: "📁", label: "File Explorer" },
   { id: "paint", icon: "🎨", label: "Paint" },
   { id: "controlpanel", icon: "⚙️", label: "Control Panel" },
 ];
 
 const desktopIcons = [
+  { id: "portfolio", icon: "🏠", label: "My Portfolio" },
   { id: "explorer", icon: "💻", label: "My Computer" },
   { id: "explorer", icon: "📁", label: "Projects" },
   { id: "about", icon: "📄", label: "About Me" },
@@ -38,6 +41,7 @@ const iconPositions = [
   { top: 20, left: 220 },
   { top: 20, left: 320 },
   { top: 20, left: 420 },
+  { top: 20, left: 520 },
 ];
 
 export default function DesktopShell() {
@@ -90,7 +94,7 @@ export default function DesktopShell() {
   const handleOpenProgram = useCallback(
     (id: string) => {
       sounds.play("open");
-      openWindow(id as "about" | "explorer" | "paint" | "controlpanel");
+      openWindow(id as "about" | "portfolio" | "explorer" | "paint" | "controlpanel");
       setStartOpen(false);
     },
     [sounds, openWindow],
@@ -144,7 +148,7 @@ export default function DesktopShell() {
   const handleIconOpen = useCallback(
     (id: string) => {
       sounds.play("open");
-      openWindow(id as "about" | "explorer" | "paint" | "controlpanel");
+      openWindow(id as "about" | "portfolio" | "explorer" | "paint" | "controlpanel");
     },
     [sounds, openWindow],
   );
@@ -197,6 +201,7 @@ export default function DesktopShell() {
           currentWallpaper={wallpaper}
         />
       );
+      case "portfolio": return <PortfolioViewer />;
       default: return null;
     }
   };

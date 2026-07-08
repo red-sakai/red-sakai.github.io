@@ -2,12 +2,13 @@
 
 ## Phase Overview
 
-**2 phases** | **21 requirements mapped** | Phase 1 complete ✓
+**3 phases** | **21 requirements mapped** | Phase 1 complete ✓
 
 | # | Phase | Goal | Requirements | Success Criteria |
 |---|-------|------|--------------|------------------|
 | 1 | Lenis Integration | Install Lenis, wire globally, refactor reveals to use Lenis scroll events | LENIS-01–04, REVEAL-01–04, COMPAT-01–05 | 8 |
 | 2 | Retro Desktop Mode | Win98-style retro desktop at `/desktop` with GRUB bootloader, interactive programs, sounds | DESKTOP-01–08 | 6 |
+| 3 | Portfolio Desktop Shortcut | Add "My Portfolio" desktop shortcut with pixel-art portfolio viewer | — | 3 |
 
 ### Phase 1: Lenis Integration ✅
 
@@ -28,3 +29,12 @@
 4. Windows are draggable, resizable, minimize/maximize/close functional
 5. Startup chime and UI sound effects via Web Audio API
 6. `npm run build` succeeds with zero errors
+
+### Phase 3: Portfolio Desktop Shortcut
+
+**Goal:** Add a "My Portfolio" desktop icon on the retro desktop that opens a pixel-art-styled portfolio viewer reading from JSON data.
+
+**Success Criteria:**
+1. "My Portfolio" desktop icon visible on the retro desktop
+2. Double-click opens a pixel-art viewer with tabs for Education, Experience, Projects, Certifications
+3. All content is pixel-art styled but still readable
