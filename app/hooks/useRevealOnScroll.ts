@@ -1,33 +1,40 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLenis } from "lenis/react";
 
-export function useRevealOnScroll<T extends Element>(options?: IntersectionObserverInit) {
+export function useRevealOnScroll<T extends Element>() {
   const ref = useRef<T | null>(null);
   const [visible, setVisible] = useState(false);
+  const revealedRef = useRef(false);
+  const lenis = useLenis();
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node || revealedRef.current) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      {
-        rootMargin: "0px 0px -10% 0px",
-        threshold: 0.15,
-        ...options,
+    const checkVisibility = () => {
+      if (!node || revealedRef.current) return;
+      const rect = node.getBoundingClientRect();
+      const threshold = window.innerHeight * 0.85;
+      if (rect.top < threshold) {
+        revealedRef.current = true;
+        setVisible(true);
       }
-    );
+    };
 
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [options]);
+    checkVisibility();
+
+    if (lenis) {
+      lenis.on("scroll", checkVisibility);
+    }
+
+    return () => {
+      if (lenis) {
+        lenis.off("scroll", checkVisibility);
+      }
+    };
+  }, [lenis]);
 
   return { ref, visible } as const;
 }

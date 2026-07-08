@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
+import { LenisProvider } from "./components/providers/LenisProvider";
 import "./globals.css";
 
 const sora = Sora({
@@ -84,7 +85,7 @@ export default function RootLayout({
           type="module"
           strategy="afterInteractive"
         />
-        {children}
+        <LenisProvider>{children}</LenisProvider>
       </body>
     </html>
   );

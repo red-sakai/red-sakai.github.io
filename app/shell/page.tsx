@@ -374,6 +374,7 @@ export default function ShellPage() {
 
           <div
             ref={scrollRef}
+            data-lenis-prevent
             className={
               "terminal-scrollbar min-h-0 flex-1 space-y-3 overflow-y-auto border border-emerald-200/20 bg-black/60 p-4 text-[15px] transition-all duration-500 ease-out " +
               (hasMounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")
