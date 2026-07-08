@@ -352,30 +352,6 @@
   z-index: 20001;
 }
 
-/* ── Pixel-art viewer styles ── */
-
-.pixel-content {
-  position: relative;
-  z-index: 2;
-}
-
-.pixel-content::-webkit-scrollbar {
-  width: 8px;
-}
-
-.pixel-content::-webkit-scrollbar-track {
-  background: #0a0a0a;
-}
-
-.pixel-content::-webkit-scrollbar-thumb {
-  background: #33ff33;
-  border: 1px solid #0a0a0a;
-}
-
-.pixel-tab:hover {
-  color: #33ff33 !important;
-}
-
 .pixelated-wrapper {
   image-rendering: pixelated;
   -ms-interpolation-mode: nearest-neighbor;
@@ -385,55 +361,4 @@
   image-rendering: pixelated !important;
   image-rendering: -moz-crisp-edges !important;
   image-rendering: crisp-edges !important;
-}
-
-.pixelated-wrapper h1,
-.pixelated-wrapper h2,
-.pixelated-wrapper h3,
-.pixelated-wrapper p,
-.pixelated-wrapper span,
-.pixelated-wrapper a,
-.pixelated-wrapper button,
-.pixelated-wrapper li,
-.pixelated-wrapper label {
-  font-family: "Press Start 2P", "Courier New", monospace !important;
-  -webkit-font-smoothing: none !important;
-  -moz-osx-font-smoothing: unset !important;
-  font-smooth: never !important;
-}
-
-.pixelated-wrapper a {
-  color: #33ff33 !important;
-  text-decoration: underline !important;
-}
-
-.pixelated-wrapper a:hover {
-  color: #ffb000 !important;
-}
-
-.pixelated-wrapper section {
-  background: transparent !important;
-  border: 2px solid #1a1a1a !important;
-  border-radius: 0 !important;
-  padding: 8px !important;
-  margin-bottom: 8px !important;
-  box-shadow: none !important;
-}
-
-.pixelated-wrapper section > div {
-  background: transparent !important;
-}
-
-.pixelated-wrapper .rounded-3xl {
-  border-radius: 0 !important;
-}
-
-.pixelated-wrapper .shadow-lg,
-.pixelated-wrapper .shadow-2xl,
-.pixelated-wrapper .shadow-xl {
-  box-shadow: none !important;
-}
-
-.pixelated-wrapper .backdrop-blur-0 {
-  backdrop-filter: none !important;
 }
