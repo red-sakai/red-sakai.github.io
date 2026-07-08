@@ -1,3 +1,3 @@
-/// <reference path="./app/types/model-viewer.d.ts" />
+import "./app/types/model-viewer.d.ts";
 declare module "*.css";
 export {};

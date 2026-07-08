@@ -1,0 +1,474 @@
+@keyframes scanlines {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 4px; }
+}
+
+.desktop-scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanlines 8s linear infinite;
+}
+
+.crt-curve::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.35) 100%);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+.win98-window {
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  outline: 1px solid #000;
+  position: absolute;
+  font-family: "MS Sans Serif", "Chicago", "Segoe UI", sans-serif;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.win98-titlebar {
+  background: linear-gradient(90deg, #000080, #1084d0);
+  color: #fff;
+  padding: 2px 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: default;
+  user-select: none;
+  height: 18px;
+}
+
+.win98-titlebar-inactive {
+  background: linear-gradient(90deg, #808080, #b4b4b4);
+}
+
+.win98-title-buttons { display: flex; gap: 2px; }
+
+.win98-title-btn {
+  width: 16px;
+  height: 14px;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  outline: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  color: #000;
+}
+
+.win98-title-btn:active {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+}
+
+.win98-taskbar {
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  padding: 0 2px;
+  gap: 2px;
+  z-index: 9000;
+  font-family: "MS Sans Serif", "Chicago", "Segoe UI", sans-serif;
+}
+
+.win98-start-btn {
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  outline: 1px solid #000;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "MS Sans Serif", "Chicago", "Segoe UI", sans-serif;
+  color: #000;
+  height: 22px;
+  white-space: nowrap;
+}
+
+.win98-start-btn:active,
+.win98-start-btn.pressed {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+}
+
+.win98-start-menu {
+  position: fixed;
+  bottom: 30px;
+  left: 0;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  outline: 1px solid #000;
+  display: flex;
+  z-index: 9100;
+  font-family: "MS Sans Serif", "Chicago", "Segoe UI", sans-serif;
+}
+
+.win98-start-sidebar {
+  background: linear-gradient(180deg, #000080, #000000);
+  width: 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.win98-start-sidebar span {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+.win98-start-items { display: flex; flex-direction: column; min-width: 180px; }
+
+.win98-start-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-size: 11px;
+  cursor: pointer;
+  color: #000;
+}
+
+.win98-start-item:hover { background: #000080; color: #fff; }
+
+.win98-start-divider {
+  border-top: 1px solid #808080;
+  border-bottom: 1px solid #fff;
+  margin: 3px 6px;
+}
+
+.win98-tray {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  padding: 0 6px;
+  margin-left: auto;
+  font-size: 11px;
+  color: #000;
+}
+
+.win98-taskbar-btn {
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  outline: 1px solid #000;
+  padding: 1px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #000;
+  height: 22px;
+}
+
+.win98-taskbar-btn.active {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+}
+
+.win98-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  cursor: se-resize;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+}
+
+.win98-icon-label {
+  color: #fff;
+  text-shadow:
+    1px 1px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000;
+  font-size: 11px;
+  font-family: "MS Sans Serif", "Chicago", "Segoe UI", sans-serif;
+  text-align: center;
+  word-wrap: break-word;
+  max-width: 75px;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .win98-window {
+    width: calc(100vw - 12px) !important;
+    height: calc(100dvh - 42px) !important;
+    left: 4px !important;
+    top: 4px !important;
+  }
+  .win98-resize-handle { display: none; }
+  .win98-icon-label { font-size: 10px; }
+  .win98-start-menu { left: 0; right: auto; }
+}
+
+@keyframes boot-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes grub-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.win98-context-menu {
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  outline: 1px solid #000;
+  padding: 2px;
+  font-family: "MS Sans Serif", "Chicago", "Segoe UI", sans-serif;
+  font-size: 11px;
+  min-width: 160px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+  user-select: none;
+}
+
+.win98-context-item {
+  display: flex;
+  align-items: center;
+  padding: 3px 20px 3px 4px;
+  cursor: pointer;
+  color: #000;
+  position: relative;
+  white-space: nowrap;
+}
+
+.win98-context-item:hover {
+  background: #000080;
+  color: #fff;
+}
+
+.win98-context-item.disabled {
+  color: #808080;
+  cursor: default;
+}
+
+.win98-context-item.disabled:hover {
+  background: transparent;
+  color: #808080;
+}
+
+.win98-context-separator {
+  border-top: 1px solid #808080;
+  border-bottom: 1px solid #fff;
+  margin: 3px 6px;
+}
+
+.win98-context-icon {
+  width: 16px;
+  text-align: center;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.win98-context-label {
+  flex: 1;
+}
+
+.win98-context-arrow {
+  margin-left: auto;
+  font-size: 9px;
+  padding-left: 12px;
+}
+
+.win98-context-submenu {
+  position: absolute;
+  left: 100%;
+  top: -3px;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  outline: 1px solid #000;
+  padding: 2px;
+  min-width: 140px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+  z-index: 20001;
+}
+
+.pixelated-wrapper {
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+.pixelated-content {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.pixelated-content img {
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+}
+
+/* Force sections inside PixelatedWrapper to always be visible
+   (overrides useRevealOnScroll which depends on Lenis events that
+    don't fire inside the desktop window container) */
+.pixelated-wrapper section[id],
+.pixelated-wrapper footer[id] {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* ─────────────────────────────────────────────
+   Portfolio Viewer Dark Mode
+   Scoped overrides for section components inside
+   the viewer  (globals.css uses :root.dark which
+   doesn't match when class is on <main>)
+   ───────────────────────────────────────────── */
+
+.portfolio-viewer.portfolio-viewer-dark {
+  color-scheme: dark;
+}
+
+.portfolio-viewer.portfolio-viewer-dark * {
+  color: #e2e8f0 !important;
+}
+
+/* Revert accent colors */
+.portfolio-viewer.portfolio-viewer-dark .text-amber-600,
+.portfolio-viewer.portfolio-viewer-dark [class*="exp-tab"],
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-accent"],
+.portfolio-viewer.portfolio-viewer-dark [class*="cert-accent"] {
+  color: #fbbf24 !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark a:not([class*="btn"]):not(button) {
+  color: #93c5fd !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark button {
+  color: inherit !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark [class*="edu-card"],
+.portfolio-viewer.portfolio-viewer-dark [class*="exp-card"],
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-card"],
+.portfolio-viewer.portfolio-viewer-dark [class*="cert-card"] {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark [class*="edu-tag"],
+.portfolio-viewer.portfolio-viewer-dark [class*="exp-tag"],
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-tag"],
+.portfolio-viewer.portfolio-viewer-dark [class*="cert-tag"] {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-filter-active"] {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-link-repo"],
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-link-demo"] {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark footer {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(11, 18, 32, 0.8) !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-blue-300 {
+  color: #93c5fd !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-50 {
+  color: #f8fafc !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-100 {
+  color: #f1f5f9 !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-200,
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-200\/80,
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-200\/85 {
+  color: #e2e8f0 !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-300 {
+  color: #cbd5e1 !important;
+}
+
+@keyframes desktop-icon-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+.desktop-icon-blink {
+  animation: desktop-icon-blink 0.15s ease-in-out 4;
+}

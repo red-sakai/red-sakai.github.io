@@ -3,33 +3,38 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+const MODES = [
+  { id: "normal" as const, label: "Normal Mode (Portfolio)", href: "/gui-loading" },
+  { id: "desktop" as const, label: "Retro Desktop Mode", href: "/desktop-loading" },
+];
+
 export default function GrubBootloaderPage() {
-  const [selection, setSelection] = useState<"GUI" | "Shell">("GUI");
+  const [selection, setSelection] = useState<"normal" | "desktop">("normal");
   const [countdown, setCountdown] = useState(5);
   const [hasInteracted, setHasInteracted] = useState(false);
   const router = useRouter();
 
-  const handleSelect = (mode: "GUI" | "Shell") => {
+  const handleSelect = (mode: "normal" | "desktop") => {
     setHasInteracted(true);
     if (mode === selection) {
-      router.push(mode === "GUI" ? "/gui-loading" : "/shell");
+      router.push(mode === "normal" ? "/gui-loading" : "/desktop-loading");
       return;
     }
     setSelection(mode);
   };
 
-  const selectedHref = useMemo(() => {
-    return selection === "GUI" ? "/gui-loading" : "/shell";
-  }, [selection]);
+  const selectedHref = useMemo(
+    () => (selection === "normal" ? "/gui-loading" : "/desktop-loading"),
+    [selection],
+  );
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         event.preventDefault();
         setHasInteracted(true);
-        setSelection((current) => (current === "GUI" ? "Shell" : "GUI"));
+        setSelection((current) => (current === "normal" ? "desktop" : "normal"));
       }
-
       if (event.key === "Enter") {
         event.preventDefault();
         router.push(selectedHref);
@@ -45,66 +50,87 @@ export default function GrubBootloaderPage() {
       router.push(selectedHref);
       return;
     }
-    const timer = window.setTimeout(() => setCountdown((value) => value - 1), 1000);
+    const timer = window.setTimeout(() => setCountdown((v) => v - 1), 1000);
     return () => window.clearTimeout(timer);
   }, [countdown, hasInteracted, router, selectedHref]);
 
   return (
-    <main className="min-h-screen bg-black text-[#d1d5db]">
-      <div className="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-6 py-12 font-mono">
-        <div className="mb-6 flex items-center justify-between text-[11px] uppercase tracking-[0.4em] text-white/60">
-          <span>GNU GRUB</span>
-          <span>2.12</span>
+    <main
+      className="crt-curve"
+      style={{
+        minHeight: "100dvh",
+        background: "#0a0a0a",
+        color: "#00ff41",
+        fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+        position: "relative",
+      }}
+    >
+      <div
+        style={{
+          position: "fixed", inset: 0,
+          background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 65, 0.03) 2px, rgba(0, 255, 65, 0.03) 4px)",
+          pointerEvents: "none", zIndex: 1,
+        }}
+      />
+      <div style={{ position: "relative", zIndex: 2, maxWidth: 700, margin: "0 auto", padding: "40px 24px", minHeight: "100dvh", display: "flex", flexDirection: "column" }}>
+        <div style={{ marginBottom: 40, opacity: 0.7, display: "flex", justifyContent: "space-between", fontSize: 12 }}>
+          <span>GNU GRUB version 2.12</span>
+          <span>{new Date().getFullYear()}</span>
         </div>
 
-        <div className="mb-3 text-sm text-white/70">Select an entry to boot:</div>
+        <div style={{ marginBottom: 16, fontSize: 13, opacity: 0.8 }}>
+          Select an entry to boot:
+        </div>
 
-        <div className="border border-white/20 bg-black/60 p-2">
-          <button
-            type="button"
-            onClick={() => handleSelect("GUI")}
-            className={
-              "flex w-full items-center px-2 py-1 text-sm " +
-              (selection === "GUI" ? "bg-white text-black" : "text-white/70")
-            }
-          >
-            * GUI Mode
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSelect("Shell")}
-            className={
-              "flex w-full items-center px-2 py-1 text-sm " +
-              (selection === "Shell" ? "bg-white text-black" : "text-white/70")
-            }
-          >
-            * Shell Mode
-          </button>
+        <div style={{ border: "1px solid rgba(0,255,65,0.3)", background: "rgba(0,255,65,0.03)", padding: 4, marginBottom: 16 }}>
+          {MODES.map((mode) => (
+            <button
+              key={mode.id}
+              onClick={() => handleSelect(mode.id)}
+              style={{
+                display: "flex", alignItems: "center", gap: 8, width: "100%",
+                padding: "6px 10px", fontSize: 13, cursor: "pointer",
+                background: selection === mode.id ? "#00ff41" : "transparent",
+                color: selection === mode.id ? "#000" : "#00ff41",
+                border: "none", textAlign: "left",
+                fontFamily: "inherit",
+              }}
+            >
+              <span style={{ visibility: selection === mode.id ? "visible" : "hidden" }}>{">"}</span>
+              <span>{mode.label}</span>
+            </button>
+          ))}
         </div>
 
         <button
-          type="button"
-          onClick={() => {
-            setHasInteracted(true);
-            router.push(selectedHref);
+          onClick={() => { setHasInteracted(true); router.push(selectedHref); }}
+          style={{
+            background: "transparent", border: "1px solid rgba(0,255,65,0.4)",
+            color: "#00ff41", padding: "8px 16px", fontSize: 12, cursor: "pointer",
+            fontFamily: "inherit", textTransform: "uppercase", letterSpacing: "0.3em",
+            marginBottom: 16, transition: "background 0.2s",
           }}
-          className="mt-3 w-full border border-white/20 bg-white/10 px-3 py-2 text-xs uppercase tracking-[0.3em] text-white/80 transition hover:bg-white/20"
+          onMouseEnter={(e) => { (e.target as HTMLButtonElement).style.background = "rgba(0,255,65,0.1)"; }}
+          onMouseLeave={(e) => { (e.target as HTMLButtonElement).style.background = "transparent"; }}
         >
           Boot selected entry
         </button>
 
-        <div className="mt-4 text-xs text-white/50">
-          {hasInteracted
-            ? "Tap the selected entry or press Enter to boot."
-            : `The highlighted entry will be booted automatically in ${countdown} seconds.`}
+        <div style={{ fontSize: 12, opacity: 0.5, lineHeight: 1.8 }}>
+          {hasInteracted ? (
+            "Tap the selected entry or press Enter to boot."
+          ) : (
+            <>
+              The highlighted entry will be booted automatically in{" "}
+              <span style={{ fontWeight: 700, opacity: 0.8 }}>{countdown}</span> seconds.
+            </>
+          )}
         </div>
 
-        <div className="mt-8 text-xs text-white/45">
-          Use the ↑ and ↓ keys to select which entry is highlighted.
-        </div>
-        <div className="text-xs text-white/45">
-          Tap the highlighted entry to boot, press Enter to boot, &#39;e&#39; to edit, or &#39;c&#39; for a
-          command line.
+        <div style={{ marginTop: "auto", paddingTop: 40, fontSize: 11, opacity: 0.4, lineHeight: 1.6 }}>
+          <div>Use the ↑ and ↓ keys to select which entry is highlighted.</div>
+          <div>Press Enter to boot, &apos;e&apos; to edit, or &apos;c&apos; for a command line.</div>
+          <div style={{ marginTop: 8, animation: "grub-blink 1s step-end infinite" }}>_</div>
         </div>
       </div>
     </main>

@@ -5,11 +5,11 @@
 See: .planning/PROJECT.md (updated 2026-07-08)
 
 **Core value:** Provide a fast, visually clean portfolio that showcases Jhered's work and lets visitors explore with a smooth, polished experience.
-**Current focus:** Phase 1 — Lenis Integration
+**Current focus:** Phase 3 — Portfolio Desktop Shortcut
 
 ## Current Phase
 
-**Phase 1: Lenis Integration** — Installing and configuring Lenis smooth scroll, refactoring reveal animations to use Lenis scroll events.
+**Phase 3: Portfolio Desktop Shortcut** — Add "My Portfolio" desktop icon with pixel-art portfolio viewer.
 
 Progress: ██████████ 100%
 Status: Complete ✓
@@ -19,6 +19,8 @@ Status: Complete ✓
 | Phase | Status |
 |-------|--------|
 | 1 | ✓ Complete |
+| 2 | ✓ Complete |
+| 3 | ✓ Complete |
 
 ## Artifacts
 
