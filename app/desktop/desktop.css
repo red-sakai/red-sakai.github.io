@@ -354,39 +354,6 @@
 
 /* ── Pixel-art viewer styles ── */
 
-.pixel-viewer {
-  --pixel-green: #33ff33;
-  --pixel-amber: #ffb000;
-  --pixel-white: #c0c0c0;
-  --pixel-dark: #0a0a0a;
-  --pixel-border: #1a1a1a;
-}
-
-.pixel-scanlines {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 255, 51, 0.03) 2px,
-    rgba(0, 255, 51, 0.03) 4px
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-
-.pixel-grid-overlay {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(0, 255, 51, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 51, 0.04) 1px, transparent 1px);
-  background-size: 16px 16px;
-  pointer-events: none;
-  z-index: 1;
-}
-
 .pixel-content {
   position: relative;
   z-index: 2;
@@ -405,128 +372,68 @@
   border: 1px solid #0a0a0a;
 }
 
-.pixel-card {
-  border: 2px solid #1a1a1a;
-  margin-bottom: 6px;
-  background: #0d0d0d;
-}
-
-.pixel-card-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  border-bottom: 1px solid #1a1a1a;
-  font-family: var(--font-pixel), monospace;
-  font-size: 9px;
-  color: #33ff33;
-  letter-spacing: 0.5px;
-}
-
-.pixel-card-body {
-  padding: 6px 8px;
-}
-
-.pixel-arrow {
-  color: #33ff33;
-  font-family: var(--font-pixel), monospace;
-  font-size: 8px;
-}
-
-.pixel-meta {
-  font-size: 10px;
-  color: #ffb000;
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.pixel-placement {
-  font-size: 9px;
-  color: #33ff33;
-  font-family: var(--font-pixel), monospace;
-  margin-bottom: 2px;
-}
-
-.pixel-date {
-  font-size: 9px;
-  color: #666;
-  margin-bottom: 4px;
-}
-
-.pixel-desc {
-  font-size: 10px;
-  color: #c0c0c0;
-  margin: 4px 0;
-  line-height: 1.4;
-}
-
-.pixel-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  margin-top: 4px;
-}
-
-.pixel-tag {
-  font-size: 8px;
-  padding: 1px 4px;
-  border: 1px solid #33ff33;
-  color: #33ff33;
-  font-family: var(--font-pixel), monospace;
-  letter-spacing: 0.5px;
-}
-
-.pixel-status {
-  margin-left: auto;
-  font-family: var(--font-pixel), monospace;
-  font-size: 8px;
-}
-
-.pixel-status-shipped { color: #33ff33; }
-.pixel-status-in-progress { color: #ffb000; }
-.pixel-status-beta { color: #ffb000; }
-.pixel-status-discontinued { color: #666; }
-
-.pixel-list {
-  list-style: none;
-  padding: 0;
-  margin: 4px 0;
-}
-
-.pixel-list-item {
-  font-size: 9px;
-  color: #c0c0c0;
-  padding: 1px 0;
-  line-height: 1.3;
-}
-
-.pixel-bullet {
-  color: #33ff33;
-  font-family: var(--font-pixel), monospace;
-  font-size: 8px;
-  margin-right: 4px;
-}
-
-.pixel-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.pixel-link {
-  font-size: 9px;
-  color: #33ff33;
-  text-decoration: none;
-  font-family: var(--font-pixel), monospace;
-  letter-spacing: 0.5px;
-}
-
-.pixel-link:hover {
-  color: #ffb000;
-  text-decoration: underline;
-}
-
 .pixel-tab:hover {
   color: #33ff33 !important;
+}
+
+.pixelated-wrapper {
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+.pixelated-wrapper img {
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+}
+
+.pixelated-wrapper h1,
+.pixelated-wrapper h2,
+.pixelated-wrapper h3,
+.pixelated-wrapper p,
+.pixelated-wrapper span,
+.pixelated-wrapper a,
+.pixelated-wrapper button,
+.pixelated-wrapper li,
+.pixelated-wrapper label {
+  font-family: "Press Start 2P", "Courier New", monospace !important;
+  -webkit-font-smoothing: none !important;
+  -moz-osx-font-smoothing: unset !important;
+  font-smooth: never !important;
+}
+
+.pixelated-wrapper a {
+  color: #33ff33 !important;
+  text-decoration: underline !important;
+}
+
+.pixelated-wrapper a:hover {
+  color: #ffb000 !important;
+}
+
+.pixelated-wrapper section {
+  background: transparent !important;
+  border: 2px solid #1a1a1a !important;
+  border-radius: 0 !important;
+  padding: 8px !important;
+  margin-bottom: 8px !important;
+  box-shadow: none !important;
+}
+
+.pixelated-wrapper section > div {
+  background: transparent !important;
+}
+
+.pixelated-wrapper .rounded-3xl {
+  border-radius: 0 !important;
+}
+
+.pixelated-wrapper .shadow-lg,
+.pixelated-wrapper .shadow-2xl,
+.pixelated-wrapper .shadow-xl {
+  box-shadow: none !important;
+}
+
+.pixelated-wrapper .backdrop-blur-0 {
+  backdrop-filter: none !important;
 }
