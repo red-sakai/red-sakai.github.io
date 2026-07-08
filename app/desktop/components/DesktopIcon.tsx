@@ -1,16 +1,26 @@
 "use client";
 
-import { useCallback, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 
 interface Props {
   icon: string;
   label: string;
   onOpen: () => void;
+  iconSize?: "large" | "small";
+  refreshTick?: number;
 }
 
-export default function DesktopIcon({ icon, label, onOpen }: Props) {
+export default function DesktopIcon({ icon, label, onOpen, iconSize = "large", refreshTick = 0 }: Props) {
   const [selected, setSelected] = useState(false);
+  const [blinking, setBlinking] = useState(false);
   const lastClick = useRef(0);
+
+  useEffect(() => {
+    if (refreshTick === 0) return;
+    const raf = requestAnimationFrame(() => setBlinking(true));
+    const t = setTimeout(() => setBlinking(false), 600);
+    return () => { cancelAnimationFrame(raf); clearTimeout(t); };
+  }, [refreshTick]);
 
   const handleClick = useCallback(
     (e: MouseEvent) => {
@@ -29,6 +39,8 @@ export default function DesktopIcon({ icon, label, onOpen }: Props) {
 
   const handleBlur = useCallback(() => setSelected(false), []);
 
+  const px = iconSize === "large" ? 36 : 24;
+
   return (
     <button
       className="flex flex-col items-center gap-1 p-1 cursor-pointer border-none bg-transparent"
@@ -39,8 +51,9 @@ export default function DesktopIcon({ icon, label, onOpen }: Props) {
       tabIndex={0}
     >
       <div
+        className={blinking ? "desktop-icon-blink" : ""}
         style={{
-          fontSize: 36, lineHeight: 1, filter: selected ? "brightness(0.7) sepia(1) hue-rotate(180deg) saturate(3)" : undefined,
+          fontSize: px, lineHeight: 1, filter: selected ? "brightness(0.7) sepia(1) hue-rotate(180deg) saturate(3)" : undefined,
           background: selected ? "rgba(0,0,128,0.3)" : undefined,
           borderRadius: 4, padding: 4,
         }}
@@ -50,6 +63,7 @@ export default function DesktopIcon({ icon, label, onOpen }: Props) {
       <span
         className="win98-icon-label"
         style={{
+          fontSize: iconSize === "large" ? 11 : 10,
           background: selected ? "rgba(0,0,128,0.4)" : undefined,
           borderRadius: 2, padding: "0 2px",
         }}

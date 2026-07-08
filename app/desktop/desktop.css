@@ -357,8 +357,118 @@
   -ms-interpolation-mode: nearest-neighbor;
 }
 
-.pixelated-wrapper img {
+.pixelated-content {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.pixelated-content img {
   image-rendering: pixelated !important;
   image-rendering: -moz-crisp-edges !important;
   image-rendering: crisp-edges !important;
+}
+
+/* Force sections inside PixelatedWrapper to always be visible
+   (overrides useRevealOnScroll which depends on Lenis events that
+    don't fire inside the desktop window container) */
+.pixelated-wrapper section[id],
+.pixelated-wrapper footer[id] {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* ─────────────────────────────────────────────
+   Portfolio Viewer Dark Mode
+   Scoped overrides for section components inside
+   the viewer  (globals.css uses :root.dark which
+   doesn't match when class is on <main>)
+   ───────────────────────────────────────────── */
+
+.portfolio-viewer.portfolio-viewer-dark {
+  color-scheme: dark;
+}
+
+.portfolio-viewer.portfolio-viewer-dark * {
+  color: #e2e8f0 !important;
+}
+
+/* Revert accent colors */
+.portfolio-viewer.portfolio-viewer-dark .text-amber-600,
+.portfolio-viewer.portfolio-viewer-dark [class*="exp-tab"],
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-accent"],
+.portfolio-viewer.portfolio-viewer-dark [class*="cert-accent"] {
+  color: #fbbf24 !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark a:not([class*="btn"]):not(button) {
+  color: #93c5fd !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark button {
+  color: inherit !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark [class*="edu-card"],
+.portfolio-viewer.portfolio-viewer-dark [class*="exp-card"],
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-card"],
+.portfolio-viewer.portfolio-viewer-dark [class*="cert-card"] {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark [class*="edu-tag"],
+.portfolio-viewer.portfolio-viewer-dark [class*="exp-tag"],
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-tag"],
+.portfolio-viewer.portfolio-viewer-dark [class*="cert-tag"] {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-filter-active"] {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-link-repo"],
+.portfolio-viewer.portfolio-viewer-dark [class*="proj-link-demo"] {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark footer {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(11, 18, 32, 0.8) !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-blue-300 {
+  color: #93c5fd !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-50 {
+  color: #f8fafc !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-100 {
+  color: #f1f5f9 !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-200,
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-200\/80,
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-200\/85 {
+  color: #e2e8f0 !important;
+}
+
+.portfolio-viewer.portfolio-viewer-dark .dark\:text-slate-300 {
+  color: #cbd5e1 !important;
+}
+
+@keyframes desktop-icon-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+.desktop-icon-blink {
+  animation: desktop-icon-blink 0.15s ease-in-out 4;
 }

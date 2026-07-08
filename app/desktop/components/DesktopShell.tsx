@@ -57,6 +57,9 @@ export default function DesktopShell() {
   const [biosLine, setBiosLine] = useState(0);
   const [memCount, setMemCount] = useState(0);
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number } | null>(null);
+  const [iconSize, setIconSize] = useState<"large" | "small">("large");
+  const [iconSortBy, setIconSortBy] = useState<"name" | "size" | "type" | "date">("name");
+  const [refreshTick, setRefreshTick] = useState(0);
 
   useEffect(() => {
     const timers = [
@@ -109,6 +112,10 @@ export default function DesktopShell() {
     setCtxMenu({ x: e.clientX, y: e.clientY });
   }, []);
 
+  const handleRefresh = useCallback(() => {
+    setRefreshTick((t) => t + 1);
+  }, []);
+
   const handleCloseCtxMenu = useCallback(() => {
     setCtxMenu(null);
   }, []);
@@ -117,21 +124,20 @@ export default function DesktopShell() {
     {
       label: "View",
       children: [
-        { label: "Large Icons", icon: "○", action: () => {} },
-        { label: "Small Icons", icon: "•", action: () => {} },
-        { separator: true },
-        { label: "Refresh", icon: "⟳", action: () => window.location.reload() },
+        { label: "Large Icons", icon: "○", action: () => setIconSize("large") },
+        { label: "Small Icons", icon: "•", action: () => setIconSize("small") },
       ],
     },
     {
       label: "Sort By",
       children: [
-        { label: "Name", action: () => {} },
-        { label: "Size", action: () => {} },
-        { label: "Type", action: () => {} },
-        { label: "Date", action: () => {} },
+        { label: "Name", action: () => setIconSortBy("name") },
+        { label: "Size", action: () => setIconSortBy("size") },
+        { label: "Type", action: () => setIconSortBy("type") },
+        { label: "Date", action: () => setIconSortBy("date") },
       ],
     },
+    { label: "Refresh", icon: "⟳", action: handleRefresh },
     { separator: true },
     { label: "Paste", icon: "📋", disabled: true, action: () => {} },
     { separator: true },
@@ -285,12 +291,19 @@ export default function DesktopShell() {
         />
       )}
 
-      {desktopIcons.map((icon, idx) => (
+      {[...desktopIcons]
+        .sort((a, b) => {
+          if (iconSortBy === "name") return a.label.localeCompare(b.label);
+          return 0;
+        })
+        .map((icon, idx) => (
         <div key={icon.id + idx} style={{ position: "absolute", ...iconPositions[idx] }}>
           <DesktopIcon
             icon={icon.icon}
             label={icon.label}
             onOpen={() => handleIconOpen(icon.id)}
+            iconSize={iconSize}
+            refreshTick={refreshTick}
           />
         </div>
       ))}

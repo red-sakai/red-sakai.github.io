@@ -125,7 +125,7 @@ export default function WindowShell({
           <button className="win98-title-btn" onMouseDown={handleClose} aria-label="Close">✕</button>
         </div>
       </div>
-      <div style={{ padding: 2, height: "calc(100% - 22px)", overflow: "auto", background: "#fff" }}>
+      <div data-lenis-prevent style={{ padding: 2, height: "calc(100% - 22px)", overflow: "auto", background: "#fff" }}>
         {children}
       </div>
       <div className="win98-resize-handle" onMouseDown={handleResizeMouseDown}>
