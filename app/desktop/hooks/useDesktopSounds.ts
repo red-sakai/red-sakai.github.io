@@ -43,10 +43,7 @@ export function useDesktopSounds() {
       if (!enabledRef.current) return;
       switch (name) {
         case "startup":
-          playNote(523.25, 0.12, "square", 0.06);
-          setTimeout(() => playNote(659.25, 0.12, "square", 0.06), 100);
-          setTimeout(() => playNote(783.99, 0.12, "square", 0.06), 200);
-          setTimeout(() => playNote(1046.5, 0.25, "square", 0.06), 300);
+          playNote(440, 0.15, "square", 0.08);
           break;
         case "click":
           playNote(800, 0.04, "square", 0.03);

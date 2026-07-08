@@ -47,12 +47,34 @@ export default function DesktopShell() {
   const [startOpen, setStartOpen] = useState(false);
   const [wallpaper, setWallpaper] = useState("#008080");
   const [showBoot, setShowBoot] = useState(true);
+  const [biosLine, setBiosLine] = useState(0);
+  const [memCount, setMemCount] = useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowBoot(false), 2000);
+    const timers = [
+      setTimeout(() => setBiosLine(1), 150),
+      setTimeout(() => setBiosLine(2), 400),
+      setTimeout(() => setBiosLine(3), 700),
+      setTimeout(() => setBiosLine(4), 1400),
+      setTimeout(() => setBiosLine(5), 1700),
+      setTimeout(() => { setBiosLine(6); }, 2000),
+    ];
     sounds.play("startup");
-    return () => clearTimeout(timer);
+    const bootTimer = setTimeout(() => setShowBoot(false), 2500);
+    return () => { timers.forEach(clearTimeout); clearTimeout(bootTimer); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (biosLine < 3 || biosLine >= 4) return;
+    const t = setInterval(() => {
+      setMemCount((p) => {
+        const n = p + Math.floor(Math.random() * 12288) + 4096;
+        if (n >= 65536) { clearInterval(t); return 65536; }
+        return n;
+      });
+    }, 70);
+    return () => clearInterval(t);
+  }, [biosLine]);
 
   useEffect(() => {
     if (!startOpen) return;
@@ -137,28 +159,59 @@ export default function DesktopShell() {
   if (showBoot) {
     return (
       <main
-        className="desktop-booting-page"
+        className="crt-curve"
         style={{
-          minHeight: "100dvh", display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "center", gap: 24,
+          minHeight: "100dvh", background: "#000", color: "#00ff41",
+          fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+          fontSize: 14, display: "flex", flexDirection: "column",
+          justifyContent: "center", alignItems: "center",
         }}
       >
-        <div style={{ fontSize: 48, animation: "logo-glow 0.8s ease-in-out infinite alternate" }}>🪟</div>
-        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: 2 }}>Windows 98</div>
         <div
           style={{
-            width: 200, height: 16, background: "#000", border: "2px solid #fff",
-            borderRadius: 2, overflow: "hidden",
+            position: "fixed", inset: 0,
+            background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.03) 2px, rgba(0,255,65,0.03) 4px)",
+            pointerEvents: "none", zIndex: 1,
           }}
-        >
-          <div
-            style={{
-              height: "100%", background: "linear-gradient(90deg, #000080, #1084d0)",
-              width: "0%", animation: "boot-progress 1.8s ease-in-out forwards",
-            }}
-          />
+        />
+        <div style={{ position: "relative", zIndex: 2, width: 520, maxWidth: "90vw" }}>
+          <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: 4, textAlign: "center", marginBottom: 20, color: "#00cc33" }}>
+            JHERE<span style={{ color: "#00ff41" }}>D OS</span>
+          </div>
+          <div style={{ border: "1px solid rgba(0,255,65,0.15)", padding: "16px 20px", background: "rgba(0,255,65,0.02)" }}>
+            {biosLine >= 1 && (
+              <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>
+                <span style={{ color: "#008800" }}>&gt; </span>Jhered OS Shell v1.0 initializing...
+              </div>
+            )}
+            {biosLine >= 2 && (
+              <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>
+                <span style={{ color: "#008800" }}>&gt; </span>Memory Test: {memCount.toLocaleString()}K{memCount >= 65536 ? " OK" : ""}
+                {memCount < 65536 && <span style={{ animation: "grub-blink 0.5s step-end infinite" }}>_</span>}
+              </div>
+            )}
+            {biosLine >= 3 && (
+              <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>
+                <span style={{ color: "#008800" }}>&gt; </span>Loading desktop environment...
+              </div>
+            )}
+            {biosLine >= 4 && (
+              <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>
+                <span style={{ color: "#008800" }}>&gt; </span>Starting taskbar services...
+              </div>
+            )}
+            {biosLine >= 5 && (
+              <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>
+                <span style={{ color: "#008800" }}>&gt; </span>Initializing window manager...
+              </div>
+            )}
+            {biosLine >= 6 && (
+              <div style={{ marginTop: 12, animation: "boot-fade-in 0.3s ease-out" }}>
+                <span style={{ color: "#00ff41" }}>&gt; </span>Desktop ready.
+              </div>
+            )}
+          </div>
         </div>
-        <div style={{ fontSize: 11, opacity: 0.8 }}>Starting your desktop...</div>
       </main>
     );
   }

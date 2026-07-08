@@ -37,7 +37,7 @@ export default function StartMenu({ programs, onOpen, onShutDown, sounds }: Prop
   return (
     <div className="win98-start-menu" onMouseDown={(e) => e.stopPropagation()}>
       <div className="win98-start-sidebar">
-        <span>Windows 98</span>
+        <span>Jhered OS</span>
       </div>
       <div className="win98-start-items">
         {programs.map((p) => (

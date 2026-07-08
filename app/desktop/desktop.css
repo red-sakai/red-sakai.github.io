@@ -263,29 +263,9 @@
   .win98-start-menu { left: 0; right: auto; }
 }
 
-@keyframes boot-progress {
-  from { width: 0%; }
-  to { width: 100%; }
-}
-
 @keyframes boot-fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-@keyframes crt-on {
-  0% { filter: brightness(0); }
-  20% { filter: brightness(0.3); }
-  40% { filter: brightness(0.8); }
-  60% { filter: brightness(0.4); }
-  80% { filter: brightness(0.9); }
-  100% { filter: brightness(1); }
-}
-
-@keyframes logo-glow {
-  0% { filter: brightness(0.7); }
-  50% { filter: brightness(1.3); }
-  100% { filter: brightness(0.7); }
 }
 
 @keyframes grub-blink {
