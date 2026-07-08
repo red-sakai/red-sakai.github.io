@@ -8,6 +8,8 @@ import Taskbar from "./Taskbar";
 import StartMenu from "./StartMenu";
 import DesktopIcon from "./DesktopIcon";
 import WindowShell from "./Window";
+import ContextMenu from "./ContextMenu";
+import type { ContextMenuItem } from "./ContextMenu";
 import AboutMeWindow from "./programs/AboutMeWindow";
 import FileExplorer from "./programs/FileExplorer";
 import PaintClone from "./programs/PaintClone";
@@ -50,6 +52,7 @@ export default function DesktopShell() {
   const [showBoot, setShowBoot] = useState(true);
   const [biosLine, setBiosLine] = useState(0);
   const [memCount, setMemCount] = useState(0);
+  const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     const timers = [
@@ -96,6 +99,47 @@ export default function DesktopShell() {
   const handleShutDown = useCallback(() => {
     router.push("/grub-bootloader");
   }, [router]);
+
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    setCtxMenu({ x: e.clientX, y: e.clientY });
+  }, []);
+
+  const handleCloseCtxMenu = useCallback(() => {
+    setCtxMenu(null);
+  }, []);
+
+  const contextItems: ContextMenuItem[] = [
+    {
+      label: "View",
+      children: [
+        { label: "Large Icons", icon: "○", action: () => {} },
+        { label: "Small Icons", icon: "•", action: () => {} },
+        { separator: true },
+        { label: "Refresh", icon: "⟳", action: () => window.location.reload() },
+      ],
+    },
+    {
+      label: "Sort By",
+      children: [
+        { label: "Name", action: () => {} },
+        { label: "Size", action: () => {} },
+        { label: "Type", action: () => {} },
+        { label: "Date", action: () => {} },
+      ],
+    },
+    { separator: true },
+    { label: "Paste", icon: "📋", disabled: true, action: () => {} },
+    { separator: true },
+    { label: "Properties", icon: "⚙️", action: () => {
+      const w = windows.find((win) => win.component === "controlpanel");
+      if (!w) {
+        openWindow("controlpanel");
+      } else {
+        focusWindow(w.id);
+      }
+    }},
+  ];
 
   const handleIconOpen = useCallback(
     (id: string) => {
@@ -225,8 +269,17 @@ export default function DesktopShell() {
         overflow: "hidden", paddingBottom: 30, animation: "boot-fade-in 0.3s ease-out",
         fontFamily: '"MS Sans Serif", "Chicago", "Segoe UI", sans-serif',
       }}
-      onContextMenu={(e) => e.preventDefault()}
+      onContextMenu={handleContextMenu}
     >
+      {ctxMenu && (
+        <ContextMenu
+          x={ctxMenu.x}
+          y={ctxMenu.y}
+          items={contextItems}
+          onClose={handleCloseCtxMenu}
+        />
+      )}
+
       {desktopIcons.map((icon, idx) => (
         <div key={icon.id + idx} style={{ position: "absolute", ...iconPositions[idx] }}>
           <DesktopIcon

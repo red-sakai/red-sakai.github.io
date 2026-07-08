@@ -272,3 +272,82 @@
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
 }
+
+.win98-context-menu {
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  outline: 1px solid #000;
+  padding: 2px;
+  font-family: "MS Sans Serif", "Chicago", "Segoe UI", sans-serif;
+  font-size: 11px;
+  min-width: 160px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+  user-select: none;
+}
+
+.win98-context-item {
+  display: flex;
+  align-items: center;
+  padding: 3px 20px 3px 4px;
+  cursor: pointer;
+  color: #000;
+  position: relative;
+  white-space: nowrap;
+}
+
+.win98-context-item:hover {
+  background: #000080;
+  color: #fff;
+}
+
+.win98-context-item.disabled {
+  color: #808080;
+  cursor: default;
+}
+
+.win98-context-item.disabled:hover {
+  background: transparent;
+  color: #808080;
+}
+
+.win98-context-separator {
+  border-top: 1px solid #808080;
+  border-bottom: 1px solid #fff;
+  margin: 3px 6px;
+}
+
+.win98-context-icon {
+  width: 16px;
+  text-align: center;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.win98-context-label {
+  flex: 1;
+}
+
+.win98-context-arrow {
+  margin-left: auto;
+  font-size: 9px;
+  padding-left: 12px;
+}
+
+.win98-context-submenu {
+  position: absolute;
+  left: 100%;
+  top: -3px;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  outline: 1px solid #000;
+  padding: 2px;
+  min-width: 140px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+  z-index: 20001;
+}
