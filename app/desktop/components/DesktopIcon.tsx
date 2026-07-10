@@ -8,9 +8,11 @@ interface Props {
   onOpen: () => void;
   iconSize?: "large" | "small";
   refreshTick?: number;
+  doubleClickSpeed?: number;
+  swapButtons?: boolean;
 }
 
-export default function DesktopIcon({ icon, label, onOpen, iconSize = "large", refreshTick = 0 }: Props) {
+export default function DesktopIcon({ icon, label, onOpen, iconSize = "large", refreshTick = 0, doubleClickSpeed = 400, swapButtons = false }: Props) {
   const [selected, setSelected] = useState(false);
   const [blinking, setBlinking] = useState(false);
   const lastClick = useRef(0);
@@ -26,7 +28,7 @@ export default function DesktopIcon({ icon, label, onOpen, iconSize = "large", r
     (e: MouseEvent) => {
       e.stopPropagation();
       const now = Date.now();
-      if (now - lastClick.current < 400 && lastClick.current > 0) {
+      if (now - lastClick.current < doubleClickSpeed && lastClick.current > 0) {
         onOpen();
         lastClick.current = 0;
       } else {
@@ -34,7 +36,7 @@ export default function DesktopIcon({ icon, label, onOpen, iconSize = "large", r
         setSelected(true);
       }
     },
-    [onOpen],
+    [onOpen, doubleClickSpeed],
   );
 
   const handleBlur = useCallback(() => setSelected(false), []);
@@ -45,9 +47,21 @@ export default function DesktopIcon({ icon, label, onOpen, iconSize = "large", r
     <button
       className="flex flex-col items-center gap-1 p-1 cursor-pointer border-none bg-transparent"
       style={{ width: 80, outline: "none" }}
-      onClick={handleClick}
+      onClick={(e) => swapButtons ? e.preventDefault() : handleClick(e)}
       onBlur={handleBlur}
-      onContextMenu={(e) => e.preventDefault()}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        if (swapButtons) {
+          const now = Date.now();
+          if (now - lastClick.current < doubleClickSpeed && lastClick.current > 0) {
+            onOpen();
+            lastClick.current = 0;
+          } else {
+            lastClick.current = now;
+            setSelected(true);
+          }
+        }
+      }}
       tabIndex={0}
     >
       <div
