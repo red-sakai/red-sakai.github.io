@@ -22,7 +22,16 @@
 
 **Requirements:** DESKTOP-01, DESKTOP-02, DESKTOP-03, DESKTOP-04, DESKTOP-05, DESKTOP-06, DESKTOP-07, DESKTOP-08
 
+**Plans:** 5 plans across 2 waves
+
 **Success Criteria:**
+
+Plans:
+- [ ] 02-01-PLAN.md — Foundation: window manager type extension, CSS variables, wallpapers directory
+- [ ] 02-02-PLAN.md — DesktopIcon double-click speed prop, ContextMenu simplification
+- [ ] 02-03-PLAN.md — Internet Explorer IE5/6-style iframe browser component
+- [ ] 02-04-PLAN.md — Control Panel expansion (wallpaper, color scheme, resolution, mouse, icons)
+- [ ] 02-05-PLAN.md — DesktopShell integration (wallpaper system, color scheme, icon vis, context menu, browser routing)
 1. GRUB bootloader offers Normal Mode (→ existing portfolio) and Retro Desktop Mode (→ `/desktop`)
 2. `/desktop` route renders a Win98 desktop with taskbar, start menu, desktop icons, and draggable windows
 3. At least 4 programs work: About Me (notepad), File Explorer, Paint clone, Control Panel
