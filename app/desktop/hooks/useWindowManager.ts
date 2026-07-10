@@ -6,7 +6,7 @@ export interface WindowState {
   id: string;
   title: string;
   icon: string;
-  component: "about" | "portfolio" | "explorer" | "paint" | "controlpanel";
+  component: "about" | "portfolio" | "explorer" | "paint" | "controlpanel" | "browser";
   x: number;
   y: number;
   width: number;
@@ -24,30 +24,28 @@ export function useWindowManager() {
   const openWindow = useCallback(
     (component: WindowState["component"]) => {
       const id = `win-${++idCounter.current}`;
-      const offsets: Record<string, number> = { about: 0, portfolio: 15, explorer: 30, paint: 60, controlpanel: 90 };
+      const offsets: Record<string, number> = { about: 0, portfolio: 15, explorer: 30, paint: 60, controlpanel: 90, browser: 45 };
       const offset = offsets[component];
+      const titleMap: Record<string, string> = {
+        about: "About Me - Notepad",
+        portfolio: "My Portfolio",
+        explorer: "File Explorer",
+        paint: "Paint",
+        controlpanel: "Control Panel",
+        browser: "Internet Explorer",
+      };
+      const iconMap: Record<string, string> = {
+        about: "📄",
+        portfolio: "🏠",
+        explorer: "📁",
+        paint: "🎨",
+        controlpanel: "⚙️",
+        browser: "🌐",
+      };
       const newWin: WindowState = {
         id,
-        title:
-          component === "about"
-            ? "About Me - Notepad"
-            : component === "portfolio"
-              ? "My Portfolio"
-              : component === "explorer"
-                ? "File Explorer"
-                : component === "paint"
-                  ? "Paint"
-                  : "Control Panel",
-        icon:
-          component === "about"
-            ? "📄"
-            : component === "portfolio"
-              ? "🏠"
-              : component === "explorer"
-                ? "📁"
-                : component === "paint"
-                  ? "🎨"
-                  : "⚙️",
+        title: titleMap[component] || component,
+        icon: iconMap[component] || "📄",
         component,
         width: component === "portfolio" ? Math.round(window.innerWidth * 0.8) : 500,
         height: component === "portfolio" ? Math.round(window.innerHeight * 0.8) : 380,
