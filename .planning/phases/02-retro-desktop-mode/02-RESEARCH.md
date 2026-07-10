@@ -555,22 +555,16 @@ imported-wallpaper-N → base64 data URI string
 | A4 | No new npm packages are needed | General | If wrong, all features can be built with browser APIs. Package installs are only needed for conveniences like `idb-keyval` for IndexedDB. |
 | A5 | The GRUB bootloader at `/grub-bootloader` already redirecting to `/desktop-loading` → `/desktop` needs no changes | GRUB Integration | If wrong, GRUB page needs editing (low effort). Verified: current code routes to `/desktop-loading` for desktop mode. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **What wallpaper images should ship as defaults?**
-   - What we know: `public/wallpapers/` is empty and must be created
-   - What's unclear: Should the plan include finding/downloading sample Win98 wallpapers, or just create the directory with a `.gitkeep` and let the user add their own?
-   - Recommendation: Create the directory with `.gitkeep`. Wallpaper images are user content — the system works with any images placed there. The default teal is the fallback when the directory is empty.
+   RESOLVED: Create the directory with `.gitkeep`. Wallpaper images are user content — the system works with any images placed there. The default teal is the fallback when the directory is empty.
 
 2. **How should the "faux screen resolution" actually behave?**
-   - What we know: D-12 says "faux resolution picker" — purely cosmetic
-   - What's unclear: Does clicking "800x600" vs "1024x768" actually change anything about the desktop rendering, or is it a visual-only dialog?
-   - Recommendation: Make it a purely visual dialog that shows "selected resolution" but doesn't change desktop rendering. This matches Win98 behavior where resolution changes were rare and applied system-wide. Add a note in the UI: "Changes take effect after restart."
+   RESOLVED: Make it a purely visual dialog that shows "selected resolution" but doesn't change desktop rendering. This matches Win98 behavior where resolution changes were rare and applied system-wide. Add a note in the UI: "Changes take effect after restart."
 
 3. **How to handle icon positioning when icons are toggled on/off?**
-   - What we know: Currently icons are positioned via `iconPositions` array (static top/left values). D-14 adds visibility toggles.
-   - What's unclear: Should invisible icons leave gaps, or should visible icons reflow into remaining slots?
-   - Recommendation: Use CSS flex-wrap or grid for the icon container. Filter invisible icons from the render array, let CSS handle layout. This is simpler than maintaining position-to-icon mappings.
+   RESOLVED: Use CSS flex-wrap or grid for the icon container. Filter invisible icons from the render array, let CSS handle layout. This is simpler than maintaining position-to-icon mappings.
 
 ## Validation Architecture
 
