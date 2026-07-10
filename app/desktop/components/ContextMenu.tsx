@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 export interface ContextMenuItem {
   label?: string;
@@ -20,8 +20,6 @@ interface ContextMenuProps {
 
 export default function ContextMenu({ x, y, items, onClose }: ContextMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [subLabel, setSubLabel] = useState<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const close = useCallback(() => onClose(), [onClose]);
 
@@ -41,37 +39,6 @@ export default function ContextMenu({ x, y, items, onClose }: ContextMenuProps) 
     close();
   };
 
-  const showSub = (label: string | null) => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (label === null) {
-      timerRef.current = setTimeout(() => setSubLabel(null), 200);
-    } else {
-      setSubLabel(label);
-    }
-  };
-
-  const renderSubmenu = (children: ContextMenuItem[]) => (
-    <div className="win98-context-submenu">
-      {children.map((child, j) => {
-        if (child.separator) return <div key={j} className="win98-context-separator" />;
-        return (
-          <div
-            key={j}
-            className={`win98-context-item${child.disabled ? " disabled" : ""}`}
-            onClick={() => {
-              if (child.disabled) return;
-              child.action?.();
-              close();
-            }}
-          >
-            <span className="win98-context-icon">{child.icon || ""}</span>
-            <span className="win98-context-label">{child.label || ""}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-
   return (
     <div
       ref={ref}
@@ -85,14 +52,14 @@ export default function ContextMenu({ x, y, items, onClose }: ContextMenuProps) 
           <div
             key={i}
             className={`win98-context-item${item.disabled ? " disabled" : ""}`}
-            onMouseEnter={() => item.children && item.label && showSub(item.label)}
-            onMouseLeave={() => item.children && showSub(null)}
-            onClick={() => handleItemClick(item)}
+            onClick={() => {
+              if (item.disabled) return;
+              item.action?.();
+              close();
+            }}
           >
-            <span className="win98-context-icon">{item.icon || ""}</span>
-            <span className="win98-context-label">{item.label || ""}</span>
-            {item.children && <span className="win98-context-arrow">▶</span>}
-            {item.children && item.label && subLabel === item.label && renderSubmenu(item.children)}
+            {item.icon && <span className="win98-context-icon">{item.icon}</span>}
+            {item.label && <span className="win98-context-label">{item.label}</span>}
           </div>
         );
       })}
