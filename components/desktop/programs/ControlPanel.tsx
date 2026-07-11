@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import { WALLPAPER_PRESETS } from "@/data/wallpapers-generated";
 
 interface WallpaperState {
   type: "color" | "preset" | "imported";
@@ -54,11 +55,6 @@ const SOLID_WALLPAPERS = [
   { id: "navy", label: "Navy", color: "#000080" },
 ];
 
-const PRESET_WALLPAPERS = [
-  { id: "preset-1", label: "Wallpaper 1", path: "/wallpapers/wallpaper1.jpg" },
-  { id: "preset-2", label: "Wallpaper 2", path: "/wallpapers/wallpaper2.jpg" },
-];
-
 const ICON_DEFS = [
   { id: "portfolio", label: "My Portfolio" },
   { id: "explorer", label: "My Computer" },
@@ -67,6 +63,7 @@ const ICON_DEFS = [
 ];
 
 const RESOLUTIONS = ["640x480", "800x600", "1024x768"];
+const WALLPAPER_PAGE_SIZE = 24;
 
 export default function ControlPanel({
   soundToggle, onClose,
@@ -80,7 +77,8 @@ export default function ControlPanel({
 }: Props) {
   const [soundsEnabled, setSoundsEnabled] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [localPresets] = useState<{id: string, label: string, path: string}[]>(PRESET_WALLPAPERS);
+  const [localPresets] = useState<{id: string, label: string, path: string}[]>(WALLPAPER_PRESETS);
+  const [visibleCount, setVisibleCount] = useState(WALLPAPER_PAGE_SIZE);
   const [localImported, setLocalImported] = useState<{id: string, label: string, dataUri: string}[]>([]);
 
   // Initialize wallpaper state from props
@@ -255,25 +253,42 @@ export default function ControlPanel({
           {/* Preset images gallery */}
           {localPresets.length > 0 && (
             <>
-              <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 4 }}>Presets</div>
+              <div style={{ fontSize: 11, fontWeight: 600, marginBottom: 4 }}>
+                Presets ({visibleCount >= localPresets.length ? localPresets.length : visibleCount}/{localPresets.length})
+              </div>
               <div style={{ display: "flex", gap: 6, marginBottom: 8, flexWrap: "wrap" }}>
-                {localPresets.map((p) => (
+                {localPresets.slice(0, visibleCount).map((p) => (
                   <button
                     key={p.id}
                     onClick={() => handlePresetClick(p.path)}
                     style={{
                       width: 60, height: 40,
                       border: wallpaper.value === p.path ? "3px solid #000080" : "2px solid #808080",
-                      cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                      padding: 0, background: "#e0e0e0", fontSize: 10, color: "#000",
+                      cursor: "pointer", padding: 0, overflow: "hidden", position: "relative",
                     }}
                     title={p.label}
                     aria-label={p.label}
                   >
-                    {p.label}
+                    <img
+                      src={p.path}
+                      alt={p.label}
+                      loading="lazy"
+                      decoding="async"
+                      width={60}
+                      height={40}
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
                   </button>
                 ))}
               </div>
+              {visibleCount < localPresets.length && (
+                <button
+                  onClick={() => setVisibleCount(c => c + WALLPAPER_PAGE_SIZE)}
+                  style={{ ...win98Btn, marginBottom: 4, width: "100%", fontSize: 11 }}
+                >
+                  View More ({Math.min(WALLPAPER_PAGE_SIZE, localPresets.length - visibleCount)} remaining)
+                </button>
+              )}
             </>
           )}
 

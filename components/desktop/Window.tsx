@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useCallback, useState, type ReactNode, type MouseEvent } from "react";
-import type { WindowState } from "../hooks/useWindowManager";
+import type { WindowState } from "@/hooks/useWindowManager";
 
 interface Props {
   win: WindowState;

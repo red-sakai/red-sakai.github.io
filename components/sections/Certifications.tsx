@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import certificationsData from "../../data/certifications.json";
-import { useRevealOnScroll } from "../../hooks/useRevealOnScroll";
+import certificationsData from "@/data/certifications.json";
+import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 
 type Certification = {
 	title: string;

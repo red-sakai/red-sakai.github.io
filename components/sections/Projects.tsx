@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import projectsData from "../../data/projects.json";
-import { useRevealOnScroll } from "../../hooks/useRevealOnScroll";
+import projectsData from "@/data/projects.json";
+import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 
 type ProjectCategory = "web" | "security" | "tools" | "learning" | "emergency" | "game" | "bot";
 type ProjectType = "personal" | "commissioned" | "hackathon";

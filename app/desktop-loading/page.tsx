@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { JH_LOGO } from "../desktop/data/jhered-os-logo";
-import "../desktop/desktop.css";
+import { JH_LOGO } from "@/data/jhered-os-logo";
+import "@/components/desktop/desktop.css";
 
 export default function DesktopLoadingPage() {
   const router = useRouter();

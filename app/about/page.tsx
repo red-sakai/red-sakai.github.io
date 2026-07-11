@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { NavbarCapsule } from "../components/sections/NavbarCapsule";
+import { NavbarCapsule } from "@/components/sections/NavbarCapsule";
 
 type Milestone = {
 	year: string;

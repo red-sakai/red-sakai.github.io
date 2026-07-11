@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import favorites from "../../../data/favorites.json";
+import favorites from "@/data/favorites.json";
 
 type FavoriteEntry = {
   title: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import type { JSX } from "react";
-import { useRevealOnScroll } from "../../hooks/useRevealOnScroll";
+import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 
 export function Footer() {
   const { ref, visible } = useRevealOnScroll<HTMLElement>();

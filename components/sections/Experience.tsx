@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import experienceData from "../../data/experience.json";
-import { useRevealOnScroll } from "../../hooks/useRevealOnScroll";
+import experienceData from "@/data/experience.json";
+import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 
 type ExperienceCategory = "professional" | "organizational" | "competitive";
 

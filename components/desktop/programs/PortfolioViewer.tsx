@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { EducationSection } from "@/app/components/sections/Education";
-import { ExperienceSection } from "@/app/components/sections/Experience";
-import { ProjectsSection } from "@/app/components/sections/Projects";
-import { CertificationsSection } from "@/app/components/sections/Certifications";
-import { Footer } from "@/app/components/sections/Footer";
+import { EducationSection } from "@/components/sections/Education";
+import { ExperienceSection } from "@/components/sections/Experience";
+import { ProjectsSection } from "@/components/sections/Projects";
+import { CertificationsSection } from "@/components/sections/Certifications";
+import { Footer } from "@/components/sections/Footer";
 import PixelatedWrapper from "./PixelatedWrapper";
 
 export default function PortfolioViewer() {

@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { useWindowManager } from "../hooks/useWindowManager";
-import { useDesktopSounds } from "../hooks/useDesktopSounds";
+import { useWindowManager } from "@/hooks/useWindowManager";
+import { useDesktopSounds } from "@/hooks/useDesktopSounds";
 import Taskbar from "./Taskbar";
 import StartMenu from "./StartMenu";
 import DesktopIcon from "./DesktopIcon";
@@ -17,8 +17,8 @@ import PortfolioViewer from "./programs/PortfolioViewer";
 import InternetExplorer from "./programs/InternetExplorer";
 import GameStation from "./programs/GameStation";
 import Favorites from "./programs/Favorites";
-import { JH_LOGO } from "../data/jhered-os-logo";
-import "../desktop.css";
+import { JH_LOGO } from "@/data/jhered-os-logo";
+import "./desktop.css";
 
 interface WallpaperState {
   type: "color" | "preset" | "imported";

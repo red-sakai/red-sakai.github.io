@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Sora, JetBrains_Mono, Press_Start_2P } from "next/font/google";
 import Script from "next/script";
-import { LenisProvider } from "./components/providers/LenisProvider";
+import { LenisProvider } from "@/components/providers/LenisProvider";
 import "./globals.css";
 
 const sora = Sora({

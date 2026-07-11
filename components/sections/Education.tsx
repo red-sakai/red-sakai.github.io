@@ -1,6 +1,6 @@
 import Image from "next/image";
-import educationData from "../../data/education.json";
-import { useRevealOnScroll } from "../../hooks/useRevealOnScroll";
+import educationData from "@/data/education.json";
+import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 
 export function EducationSection() {
   const { ref } = useRevealOnScroll<HTMLElement>();

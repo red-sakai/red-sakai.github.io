@@ -2,12 +2,12 @@
 
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
-import { CertificationsSection } from "./components/sections/Certifications";
-import { EducationSection } from "./components/sections/Education";
-import { ExperienceSection } from "./components/sections/Experience";
-import { Footer } from "./components/sections/Footer";
-import { Hero } from "./components/sections/Hero";
-import { ProjectsSection } from "./components/sections/Projects";
+import { CertificationsSection } from "@/components/sections/Certifications";
+import { EducationSection } from "@/components/sections/Education";
+import { ExperienceSection } from "@/components/sections/Experience";
+import { Footer } from "@/components/sections/Footer";
+import { Hero } from "@/components/sections/Hero";
+import { ProjectsSection } from "@/components/sections/Projects";
 
 function hexToRgba(hex: string, alpha: number): string {
   const value = hex.replace("#", "");
