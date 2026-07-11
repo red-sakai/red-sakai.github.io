@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, type ReactNode } from "react";
+import { useState, useEffect, useCallback, useRef, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useWindowManager } from "../hooks/useWindowManager";
 import { useDesktopSounds } from "../hooks/useDesktopSounds";
@@ -10,13 +10,39 @@ import DesktopIcon from "./DesktopIcon";
 import WindowShell from "./Window";
 import ContextMenu from "./ContextMenu";
 import type { ContextMenuItem } from "./ContextMenu";
-import AboutMeWindow from "./programs/AboutMeWindow";
 import FileExplorer from "./programs/FileExplorer";
 import PaintClone from "./programs/PaintClone";
 import ControlPanel from "./programs/ControlPanel";
 import PortfolioViewer from "./programs/PortfolioViewer";
+import InternetExplorer from "./programs/InternetExplorer";
 import { JH_LOGO } from "../data/jhered-os-logo";
 import "../desktop.css";
+
+interface WallpaperState {
+  type: "color" | "preset" | "imported";
+  value: string;
+  fit: "tile" | "center" | "stretch";
+}
+
+interface ColorSchemeDef {
+  id: string;
+  label: string;
+  vars: Record<string, string>;
+}
+
+const COLOR_SCHEMES: ColorSchemeDef[] = [
+  { id: "standard", label: "Windows Standard", vars: { "--titlebar-start": "#000080", "--titlebar-end": "#1084d0", "--taskbar-bg": "#c0c0c0" } },
+  { id: "rose", label: "Rose", vars: { "--titlebar-start": "#800000", "--titlebar-end": "#d04848", "--taskbar-bg": "#c0c0c0" } },
+  { id: "eggplant", label: "Eggplant", vars: { "--titlebar-start": "#400040", "--titlebar-end": "#804080", "--taskbar-bg": "#c0c0c0" } },
+  { id: "marine", label: "Marine", vars: { "--titlebar-start": "#000080", "--titlebar-end": "#008080", "--taskbar-bg": "#c0c0c0" } },
+  { id: "pumpkin", label: "Pumpkin", vars: { "--titlebar-start": "#804000", "--titlebar-end": "#d08040", "--taskbar-bg": "#c0c0c0" } },
+];
+
+const FIT_STYLES: Record<string, React.CSSProperties> = {
+  tile:    { backgroundRepeat: "repeat", backgroundSize: "auto", backgroundPosition: "0 0" },
+  center:  { backgroundRepeat: "no-repeat", backgroundSize: "auto", backgroundPosition: "center center" },
+  stretch: { backgroundRepeat: "no-repeat", backgroundSize: "100% 100%", backgroundPosition: "0 0" },
+};
 
 const programList = [
   { id: "about", icon: "📄", label: "About Me" },
@@ -24,24 +50,14 @@ const programList = [
   { id: "explorer", icon: "📁", label: "File Explorer" },
   { id: "paint", icon: "🎨", label: "Paint" },
   { id: "controlpanel", icon: "⚙️", label: "Control Panel" },
+  { id: "browser", icon: "🌐", label: "Internet Explorer" },
 ];
 
-const desktopIcons = [
+const DESKTOP_ICONS = [
   { id: "portfolio", icon: "🏠", label: "My Portfolio" },
   { id: "explorer", icon: "💻", label: "My Computer" },
-  { id: "explorer", icon: "📁", label: "Projects" },
-  { id: "about", icon: "📄", label: "About Me" },
   { id: "paint", icon: "🎨", label: "Paint" },
   { id: "controlpanel", icon: "⚙️", label: "Control Panel" },
-];
-
-const iconPositions = [
-  { top: 20, left: 20 },
-  { top: 20, left: 120 },
-  { top: 20, left: 220 },
-  { top: 20, left: 320 },
-  { top: 20, left: 420 },
-  { top: 20, left: 520 },
 ];
 
 export default function DesktopShell() {
@@ -51,15 +67,52 @@ export default function DesktopShell() {
     minimizeWindow, toggleMaximize, moveWindow, resizeWindow, topWindow,
   } = useWindowManager();
   const sounds = useDesktopSounds();
+
+  const desktopRef = useRef<HTMLDivElement>(null);
   const [startOpen, setStartOpen] = useState(false);
-  const [wallpaper, setWallpaper] = useState("#008080");
   const [showBoot, setShowBoot] = useState(true);
   const [biosLine, setBiosLine] = useState(0);
   const [memCount, setMemCount] = useState(0);
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number } | null>(null);
-  const [iconSize, setIconSize] = useState<"large" | "small">("large");
-  const [iconSortBy, setIconSortBy] = useState<"name" | "size" | "type" | "date">("name");
   const [refreshTick, setRefreshTick] = useState(0);
+
+  // Wallpaper state with localStorage
+  const [wallpaperConfig, setWallpaperConfig] = useState<WallpaperState>(() => {
+    try {
+      const stored = localStorage.getItem("desktop-wallpaper");
+      return stored ? JSON.parse(stored) : { type: "color", value: "#008080", fit: "center" };
+    } catch { return { type: "color", value: "#008080", fit: "center" }; }
+  });
+
+  // Color scheme state with localStorage
+  const [colorScheme, setColorScheme] = useState<string>(() => {
+    try { return localStorage.getItem("desktop-colorscheme") || "standard"; }
+    catch { return "standard"; }
+  });
+
+  // Icon visibility with localStorage
+  const [visibleIcons, setVisibleIcons] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem("desktop-icons-vis");
+      return stored ? JSON.parse(stored) : DESKTOP_ICONS.map((i) => i.id);
+    } catch { return DESKTOP_ICONS.map((i) => i.id); }
+  });
+
+  // Mouse settings from localStorage
+  const [doubleClickSpeed, setDoubleClickSpeed] = useState<number>(() => {
+    try { return parseInt(localStorage.getItem("desktop-mousespeed") || "400", 10); }
+    catch { return 400; }
+  });
+  const [swapButtons, setSwapButtons] = useState<boolean>(() => {
+    try { return localStorage.getItem("desktop-swapbuttons") === "true"; }
+    catch { return false; }
+  });
+
+  // Faux resolution
+  const [fauxResolution, setFauxResolution] = useState<string>(() => {
+    try { return localStorage.getItem("desktop-resolution") || "1024x768"; }
+    catch { return "1024x768"; }
+  });
 
   useEffect(() => {
     const timers = [
@@ -87,6 +140,43 @@ export default function DesktopShell() {
     return () => clearInterval(t);
   }, [biosLine]);
 
+  // Persist wallpaper config
+  useEffect(() => {
+    try { localStorage.setItem("desktop-wallpaper", JSON.stringify(wallpaperConfig)); }
+    catch { /* quota exceeded — silently degrade */ }
+  }, [wallpaperConfig]);
+
+  // Persist color scheme + inject CSS variables
+  useEffect(() => {
+    try { localStorage.setItem("desktop-colorscheme", colorScheme); }
+    catch { /* ignore */ }
+    const el = desktopRef.current;
+    if (!el) return;
+    const scheme = COLOR_SCHEMES.find((s) => s.id === colorScheme);
+    if (scheme) {
+      Object.entries(scheme.vars).forEach(([key, val]) => {
+        el.style.setProperty(key, val);
+      });
+    }
+  }, [colorScheme]);
+
+  // Persist icon visibility
+  useEffect(() => {
+    try { localStorage.setItem("desktop-icons-vis", JSON.stringify(visibleIcons)); }
+    catch { /* ignore */ }
+  }, [visibleIcons]);
+
+  // Persist mouse settings
+  useEffect(() => {
+    try { localStorage.setItem("desktop-mousespeed", String(doubleClickSpeed)); }
+    catch { /* ignore */ }
+  }, [doubleClickSpeed]);
+
+  useEffect(() => {
+    try { localStorage.setItem("desktop-swapbuttons", String(swapButtons)); }
+    catch { /* ignore */ }
+  }, [swapButtons]);
+
   useEffect(() => {
     if (!startOpen) return;
     const handler = () => setStartOpen(false);
@@ -97,7 +187,7 @@ export default function DesktopShell() {
   const handleOpenProgram = useCallback(
     (id: string) => {
       sounds.play("open");
-      openWindow(id as "about" | "portfolio" | "explorer" | "paint" | "controlpanel");
+      openWindow(id as "about" | "portfolio" | "explorer" | "paint" | "controlpanel" | "browser");
       setStartOpen(false);
     },
     [sounds, openWindow],
@@ -121,40 +211,13 @@ export default function DesktopShell() {
   }, []);
 
   const contextItems: ContextMenuItem[] = [
-    {
-      label: "View",
-      children: [
-        { label: "Large Icons", icon: "○", action: () => setIconSize("large") },
-        { label: "Small Icons", icon: "•", action: () => setIconSize("small") },
-      ],
-    },
-    {
-      label: "Sort By",
-      children: [
-        { label: "Name", action: () => setIconSortBy("name") },
-        { label: "Size", action: () => setIconSortBy("size") },
-        { label: "Type", action: () => setIconSortBy("type") },
-        { label: "Date", action: () => setIconSortBy("date") },
-      ],
-    },
     { label: "Refresh", icon: "⟳", action: handleRefresh },
-    { separator: true },
-    { label: "Paste", icon: "📋", disabled: true, action: () => {} },
-    { separator: true },
-    { label: "Properties", icon: "⚙️", action: () => {
-      const w = windows.find((win) => win.component === "controlpanel");
-      if (!w) {
-        openWindow("controlpanel");
-      } else {
-        focusWindow(w.id);
-      }
-    }},
   ];
 
   const handleIconOpen = useCallback(
     (id: string) => {
       sounds.play("open");
-      openWindow(id as "about" | "portfolio" | "explorer" | "paint" | "controlpanel");
+      openWindow(id as "about" | "portfolio" | "explorer" | "paint" | "controlpanel" | "browser");
     },
     [sounds, openWindow],
   );
@@ -185,15 +248,8 @@ export default function DesktopShell() {
     return sounds.toggle();
   }, [sounds]);
 
-  const wallpaperColor =
-    wallpaper === "teal" ? "#008080" :
-    wallpaper === "black" ? "#000000" :
-    wallpaper === "maroon" ? "#800000" :
-    wallpaper === "navy" ? "#000080" : "#008080";
-
   const renderProgram = (component: string): ReactNode => {
     switch (component) {
-      case "about": return <AboutMeWindow />;
       case "explorer": return <FileExplorer />;
       case "paint": return <PaintClone />;
       case "controlpanel": return (
@@ -203,11 +259,22 @@ export default function DesktopShell() {
             const w = windows.find((win) => win.component === "controlpanel");
             if (w) closeWindow(w.id);
           }}
-          onWallpaperChange={setWallpaper}
-          currentWallpaper={wallpaper}
+          wallpaperConfig={wallpaperConfig}
+          onWallpaperConfigChange={setWallpaperConfig}
+          colorScheme={colorScheme}
+          onColorSchemeChange={setColorScheme}
+          doubleClickSpeed={doubleClickSpeed}
+          onMouseSpeedChange={setDoubleClickSpeed}
+          swapButtons={swapButtons}
+          onSwapButtonsChange={setSwapButtons}
+          visibleIcons={visibleIcons}
+          onIconVisibilityChange={setVisibleIcons}
+          fauxResolution={fauxResolution}
+          onResolutionChange={setFauxResolution}
         />
       );
       case "portfolio": return <PortfolioViewer />;
+      case "browser": return <InternetExplorer />;
       default: return null;
     }
   };
@@ -275,10 +342,17 @@ export default function DesktopShell() {
   return (
     <main
       className="desktop-scanlines"
+      ref={desktopRef}
       style={{
-        minHeight: "100dvh", background: wallpaperColor, position: "relative",
+        minHeight: "100dvh", position: "relative",
         overflow: "hidden", paddingBottom: 30, animation: "boot-fade-in 0.3s ease-out",
         fontFamily: '"MS Sans Serif", "Chicago", "Segoe UI", sans-serif',
+        ...(wallpaperConfig.type === "color"
+          ? { background: wallpaperConfig.value }
+          : {
+              backgroundImage: `url(${wallpaperConfig.value})`,
+              ...FIT_STYLES[wallpaperConfig.fit],
+            }),
       }}
       onContextMenu={handleContextMenu}
     >
@@ -291,22 +365,21 @@ export default function DesktopShell() {
         />
       )}
 
-      {[...desktopIcons]
-        .sort((a, b) => {
-          if (iconSortBy === "name") return a.label.localeCompare(b.label);
-          return 0;
-        })
-        .map((icon, idx) => (
-        <div key={icon.id + idx} style={{ position: "absolute", ...iconPositions[idx] }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, padding: 8, position: "relative", zIndex: 1 }}>
+        {DESKTOP_ICONS
+          .filter((icon) => visibleIcons.includes(icon.id))
+          .map((icon) => (
           <DesktopIcon
+            key={icon.id}
             icon={icon.icon}
             label={icon.label}
             onOpen={() => handleIconOpen(icon.id)}
-            iconSize={iconSize}
             refreshTick={refreshTick}
+            doubleClickSpeed={doubleClickSpeed}
+            swapButtons={swapButtons}
           />
-        </div>
-      ))}
+        ))}
+      </div>
 
       <Taskbar
         windows={windows}
