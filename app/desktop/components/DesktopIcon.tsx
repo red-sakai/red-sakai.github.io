@@ -1,21 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useState, type MouseEvent, type ReactNode } from "react";
 
 interface Props {
-  icon: string;
+  icon: ReactNode;
   label: string;
   onOpen: () => void;
   iconSize?: "large" | "small";
   refreshTick?: number;
-  doubleClickSpeed?: number;
   swapButtons?: boolean;
 }
 
-export default function DesktopIcon({ icon, label, onOpen, iconSize = "large", refreshTick = 0, doubleClickSpeed = 400, swapButtons = false }: Props) {
+export default function DesktopIcon({ icon, label, onOpen, iconSize = "large", refreshTick = 0, swapButtons = false }: Props) {
   const [selected, setSelected] = useState(false);
   const [blinking, setBlinking] = useState(false);
-  const lastClick = useRef(0);
 
   useEffect(() => {
     if (refreshTick === 0) return;
@@ -24,43 +22,23 @@ export default function DesktopIcon({ icon, label, onOpen, iconSize = "large", r
     return () => { cancelAnimationFrame(raf); clearTimeout(t); };
   }, [refreshTick]);
 
-  const handleClick = useCallback(
-    (e: MouseEvent) => {
-      e.stopPropagation();
-      const now = Date.now();
-      if (now - lastClick.current < doubleClickSpeed && lastClick.current > 0) {
-        onOpen();
-        lastClick.current = 0;
-      } else {
-        lastClick.current = now;
-        setSelected(true);
-      }
-    },
-    [onOpen, doubleClickSpeed],
-  );
-
-  const handleBlur = useCallback(() => setSelected(false), []);
+  const handleClick = useCallback(() => {
+    setSelected(true);
+    setTimeout(() => setSelected(false), 300);
+    onOpen();
+  }, [onOpen]);
 
   const px = iconSize === "large" ? 36 : 24;
 
   return (
     <button
       className="flex flex-col items-center gap-1 p-1 cursor-pointer border-none bg-transparent"
-      style={{ width: 80, outline: "none" }}
-      onClick={(e) => swapButtons ? e.preventDefault() : handleClick(e)}
-      onBlur={handleBlur}
+      style={{ width: 80, outline: "none", color: "#000" }}
+      onClick={handleClick}
+      onBlur={() => setSelected(false)}
       onContextMenu={(e) => {
         e.preventDefault();
-        if (swapButtons) {
-          const now = Date.now();
-          if (now - lastClick.current < doubleClickSpeed && lastClick.current > 0) {
-            onOpen();
-            lastClick.current = 0;
-          } else {
-            lastClick.current = now;
-            setSelected(true);
-          }
-        }
+        if (swapButtons) handleClick();
       }}
       tabIndex={0}
     >

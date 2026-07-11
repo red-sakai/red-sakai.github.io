@@ -48,6 +48,8 @@ const MENU_ITEMS = ["File", "Edit", "View", "Favorites", "Tools", "Help"];
 export default function InternetExplorer() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const historyIndexRef = useRef(0);
+  const loadingRef = useRef(false);
   const [address, setAddress] = useState("");
   const [currentUrl, setCurrentUrl] = useState("about:blank");
   const [history, setHistory] = useState<HistoryEntry[]>([{ url: "about:blank" }]);
@@ -59,6 +61,19 @@ export default function InternetExplorer() {
     if (timerRef.current !== null) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
+    }
+  }, []);
+
+  const setHistoryIndexAndRef = useCallback((n: number | ((prev: number) => number)) => {
+    if (typeof n === "function") {
+      setHistoryIndex((prev) => {
+        const next = n(prev);
+        historyIndexRef.current = next;
+        return next;
+      });
+    } else {
+      historyIndexRef.current = n;
+      setHistoryIndex(n);
     }
   }, []);
 
@@ -80,61 +95,85 @@ export default function InternetExplorer() {
       const url = sanitizeUrl(rawUrl);
       if (!url) return;
       clearTimer();
+      const currentIdx = historyIndexRef.current;
       setAddress(url === "about:blank" ? "" : url);
       setCurrentUrl(url);
       setBlocked(false);
       setLoading(true);
-      setHistory((prev) => [...prev.slice(0, historyIndex + 1), { url }]);
-      setHistoryIndex((prev) => prev + 1);
+      loadingRef.current = true;
+      setHistory((prev) => [...prev.slice(0, currentIdx + 1), { url }]);
+      setHistoryIndexAndRef((prev) => prev + 1);
       timerRef.current = setTimeout(() => {
-        setBlocked(true);
-        setLoading(false);
+        if (loadingRef.current) {
+          setBlocked(true);
+          setLoading(false);
+        }
       }, 10000);
     },
-    [historyIndex, clearTimer],
+    [clearTimer, setHistoryIndexAndRef],
   );
 
   const handleNav = useCallback(
     (action: NavAction) => {
       switch (action) {
         case "back": {
-          if (historyIndex > 0) {
-            const idx = historyIndex - 1;
-            setHistoryIndex(idx);
+          const currentIdx = historyIndexRef.current;
+          if (currentIdx > 0) {
+            const idx = currentIdx - 1;
+            setHistoryIndexAndRef(idx);
             const entry = history[idx];
             setCurrentUrl(entry.url);
             setAddress(entry.url === "about:blank" ? "" : entry.url);
             setBlocked(false);
+            setLoading(true);
+            loadingRef.current = true;
             clearTimer();
             timerRef.current = setTimeout(() => {
-              setBlocked(true);
-              setLoading(false);
+              if (loadingRef.current) {
+                setBlocked(true);
+                setLoading(false);
+              }
             }, 10000);
           }
           break;
         }
         case "forward": {
-          if (historyIndex < history.length - 1) {
-            const idx = historyIndex + 1;
-            setHistoryIndex(idx);
+          const currentIdx = historyIndexRef.current;
+          if (currentIdx < history.length - 1) {
+            const idx = currentIdx + 1;
+            setHistoryIndexAndRef(idx);
             const entry = history[idx];
             setCurrentUrl(entry.url);
             setAddress(entry.url === "about:blank" ? "" : entry.url);
             setBlocked(false);
+            setLoading(true);
+            loadingRef.current = true;
             clearTimer();
             timerRef.current = setTimeout(() => {
-              setBlocked(true);
-              setLoading(false);
+              if (loadingRef.current) {
+                setBlocked(true);
+                setLoading(false);
+              }
             }, 10000);
           }
           break;
         }
         case "refresh": {
           iframeRef.current?.contentWindow?.location.reload();
+          clearTimer();
+          setLoading(true);
+          loadingRef.current = true;
+          timerRef.current = setTimeout(() => {
+            if (loadingRef.current) {
+              setBlocked(true);
+              setLoading(false);
+            }
+          }, 10000);
           break;
         }
         case "stop": {
           iframeRef.current?.contentWindow?.stop();
+          loadingRef.current = false;
           setLoading(false);
           clearTimer();
           break;
@@ -145,20 +184,22 @@ export default function InternetExplorer() {
         }
       }
     },
-    [history, historyIndex, navigate, clearTimer],
+    [history, navigate, clearTimer, setHistoryIndexAndRef],
   );
 
   const handleIframeLoad = useCallback(() => {
+    loadingRef.current = false;
     setLoading(false);
     clearTimer();
     setBlocked(false);
     try {
       const title = iframeRef.current?.contentDocument?.title;
       if (title) {
+        const idx = historyIndexRef.current;
         setHistory((prev) => {
           const updated = [...prev];
-          if (updated[historyIndex]) {
-            updated[historyIndex] = { ...updated[historyIndex], title };
+          if (updated[idx]) {
+            updated[idx] = { ...updated[idx], title };
           }
           return updated;
         });
@@ -166,7 +207,7 @@ export default function InternetExplorer() {
     } catch {
       // Cross-origin — cannot read title, but page loaded fine
     }
-  }, [historyIndex, clearTimer]);
+  }, [clearTimer]);
 
   const handleIframeError = useCallback(() => {
     setBlocked(true);

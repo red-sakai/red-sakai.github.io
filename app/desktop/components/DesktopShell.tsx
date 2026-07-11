@@ -15,6 +15,8 @@ import PaintClone from "./programs/PaintClone";
 import ControlPanel from "./programs/ControlPanel";
 import PortfolioViewer from "./programs/PortfolioViewer";
 import InternetExplorer from "./programs/InternetExplorer";
+import GameStation from "./programs/GameStation";
+import Favorites from "./programs/Favorites";
 import { JH_LOGO } from "../data/jhered-os-logo";
 import "../desktop.css";
 
@@ -45,19 +47,31 @@ const FIT_STYLES: Record<string, React.CSSProperties> = {
 };
 
 const programList = [
-  { id: "about", icon: "📄", label: "About Me" },
   { id: "portfolio", icon: "🏠", label: "My Portfolio" },
   { id: "explorer", icon: "📁", label: "File Explorer" },
   { id: "paint", icon: "🎨", label: "Paint" },
   { id: "controlpanel", icon: "⚙️", label: "Control Panel" },
   { id: "browser", icon: "🌐", label: "Internet Explorer" },
+  { id: "games", icon: "🎮", label: "Game Station" },
+  { id: "favorites", icon: "⭐", label: "My Favorites" },
 ];
+
+const IE_ICON = (
+  <svg width="36" height="36" viewBox="0 0 36 36" style={{ display: "block" }}>
+    <circle cx="18" cy="18" r="16" fill="#1a8cdb" />
+    <ellipse cx="18" cy="18" rx="12" ry="8" fill="#fff" />
+    <text x="18" y="23" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#1a8cdb" fontFamily="Arial">e</text>
+  </svg>
+);
 
 const DESKTOP_ICONS = [
   { id: "portfolio", icon: "🏠", label: "My Portfolio" },
   { id: "explorer", icon: "💻", label: "My Computer" },
   { id: "paint", icon: "🎨", label: "Paint" },
   { id: "controlpanel", icon: "⚙️", label: "Control Panel" },
+  { id: "browser", icon: IE_ICON, label: "Internet Explorer" },
+  { id: "games", icon: "🎮", label: "Game Station" },
+  { id: "favorites", icon: "⭐", label: "My Favorites" },
 ];
 
 export default function DesktopShell() {
@@ -75,6 +89,7 @@ export default function DesktopShell() {
   const [memCount, setMemCount] = useState(0);
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number } | null>(null);
   const [refreshTick, setRefreshTick] = useState(0);
+  const [showShutDownDialog, setShowShutDownDialog] = useState(false);
 
   // Wallpaper state with localStorage
   const [wallpaperConfig, setWallpaperConfig] = useState<WallpaperState>(() => {
@@ -94,9 +109,13 @@ export default function DesktopShell() {
   const [visibleIcons, setVisibleIcons] = useState<string[]>(() => {
     try {
       const stored = localStorage.getItem("desktop-icons-vis");
-      return stored ? JSON.parse(stored) : DESKTOP_ICONS.map((i) => i.id);
+      const parsed: string[] = stored ? JSON.parse(stored) : [];
+      const allIds = DESKTOP_ICONS.map((i) => i.id);
+      return [...new Set([...parsed, ...allIds])];
     } catch { return DESKTOP_ICONS.map((i) => i.id); }
   });
+
+  const [iconSize, setIconSize] = useState<"large" | "small">("large");
 
   // Mouse settings from localStorage
   const [doubleClickSpeed, setDoubleClickSpeed] = useState<number>(() => {
@@ -187,15 +206,24 @@ export default function DesktopShell() {
   const handleOpenProgram = useCallback(
     (id: string) => {
       sounds.play("open");
-      openWindow(id as "about" | "portfolio" | "explorer" | "paint" | "controlpanel" | "browser");
+      openWindow(id as "about" | "portfolio" | "explorer" | "paint" | "controlpanel" | "browser" | "games" | "favorites");
       setStartOpen(false);
     },
     [sounds, openWindow],
   );
 
   const handleShutDown = useCallback(() => {
+    setShowShutDownDialog(true);
+  }, []);
+
+  const handleShutDownConfirm = useCallback(() => {
+    setShowShutDownDialog(false);
     router.push("/grub-bootloader");
   }, [router]);
+
+  const handleShutDownCancel = useCallback(() => {
+    setShowShutDownDialog(false);
+  }, []);
 
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -211,13 +239,34 @@ export default function DesktopShell() {
   }, []);
 
   const contextItems: ContextMenuItem[] = [
+    {
+      label: "View", icon: "▼",
+      children: [
+        { label: "Large Icons", action: () => setIconSize("large") },
+        { label: "Small Icons", action: () => setIconSize("small") },
+        { label: "List", action: () => {} },
+        { label: "Details", action: () => {} },
+      ],
+    },
+    { separator: true },
     { label: "Refresh", icon: "⟳", action: handleRefresh },
+    { label: "Paste", icon: "📋", disabled: true },
+    {
+      label: "New", icon: "✨",
+      children: [
+        { label: "Folder", icon: "📁", action: () => {} },
+        { label: "Text Document", icon: "📄", action: () => {} },
+      ],
+    },
+    { separator: true },
+    { label: "Properties", icon: "🔍", action: () => {} },
+    { label: "Display Settings", icon: "🖥️", action: () => { handleCloseCtxMenu(); sounds.play("open"); openWindow("controlpanel"); } },
   ];
 
   const handleIconOpen = useCallback(
     (id: string) => {
       sounds.play("open");
-      openWindow(id as "about" | "portfolio" | "explorer" | "paint" | "controlpanel" | "browser");
+      openWindow(id as "about" | "portfolio" | "explorer" | "paint" | "controlpanel" | "browser" | "games" | "favorites");
     },
     [sounds, openWindow],
   );
@@ -275,6 +324,8 @@ export default function DesktopShell() {
       );
       case "portfolio": return <PortfolioViewer />;
       case "browser": return <InternetExplorer />;
+      case "games": return <GameStation />;
+      case "favorites": return <Favorites />;
       default: return null;
     }
   };
@@ -365,7 +416,7 @@ export default function DesktopShell() {
         />
       )}
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, padding: 8, position: "relative", zIndex: 1 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: 8, position: "relative", zIndex: 1, width: "fit-content" }}>
         {DESKTOP_ICONS
           .filter((icon) => visibleIcons.includes(icon.id))
           .map((icon) => (
@@ -375,8 +426,8 @@ export default function DesktopShell() {
             label={icon.label}
             onOpen={() => handleIconOpen(icon.id)}
             refreshTick={refreshTick}
-            doubleClickSpeed={doubleClickSpeed}
             swapButtons={swapButtons}
+            iconSize={iconSize}
           />
         ))}
       </div>
@@ -415,6 +466,27 @@ export default function DesktopShell() {
             {renderProgram(win.component)}
           </WindowShell>
         ))}
+
+      {showShutDownDialog && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.3)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          zIndex: 99999,
+        }}>
+          <div className="win98-window" style={{ width: 320, position: "relative" }}>
+            <div className="win98-titlebar">
+              <span>Shut Down</span>
+            </div>
+            <div style={{ padding: 16, textAlign: "center", color: "#000", fontSize: 11 }}>
+              <p>Are you sure you want to shut down?</p>
+              <div style={{ marginTop: 16, display: "flex", gap: 8, justifyContent: "center" }}>
+                <button className="win98-title-btn" style={{ padding: "4px 16px" }} onClick={handleShutDownConfirm}>OK</button>
+                <button className="win98-title-btn" style={{ padding: "4px 16px" }} onClick={handleShutDownCancel}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

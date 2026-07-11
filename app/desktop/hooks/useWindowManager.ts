@@ -6,7 +6,7 @@ export interface WindowState {
   id: string;
   title: string;
   icon: string;
-  component: "about" | "portfolio" | "explorer" | "paint" | "controlpanel" | "browser";
+  component: "about" | "portfolio" | "explorer" | "paint" | "controlpanel" | "browser" | "games" | "favorites";
   x: number;
   y: number;
   width: number;
@@ -24,7 +24,7 @@ export function useWindowManager() {
   const openWindow = useCallback(
     (component: WindowState["component"]) => {
       const id = `win-${++idCounter.current}`;
-      const offsets: Record<string, number> = { about: 0, portfolio: 15, explorer: 30, paint: 60, controlpanel: 90, browser: 45 };
+      const offsets: Record<string, number> = { about: 0, portfolio: 15, explorer: 30, paint: 60, controlpanel: 90, browser: 45, games: 75, favorites: 105 };
       const offset = offsets[component];
       const titleMap: Record<string, string> = {
         about: "About Me - Notepad",
@@ -33,6 +33,8 @@ export function useWindowManager() {
         paint: "Paint",
         controlpanel: "Control Panel",
         browser: "Internet Explorer",
+        games: "Game Station",
+        favorites: "My Favorites",
       };
       const iconMap: Record<string, string> = {
         about: "📄",
@@ -41,16 +43,19 @@ export function useWindowManager() {
         paint: "🎨",
         controlpanel: "⚙️",
         browser: "🌐",
+        games: "🎮",
+        favorites: "⭐",
       };
+      const isLarge = component === "portfolio" || component === "favorites";
       const newWin: WindowState = {
         id,
         title: titleMap[component] || component,
         icon: iconMap[component] || "📄",
         component,
-        width: component === "portfolio" ? Math.round(window.innerWidth * 0.8) : 500,
-        height: component === "portfolio" ? Math.round(window.innerHeight * 0.8) : 380,
-        x: component === "portfolio" ? Math.round((window.innerWidth - Math.round(window.innerWidth * 0.8)) / 2) : 50 + offset,
-        y: component === "portfolio" ? Math.round((window.innerHeight - Math.round(window.innerHeight * 0.8)) / 2) + 15 : 30 + offset,
+        width: isLarge ? Math.round(window.innerWidth * 0.8) : 500,
+        height: isLarge ? Math.round(window.innerHeight * 0.8) : 380,
+        x: isLarge ? Math.round((window.innerWidth - Math.round(window.innerWidth * 0.8)) / 2) : 50 + offset,
+        y: isLarge ? Math.round((window.innerHeight - Math.round(window.innerHeight * 0.8)) / 2) + 15 : 30 + offset,
         zIndex: zCounter.current++,
         minimized: false,
         maximized: false,

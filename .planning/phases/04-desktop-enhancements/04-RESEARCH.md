@@ -581,22 +581,25 @@ const IE_ICON = "🌐"; // Already used for the program icon
 | A2 | IE desktop icon fits existing emoji-based pattern | IE Desktop Icon | If SVG doesn't render at 36px well, fall back to a Unicode character or emoji |
 | A3 | No new npm packages needed | Standard Stack | If a dependency is needed for SVG or dialog, we'd need to install — but all needed capabilities are already in React/TypeScript |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Archive.org item verification for Resident Evil**
+1. **Archive.org item verification for Resident Evil** — RESOLVED
    - What we know: Identifier `resident-evil_202406` exists, has MS-DOS files (442.8M RAR)
    - What's unclear: Does this item have the `emulator: dosbox` metadata field to auto-start EM-DOSBOX? The search result says "There Is No Preview Available For This Item" which may indicate the DOSBox emulator metadata isn't set.
    - Recommendation: Verify in a browser at `https://archive.org/details/resident-evil_202406` — if no emulator preview, may need to use the MS-DOS Software Library's version instead. Or use dos.zone's embedding (dos.zone/resident-evil) which uses js-dos v7.
+   - Resolution: Will embed via `https://archive.org/embed/resident-evil_202406` with EM-DOSBOX fallback; GRUB bootloader plans can adjust if metadata differs.
 
-2. **IE pixel-art icon design**
+2. **IE pixel-art icon design** — RESOLVED
    - What we know: DesktopIcon renders at 36px. Pattern is emoji-based (🎨, 💻, etc.)
    - What's unclear: What exact pixel-art design to use — simple SVG "e" logo, or emulate the Win98 IE desktop icon (globe with compass ring)?
    - Recommendation: Simple approach — use a stylized "e" in a blue circle (SVG). Matches the spirit without over-engineering pixel detail at 36px.
+   - Resolution: SVG pixel-art IE "e" logo at 36px, matching DesktopIcon dimension pattern.
 
-3. **Shut Down confirmation dialog visual style**
+3. **Shut Down confirmation dialog visual style** — RESOLVED
    - What we know: Should be Win98-style. Existing window/dialog patterns use `.win98-window` and `.win98-titlebar` classes.
    - What's unclear: Whether to make it a full program window or a simpler centered dialog.
    - Recommendation: Simple centered modal (not a taskbar-managed window) for cleanliness — matches how Win98 shutdown confirmation works.
+   - Resolution: Simple centered modal dialog, not a taskbar-managed window.
 
 ## Environment Availability
 
