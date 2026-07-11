@@ -1,11 +1,28 @@
 [
   {
+    "title": "Chief Executive Officer",
+    "blurb": "Leading student initiatives for learning and studying modern world concepts for fellow members to be prepared for the industry.",
+    "category": "organizational",
+    "organization": "Cisco NetConnect PUP - Manila",
+    "orgType": "Leadership",
+    "date": "JUL 2026 - PRESENT",
+    "tags": ["Leadership", "Networking", "Cybersecurity", "Strategic Planning"],
+    "images": [
+      "/images/organizational/cisco/cisco-logo.jpg",
+      "/images/organizational/cisco/cisco1.jpg",
+      "/images/organizational/cisco/cisco2.jpg",
+      "/images/organizational/cisco/cisco3.jpg",
+      "/images/organizational/cisco/cisco4.jpg",
+      "/images/organizational/cisco/cisco5.jpg"
+    ]
+  },
+  {
     "title": "Vice Chief Executive Officer",
     "blurb": "Supporting organizational leadership, coordinating technical initiatives, and helping drive student engagement in networking and cybersecurity activities.",
     "category": "organizational",
     "organization": "Cisco NetConnect PUP - Manila",
     "orgType": "Leadership",
-    "date": "2025 - Present",
+    "date": "NOV 2025 - JUL 2026",
     "tags": ["Leadership", "Networking", "Cybersecurity", "Strategic Planning"],
     "images": [
       "/images/organizational/cisco/cisco-logo.jpg",
@@ -22,7 +39,7 @@
     "category": "organizational",
     "organization": "ICPEP SE - PUP Manila",
     "orgType": "Leadership",
-    "date": "2025 - Present",
+    "date": "SEP 2025 - Present",
     "tags": ["Leadership", "Programming", "Mentorship", "Web Development"],
     "images": [
       "/images/organizational/icpep/icpep-logo.jpg",
@@ -31,12 +48,36 @@
     ]
   },
   {
+    "title": "Blue Team Senior",
+    "blurb": "Conducted hands-on workshops on Security Information and Event Management (SIEM) concepts using Wazuh for log analysis, threat detection, and security monitoring. ",
+    "category": "organizational",
+    "organization": "Google Developer Groups",
+    "orgType": "Membership",
+    "date": "FEB 2026 - PRESENT",
+    "tags": ["Cybersecurity", "Incident Response", "Identity and Access Management"],
+    "images": [
+      "/images/organizational/gdg/gdg-logo.jpg"
+    ]
+  },
+  {
+    "title": "Blue Team Cadet",
+    "blurb": "Assisted in monitoring and analyzing security events (logs, alerts, and suspicious activities) to help identify possible threats and vulnerabilities within lab and practice environments.",
+    "category": "organizational",
+    "organization": "Google Developer Groups",
+    "orgType": "Membership",
+    "date": "FEB 2026 - FEB 2026",
+    "tags": ["Cybersecurity", "Incident Response", "Identity and Access Management"],
+    "images": [
+      "/images/organizational/gdg/gdg-logo.jpg"
+    ]
+  },
+  {
     "title": "Cybersecurity Cadet",
     "blurb": "Actively learning and applying security fundamentals, best practices, and real-world defensive techniques within a collaborative developer community.",
     "category": "organizational",
     "organization": "Google Developer Groups",
     "orgType": "Membership",
-    "date": "2025 - Present",
+    "date": "NOV 2025 - FEB 2026",
     "tags": ["Cybersecurity", "Incident Response", "Identity and Access Management"],
     "images": [
       "/images/organizational/gdg/gdg-logo.jpg"
@@ -48,10 +89,22 @@
     "category": "organizational",
     "organization": "AWS Cloud Club PUP",
     "orgType": "Membership",
-    "date": "2025 - Present",
+    "date": "OCT 2025 - JUN 2026",
     "tags": ["Programming", "API"],
     "images": [
       "/images/organizational/aws/aws-logo.jpg"
+    ]
+  },
+  {
+    "title": "Director of Infrastructure",
+    "blurb": "Oversee and maintain CyberPH’s technological infrastructure, ensuring robust, secure, and scalable systems for all operations.",
+    "category": "organizational",
+    "organization": "CyberPH",
+    "orgType": "Membership",
+    "date": "JAN 2026 - Present",
+    "tags": ["Cybersecurity", "Research"],
+    "images": [
+      "/images/organizational/cyberph/cyberph-logo.jpg"
     ]
   },
   {
@@ -60,7 +113,7 @@
     "category": "organizational",
     "organization": "CyberPH",
     "orgType": "Membership",
-    "date": "2025 - Present",
+    "date": "OCT 2025 - JAN 2026",
     "tags": ["Cybersecurity", "Research"],
     "images": [
       "/images/organizational/cyberph/cyberph-logo.jpg"
@@ -72,7 +125,7 @@
     "category": "organizational",
     "organization": "PUP Hygears",
     "orgType": "Membership",
-    "date": "2025 - Present",
+    "date": "NOV 2025 - JUN 2026",
     "tags": ["AutoCAD", "Web Development", "Prototyping"],
     "images": [
       "/images/organizational/hygears/hygears-logo.jpg"
@@ -120,6 +173,19 @@
       "/images/competitive/feu-conquer/feu1.jpg",
       "/images/competitive/feu-conquer/feu2.jpg",
       "/images/competitive/feu-conquer/feu3.jpg"
+    ]
+  },
+  {
+    "title": "Software Engineer Intern",
+    "blurb": "Developed custom modules for multiple clients of the company using the Odoo framework utilizing my knowledge in software engineering.",
+    "category": "professional",
+    "company": "Achieve Without Borders",
+    "orgType": "Internship",
+    "date": "June 2026 - August 2026",
+    "tags": ["Python", "PostgreSQL", "Docker", "Odoo"],
+    "images": [
+      "/images/professional/awb-logo.png",
+      "/images/professional/awb-picture1.jpeg"
     ]
   }
 ]
