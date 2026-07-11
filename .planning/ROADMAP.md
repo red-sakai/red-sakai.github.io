@@ -28,6 +28,7 @@
 **Success Criteria:**
 
 Plans:
+
 - [x] 02-01-PLAN.md — Foundation: window manager type extension, CSS variables, wallpapers directory
 - [x] 02-02-PLAN.md — DesktopIcon double-click speed prop, ContextMenu simplification
 - [x] 02-03-PLAN.md — Internet Explorer IE5/6-style iframe browser component
@@ -47,6 +48,7 @@ Plans:
 **Status:** Complete — all 3 success criteria delivered.
 
 **Success Criteria:**
+
 1. ✓ "My Portfolio" desktop icon visible on the retro desktop
 2. ✓ Double-click opens a pixel-art viewer with tabs for Education, Experience, Projects, Certifications
 3. ✓ All content is pixel-art styled but still readable
@@ -60,6 +62,7 @@ Plans:
 **Plans:** 3 plans
 
 **Success Criteria:**
+
 1. Right-click on desktop shows full Win98 context menu (View, Sort By, Refresh, Paste, New, Properties, Display Settings) with hover-to-open submenus
 2. Internet Explorer loads pages without false "blocked" state after 10 seconds
 3. Internet Explorer appears as a pixel-art desktop icon, launches on double-click
@@ -67,6 +70,11 @@ Plans:
 5. "Game Station" desktop icon opens a program that lists Resident Evil and plays it via archive.org iframe
 
 Plans:
+**Wave 1**
+
 - [ ] 04-01-PLAN.md — IE bugfix, type expansion, Start Menu cleanup (DESKTOP-10, DESKTOP-12)
 - [ ] 04-02-PLAN.md — Context menu component rewrite with hover-to-open submenus (DESKTOP-09)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 04-03-PLAN.md — Game Station creation, IE/GS desktop icons, context menu data wiring (DESKTOP-09, DESKTOP-11, DESKTOP-13)
