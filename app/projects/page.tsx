@@ -1,4 +1,4 @@
-import { NavbarCapsule } from "../components/sections/NavbarCapsule";
+import { NavbarCapsule } from "@/components/sections/NavbarCapsule";
 
 export default function ProjectsPage() {
 	return (

@@ -1,66 +1,58 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import styles from "./windows98.module.css";
+import { useState, useEffect, useCallback, type MouseEvent } from "react";
+import type { WindowState } from "@/hooks/useWindowManager";
 
-export type TaskbarWindow = {
-  id: string;
-  title: string;
-  isActive: boolean;
-  isMinimized: boolean;
-};
-
-type TaskbarProps = {
-  windows: TaskbarWindow[];
-  onToggleStart: () => void;
+interface Props {
+  windows: WindowState[];
+  onStartClick: () => void;
   startOpen: boolean;
-  onTaskClick: (id: string) => void;
-};
+  onTaskbarClick: (id: string) => void;
+  sounds: { play: (name: "click") => void };
+}
 
-export function Taskbar({ windows, onToggleStart, startOpen, onTaskClick }: TaskbarProps) {
-  const [time, setTime] = useState<string>("");
+export default function Taskbar({ windows, onStartClick, startOpen, onTaskbarClick, sounds }: Props) {
+  const [time, setTime] = useState("");
 
   useEffect(() => {
-    const updateTime = () => {
+    const update = () => {
       const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const displayHours = hours % 12 || 12;
-      const displayMinutes = minutes.toString().padStart(2, "0");
-      const suffix = hours >= 12 ? "PM" : "AM";
-      setTime(`${displayHours}:${displayMinutes} ${suffix}`);
+      setTime(now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
     };
-
-    updateTime();
-    const timer = window.setInterval(updateTime, 1000 * 30);
-    return () => window.clearInterval(timer);
+    update();
+    const id = setInterval(update, 10000);
+    return () => clearInterval(id);
   }, []);
 
+  const handleStart = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      sounds.play("click");
+      onStartClick();
+    },
+    [onStartClick, sounds],
+  );
+
   return (
-    <div className={styles.taskbar}>
+    <div className="win98-taskbar" onMouseDown={(e) => e.stopPropagation()}>
       <button
-        type="button"
-        className={`${styles.startButton} ${startOpen ? styles.startButtonActive : ""}`}
-        onClick={onToggleStart}
+        className={`win98-start-btn ${startOpen ? "pressed" : ""}`}
+        onClick={handleStart}
       >
-        Start
+        <span style={{ fontSize: 16, lineHeight: 1 }}>🪟</span>
+        <span>Start</span>
       </button>
-      <div className={styles.taskbarButtons}>
-        {windows.map((win) => (
-          <button
-            key={win.id}
-            type="button"
-            className={`${styles.taskbarButton} ${win.isActive ? styles.taskbarButtonActive : ""}`}
-            onClick={() => onTaskClick(win.id)}
-          >
-            {win.title}
-          </button>
-        ))}
-      </div>
-      <div className={styles.tray}>
-        <span role="status" aria-live="polite">
-          {time}
-        </span>
+      {windows.map((w) => (
+        <button
+          key={w.id}
+          className={`win98-taskbar-btn ${!w.minimized ? "active" : ""}`}
+          onClick={() => onTaskbarClick(w.id)}
+        >
+          {w.icon} {w.title}
+        </button>
+      ))}
+      <div className="win98-tray">
+        <span>{time}</span>
       </div>
     </div>
   );

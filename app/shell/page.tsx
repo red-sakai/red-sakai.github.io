@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import TerminalNavbar from "../components/ui/TerminalNavbar";
-import ShapeBlur from "../components/ui/ShapeBlur";
+import TerminalNavbar from "@/components/ui/TerminalNavbar";
+import ShapeBlur from "@/components/ui/ShapeBlur";
 
 type TerminalEntryMap = {
   input: { text: string };
