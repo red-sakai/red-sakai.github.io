@@ -1,10 +1,11 @@
 ---
 phase: 4
 slug: desktop-enhancements
-status: draft
+status: approved
 shadcn_initialized: true
 preset: new-york (unused in this phase)
 created: 2026-07-11
+reviewed_at: 2026-07-11
 ---
 
 # Phase 4 — UI Design Contract
