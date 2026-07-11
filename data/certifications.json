@@ -34,15 +34,15 @@
     ]
   },
   {
-    "title": "IBM Full Stack Software Developer Professional Certificate",
-    "issuer": "IBM | Coursera",
-    "date": "Coming Soon",
-    "description": "Coming soon: a full-stack track covering modern web app fundamentals across front-end, back-end, and practical development workflows.",
+    "title": "Certified in Cybersecurity",
+    "issuer": "ISC2",
+    "date": "2026",
+    "description": "Demonstrates foundational knowledge of cybersecurity principles, including security operations, networking fundamentals, risk management, incident response, and governance, aligned with industry best practices for entry-level cybersecurity roles.",
     "tags": [
-      "Full Stack",
-      "Web Development",
-      "Front End",
-      "Back End"
+      "Risk Management",
+      "Incident Reponse",
+      "Security Operations",
+      "Network Security"
     ]
   }
 ]
