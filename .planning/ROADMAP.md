@@ -57,7 +57,7 @@ Plans:
 
 **Requirements:** DESKTOP-09 (context menu restoration), DESKTOP-10 (IE bugfix), DESKTOP-11 (IE desktop icon), DESKTOP-12 (Start Menu cleanup), DESKTOP-13 (Game Station DOS games)
 
-**Plans:** 0/0 planned
+**Plans:** 3 plans
 
 **Success Criteria:**
 1. Right-click on desktop shows full Win98 context menu (View, Sort By, Refresh, Paste, New, Properties, Display Settings) with hover-to-open submenus
@@ -65,3 +65,8 @@ Plans:
 3. Internet Explorer appears as a pixel-art desktop icon, launches on double-click
 4. Start Menu no longer shows "About Me"; Shut Down shows confirmation then returns to GRUB
 5. "Game Station" desktop icon opens a program that lists Resident Evil and plays it via archive.org iframe
+
+Plans:
+- [ ] 04-01-PLAN.md — IE bugfix, type expansion, Start Menu cleanup (DESKTOP-10, DESKTOP-12)
+- [ ] 04-02-PLAN.md — Context menu component rewrite with hover-to-open submenus (DESKTOP-09)
+- [ ] 04-03-PLAN.md — Game Station creation, IE/GS desktop icons, context menu data wiring (DESKTOP-09, DESKTOP-11, DESKTOP-13)
