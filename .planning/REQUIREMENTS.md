@@ -43,6 +43,14 @@
 - [ ] **DESKTOP-07**: Four programs functional: About Me (notepad with bio), File Explorer (browses portfolio data), Paint (canvas drawing with colors), Control Panel (appearance settings)
 - [ ] **DESKTOP-08**: Retro sound effects via Web Audio API — startup chime, window open/close, click, error beep; responsive adaptation for mobile
 
+### Desktop Enhancements (Phase 4)
+
+- [ ] **DESKTOP-09**: Right-click context menu restored with full Win98 items: View (Large Icons, Small Icons, List, Details), Sort By (Name, Size, Type, Date Modified), Refresh, Paste, New (Folder, Text Document), Properties, Display Settings; hover-to-open submenus
+- [ ] **DESKTOP-10**: Internet Explorer bugfix — 10-second blocked timer only triggers if loading is still active; stale closure bug in history navigation fixed
+- [ ] **DESKTOP-11**: Internet Explorer appears as a pixel-art desktop icon (5th icon); double-click launches IE program
+- [ ] **DESKTOP-12**: Start Menu cleanup — "About Me" item removed; "Shut Down..." shows confirmation dialog before navigating to GRUB
+- [ ] **DESKTOP-13**: "Game Station" program window lists available DOS games; clicking a game opens archive.org DOSBox emulator in iframe; first game: Resident Evil
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -77,14 +85,20 @@
 | DESKTOP-06 | Phase 2 | Pending |
 | DESKTOP-07 | Phase 2 | Pending |
 | DESKTOP-08 | Phase 2 | Pending |
+| DESKTOP-09 | Phase 4 | Pending |
+| DESKTOP-10 | Phase 4 | Pending |
+| DESKTOP-11 | Phase 4 | Pending |
+| DESKTOP-12 | Phase 4 | Pending |
+| DESKTOP-13 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 13 total
 - v2 requirements: 2 total (carried forward)
 - v2 phase requirements: 8 total
-- Mapped to phases: 23
+- Phase 4 requirements: 5 total
+- Mapped to phases: 28
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-07-08*
-*Last updated: 2026-07-08 — Phase 2 added*
+*Last updated: 2026-07-11 — Phase 4 added*

@@ -1,3 +1,11 @@
+:root {
+  --titlebar-start: #000080;
+  --titlebar-end: #1084d0;
+  --titlebar-inactive-start: #808080;
+  --titlebar-inactive-end: #b4b4b4;
+  --taskbar-bg: #c0c0c0;
+}
+
 @keyframes scanlines {
   0% { background-position: 0 0; }
   100% { background-position: 0 4px; }
@@ -41,7 +49,7 @@
 }
 
 .win98-titlebar {
-  background: linear-gradient(90deg, #000080, #1084d0);
+  background: linear-gradient(90deg, var(--titlebar-start, #000080), var(--titlebar-end, #1084d0));
   color: #fff;
   padding: 2px 3px;
   display: flex;
@@ -55,7 +63,7 @@
 }
 
 .win98-titlebar-inactive {
-  background: linear-gradient(90deg, #808080, #b4b4b4);
+  background: linear-gradient(90deg, var(--titlebar-inactive-start, #808080), var(--titlebar-inactive-end, #b4b4b4));
 }
 
 .win98-title-buttons { display: flex; gap: 2px; }
@@ -87,7 +95,7 @@
 }
 
 .win98-taskbar {
-  background: #c0c0c0;
+  background: var(--taskbar-bg, #c0c0c0);
   border-top: 2px solid #fff;
   position: fixed;
   bottom: 0;
@@ -146,7 +154,7 @@
 }
 
 .win98-start-sidebar {
-  background: linear-gradient(180deg, #000080, #000000);
+  background: linear-gradient(180deg, var(--titlebar-start, #000080), #000000);
   width: 24px;
   display: flex;
   align-items: flex-end;

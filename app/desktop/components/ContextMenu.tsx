@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 
 export interface ContextMenuItem {
   label?: string;
@@ -20,8 +20,8 @@ interface ContextMenuProps {
 
 export default function ContextMenu({ x, y, items, onClose }: ContextMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [subLabel, setSubLabel] = useState<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [hoveredParent, setHoveredParent] = useState<number | null>(null);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const close = useCallback(() => onClose(), [onClose]);
 
@@ -35,42 +35,26 @@ export default function ContextMenu({ x, y, items, onClose }: ContextMenuProps) 
     return () => window.removeEventListener("mousedown", handler);
   }, [close]);
 
+  const handleItemMouseEnter = (index: number, hasChildren: boolean) => {
+    if (!hasChildren) return;
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => {
+      setHoveredParent(index);
+    }, 150);
+  };
+
+  const handleItemMouseLeave = (index: number) => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => {
+      setHoveredParent((current) => current === index ? null : current);
+    }, 200);
+  };
+
   const handleItemClick = (item: ContextMenuItem) => {
-    if (item.disabled || item.children) return;
+    if (item.disabled) return;
     item.action?.();
     close();
   };
-
-  const showSub = (label: string | null) => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (label === null) {
-      timerRef.current = setTimeout(() => setSubLabel(null), 200);
-    } else {
-      setSubLabel(label);
-    }
-  };
-
-  const renderSubmenu = (children: ContextMenuItem[]) => (
-    <div className="win98-context-submenu">
-      {children.map((child, j) => {
-        if (child.separator) return <div key={j} className="win98-context-separator" />;
-        return (
-          <div
-            key={j}
-            className={`win98-context-item${child.disabled ? " disabled" : ""}`}
-            onClick={() => {
-              if (child.disabled) return;
-              child.action?.();
-              close();
-            }}
-          >
-            <span className="win98-context-icon">{child.icon || ""}</span>
-            <span className="win98-context-label">{child.label || ""}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
 
   return (
     <div
@@ -82,17 +66,45 @@ export default function ContextMenu({ x, y, items, onClose }: ContextMenuProps) 
       {items.map((item, i) => {
         if (item.separator) return <div key={i} className="win98-context-separator" />;
         return (
-          <div
-            key={i}
-            className={`win98-context-item${item.disabled ? " disabled" : ""}`}
-            onMouseEnter={() => item.children && item.label && showSub(item.label)}
-            onMouseLeave={() => item.children && showSub(null)}
-            onClick={() => handleItemClick(item)}
-          >
-            <span className="win98-context-icon">{item.icon || ""}</span>
-            <span className="win98-context-label">{item.label || ""}</span>
-            {item.children && <span className="win98-context-arrow">▶</span>}
-            {item.children && item.label && subLabel === item.label && renderSubmenu(item.children)}
+          <div key={i} style={{ position: "relative" }}>
+            <div
+              className={`win98-context-item${item.disabled ? " disabled" : ""}`}
+              onMouseEnter={() => handleItemMouseEnter(i, !!item.children)}
+              onMouseLeave={() => handleItemMouseLeave(i)}
+              onClick={() => handleItemClick(item)}
+            >
+              {item.icon && <span className="win98-context-icon">{item.icon}</span>}
+              {item.label && <span className="win98-context-label">{item.label}</span>}
+              {item.children && <span className="win98-context-arrow">▸</span>}
+            </div>
+            {item.children && hoveredParent === i && (
+              <div
+                className="win98-context-submenu"
+                onMouseEnter={() => {
+                  if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+                }}
+                onMouseLeave={() => {
+                  if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+                  hoverTimerRef.current = setTimeout(() => {
+                    setHoveredParent(null);
+                  }, 200);
+                }}
+              >
+                {item.children.map((child, ci) => {
+                  if (child.separator) return <div key={ci} className="win98-context-separator" />;
+                  return (
+                    <div
+                      key={ci}
+                      className={`win98-context-item${child.disabled ? " disabled" : ""}`}
+                      onClick={() => handleItemClick(child)}
+                    >
+                      {child.icon && <span className="win98-context-icon">{child.icon}</span>}
+                      {child.label && <span className="win98-context-label">{child.label}</span>}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         );
       })}
