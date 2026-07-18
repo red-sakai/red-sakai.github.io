@@ -232,6 +232,26 @@
   border-bottom: 2px solid #fff;
 }
 
+.win98-field {
+  width: 100%;
+  padding: 2px 4px;
+  font-size: 11px;
+  font-family: "MS Sans Serif", "Chicago", "Segoe UI", sans-serif;
+  background: #fff;
+  color: #000;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  outline: 1px solid #000;
+  box-sizing: border-box;
+}
+
+.win98-field:read-only {
+  background: #c0c0c0;
+  cursor: default;
+}
+
 .win98-resize-handle {
   position: absolute;
   bottom: 0;
@@ -274,6 +294,37 @@
 @keyframes boot-fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes login-vanish {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.08); opacity: 0; }
+}
+
+@keyframes overlay-fade {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  font-family: "MS Sans Serif", "Chicago", "Segoe UI", sans-serif;
+}
+
+.login-vanish {
+  animation: login-vanish 3s ease-out forwards;
+}
+
+.overlay-fade {
+  animation: overlay-fade 3s ease-out forwards;
 }
 
 @keyframes grub-blink {
