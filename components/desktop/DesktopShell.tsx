@@ -17,7 +17,7 @@ import PortfolioViewer from "./programs/PortfolioViewer";
 import InternetExplorer from "./programs/InternetExplorer";
 import GameStation from "./programs/GameStation";
 import Favorites from "./programs/Favorites";
-import { JH_LOGO } from "@/data/jhered-os-logo";
+import LoginModal from "./LoginModal";
 import "./desktop.css";
 
 interface WallpaperState {
@@ -84,80 +84,62 @@ export default function DesktopShell() {
 
   const desktopRef = useRef<HTMLDivElement>(null);
   const [startOpen, setStartOpen] = useState(false);
-  const [showBoot, setShowBoot] = useState(true);
-  const [biosLine, setBiosLine] = useState(0);
-  const [memCount, setMemCount] = useState(0);
+  const [showBoot, setShowBoot] = useState(false);
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number } | null>(null);
   const [refreshTick, setRefreshTick] = useState(0);
   const [showShutDownDialog, setShowShutDownDialog] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
+  const [loginAnimating, setLoginAnimating] = useState(false);
 
   // Wallpaper state with localStorage
-  const [wallpaperConfig, setWallpaperConfig] = useState<WallpaperState>(() => {
-    try {
-      const stored = localStorage.getItem("desktop-wallpaper");
-      return stored ? JSON.parse(stored) : { type: "color", value: "#008080", fit: "center" };
-    } catch { return { type: "color", value: "#008080", fit: "center" }; }
-  });
+  const [wallpaperConfig, setWallpaperConfig] = useState<WallpaperState>({ type: "color", value: "#008080", fit: "center" });
 
   // Color scheme state with localStorage
-  const [colorScheme, setColorScheme] = useState<string>(() => {
-    try { return localStorage.getItem("desktop-colorscheme") || "standard"; }
-    catch { return "standard"; }
-  });
+  const [colorScheme, setColorScheme] = useState<string>("standard");
 
   // Icon visibility with localStorage
-  const [visibleIcons, setVisibleIcons] = useState<string[]>(() => {
-    try {
-      const stored = localStorage.getItem("desktop-icons-vis");
-      const parsed: string[] = stored ? JSON.parse(stored) : [];
-      const allIds = DESKTOP_ICONS.map((i) => i.id);
-      return [...new Set([...parsed, ...allIds])];
-    } catch { return DESKTOP_ICONS.map((i) => i.id); }
-  });
+  const [visibleIcons, setVisibleIcons] = useState<string[]>(() => DESKTOP_ICONS.map((i) => i.id));
 
   const [iconSize, setIconSize] = useState<"large" | "small">("large");
 
   // Mouse settings from localStorage
-  const [doubleClickSpeed, setDoubleClickSpeed] = useState<number>(() => {
-    try { return parseInt(localStorage.getItem("desktop-mousespeed") || "400", 10); }
-    catch { return 400; }
-  });
-  const [swapButtons, setSwapButtons] = useState<boolean>(() => {
-    try { return localStorage.getItem("desktop-swapbuttons") === "true"; }
-    catch { return false; }
-  });
+  const [doubleClickSpeed, setDoubleClickSpeed] = useState<number>(400);
+  const [swapButtons, setSwapButtons] = useState<boolean>(false);
 
   // Faux resolution
-  const [fauxResolution, setFauxResolution] = useState<string>(() => {
-    try { return localStorage.getItem("desktop-resolution") || "1024x768"; }
-    catch { return "1024x768"; }
-  });
+  const [fauxResolution, setFauxResolution] = useState<string>("1024x768");
 
+  // Hydration-safe localStorage loader — runs once on mount (client only)
   useEffect(() => {
-    const timers = [
-      setTimeout(() => setBiosLine(1), 150),
-      setTimeout(() => setBiosLine(2), 400),
-      setTimeout(() => setBiosLine(3), 700),
-      setTimeout(() => setBiosLine(4), 1400),
-      setTimeout(() => setBiosLine(5), 1700),
-      setTimeout(() => { setBiosLine(6); }, 2000),
-    ];
-    sounds.play("startup");
-    const bootTimer = setTimeout(() => setShowBoot(false), 2500);
-    return () => { timers.forEach(clearTimeout); clearTimeout(bootTimer); };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (biosLine < 3 || biosLine >= 4) return;
-    const t = setInterval(() => {
-      setMemCount((p) => {
-        const n = p + Math.floor(Math.random() * 12288) + 4096;
-        if (n >= 65536) { clearInterval(t); return 65536; }
-        return n;
-      });
-    }, 70);
-    return () => clearInterval(t);
-  }, [biosLine]);
+    try {
+      const wp = localStorage.getItem("desktop-wallpaper");
+      if (wp) setWallpaperConfig(JSON.parse(wp));
+    } catch {}
+    try {
+      const cs = localStorage.getItem("desktop-colorscheme");
+      if (cs) setColorScheme(cs);
+    } catch {}
+    try {
+      const iv = localStorage.getItem("desktop-icons-vis");
+      if (iv) {
+        const parsed: string[] = JSON.parse(iv);
+        const allIds = DESKTOP_ICONS.map((i) => i.id);
+        setVisibleIcons([...new Set([...parsed, ...allIds])]);
+      }
+    } catch {}
+    try {
+      const ms = localStorage.getItem("desktop-mousespeed");
+      if (ms) setDoubleClickSpeed(parseInt(ms, 10));
+    } catch {}
+    try {
+      const sb = localStorage.getItem("desktop-swapbuttons");
+      if (sb) setSwapButtons(sb === "true");
+    } catch {}
+    try {
+      const fr = localStorage.getItem("desktop-resolution");
+      if (fr) setFauxResolution(fr);
+    } catch {}
+  }, []);
 
   // Persist wallpaper config
   useEffect(() => {
@@ -223,6 +205,17 @@ export default function DesktopShell() {
 
   const handleShutDownCancel = useCallback(() => {
     setShowShutDownDialog(false);
+  }, []);
+
+  const handleLoginCancel = useCallback(() => {
+    router.push("/grub-bootloader");
+  }, [router]);
+
+  const handleLoginSuccess = useCallback(() => {
+    setLoginAnimating(true);
+    setTimeout(() => {
+      setShowLogin(false);
+    }, 3200);
   }, []);
 
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
@@ -330,66 +323,6 @@ export default function DesktopShell() {
     }
   };
 
-  if (showBoot) {
-    return (
-      <main
-        className="crt-curve"
-        style={{
-          minHeight: "100dvh", background: "#000", color: "#00ff41",
-          fontFamily: '"JetBrains Mono", "Fira Code", monospace',
-          fontSize: 14, display: "flex", flexDirection: "column",
-          justifyContent: "center", alignItems: "center",
-        }}
-      >
-        <div
-          style={{
-            position: "fixed", inset: 0,
-            background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.03) 2px, rgba(0,255,65,0.03) 4px)",
-            pointerEvents: "none", zIndex: 1,
-          }}
-        />
-        <div style={{ position: "relative", zIndex: 2, width: 520, maxWidth: "90vw" }}>
-          <pre style={{ fontSize: 10, lineHeight: 1.25, marginBottom: 20, color: "#00cc33", textAlign: "center" }}>
-            {JH_LOGO}
-          </pre>
-          <div style={{ border: "1px solid rgba(0,255,65,0.15)", padding: "16px 20px", background: "rgba(0,255,65,0.02)" }}>
-            {biosLine >= 1 && (
-              <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>
-                <span style={{ color: "#008800" }}>&gt; </span>Jhered OS Shell v1.0 initializing...
-              </div>
-            )}
-            {biosLine >= 2 && (
-              <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>
-                <span style={{ color: "#008800" }}>&gt; </span>Memory Test: {memCount.toLocaleString()}K{memCount >= 65536 ? " OK" : ""}
-                {memCount < 65536 && <span style={{ animation: "grub-blink 0.5s step-end infinite" }}>_</span>}
-              </div>
-            )}
-            {biosLine >= 3 && (
-              <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>
-                <span style={{ color: "#008800" }}>&gt; </span>Loading desktop environment...
-              </div>
-            )}
-            {biosLine >= 4 && (
-              <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>
-                <span style={{ color: "#008800" }}>&gt; </span>Starting taskbar services...
-              </div>
-            )}
-            {biosLine >= 5 && (
-              <div style={{ marginBottom: 8, opacity: 0.9, animation: "boot-fade-in 0.15s ease-out" }}>
-                <span style={{ color: "#008800" }}>&gt; </span>Initializing window manager...
-              </div>
-            )}
-            {biosLine >= 6 && (
-              <div style={{ marginTop: 12, animation: "boot-fade-in 0.3s ease-out" }}>
-                <span style={{ color: "#00ff41" }}>&gt; </span>Desktop ready.
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
-    );
-  }
-
   return (
     <main
       className="desktop-scanlines"
@@ -485,6 +418,16 @@ export default function DesktopShell() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {showLogin && (
+        <div className={`login-overlay${loginAnimating ? " overlay-fade" : ""}`}>
+          <LoginModal
+            animating={loginAnimating}
+            onSuccess={handleLoginSuccess}
+            onCancel={handleLoginCancel}
+          />
         </div>
       )}
     </main>
