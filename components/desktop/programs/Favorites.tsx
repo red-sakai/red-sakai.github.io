@@ -54,6 +54,26 @@ export default function Favorites() {
   const { isAdmin } = useAdmin();
   const [favorites, setFavorites] = useState<FavoriteEntry[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingEntry, setEditingEntry] = useState<FavoriteEntry | null>(null);
+  const [deletingEntry, setDeletingEntry] = useState<FavoriteEntry | null>(null);
+
+  const handleAdd = (entry: FavoriteEntry) => {
+    setFavorites(prev => [...prev, entry]);
+    setShowAddModal(false);
+  };
+
+  const handleEdit = (updated: FavoriteEntry) => {
+    setFavorites(prev => prev.map(f => f.id === updated.id ? updated : f));
+    setSelected(prev => prev?.id === updated.id ? updated : prev);
+    setEditingEntry(null);
+  };
+
+  const handleDelete = (id: string) => {
+    setFavorites(prev => prev.filter(f => f.id !== id));
+    setSelected(prev => prev?.id === id ? null : prev);
+    setDeletingEntry(null);
+  };
 
   useEffect(() => {
     try {
@@ -91,8 +111,23 @@ export default function Favorites() {
         ⭐ My Favorites{isAdmin ? " (Admin)" : ""}
       </div>
 
+      {isAdmin ? (
+        <div style={{ marginBottom: 12 }}>
+          <button
+            onClick={() => setShowAddModal(true)}
+            style={{
+              ...win98Btn,
+              padding: "4px 12px",
+              fontSize: 11,
+              fontWeight: 700,
+            }}
+          >
+            + Add Favorite
+          </button>
+        </div>
+      ) : null}
       <div style={{ fontSize: 11, marginBottom: 12, color: "#666" }}>
-        Click any cover to see details and thoughts.
+        {isAdmin ? "Click any cover to see details. Use ✏️ to edit, 🗑️ to delete." : "Click any cover to see details and thoughts."}
       </div>
 
       <div style={{ display: "flex", gap: 4, marginBottom: 12 }}>
@@ -126,23 +161,44 @@ export default function Favorites() {
               const gradient = categoryGradients[entry.category] ?? "linear-gradient(135deg, #808080, #606060)";
               const emoji = categoryEmoji[entry.category] ?? "⭐";
               return (
-                <div
-                  key={entry.id}
-                  onClick={() => setSelected(entry)}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    background: "#c0c0c0",
-                    borderTop: "2px solid #fff",
-                    borderLeft: "2px solid #fff",
-                    borderRight: "2px solid #808080",
-                    borderBottom: "2px solid #808080",
-                    outline: "1px solid #000",
-                    padding: 6,
-                    color: "#000",
-                    cursor: "pointer",
-                  }}
-                >
+                  <div
+                    key={entry.id}
+                    onClick={() => setSelected(entry)}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      background: "#c0c0c0",
+                      borderTop: "2px solid #fff",
+                      borderLeft: "2px solid #fff",
+                      borderRight: "2px solid #808080",
+                      borderBottom: "2px solid #808080",
+                      outline: "1px solid #000",
+                      padding: 6,
+                      color: "#000",
+                      cursor: "pointer",
+                      position: "relative",
+                    }}
+                  >
+                    {isAdmin && (
+                      <div style={{ position: "absolute", top: 2, right: 2, display: "flex", gap: 2 }}>
+                        <button
+                          aria-label={`Edit ${entry.title}`}
+                          onClick={(e) => { e.stopPropagation(); setEditingEntry(entry); }}
+                          style={{
+                            ...win98Btn, width: 18, height: 18, padding: 0,
+                            display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10,
+                          }}
+                        >✏️</button>
+                        <button
+                          aria-label={`Delete ${entry.title}`}
+                          onClick={(e) => { e.stopPropagation(); setDeletingEntry(entry); }}
+                          style={{
+                            ...win98Btn, width: 18, height: 18, padding: 0,
+                            display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10,
+                          }}
+                        >🗑️</button>
+                      </div>
+                    )}
                   {entry.image ? (
                     <img
                       src={entry.image}
