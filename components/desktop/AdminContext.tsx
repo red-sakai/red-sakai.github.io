@@ -12,7 +12,7 @@ const AdminContext = createContext<AdminContextValue>({
   setAdmin: () => {},
 });
 
-export const ADMIN_SECRET = "jhered";
+export const ADMIN_SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET ?? "jhered";
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setAdmin] = useState(false);
