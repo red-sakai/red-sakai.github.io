@@ -17,6 +17,7 @@ import PortfolioViewer from "./programs/PortfolioViewer";
 import InternetExplorer from "./programs/InternetExplorer";
 import GameStation from "./programs/GameStation";
 import Favorites from "./programs/Favorites";
+import { AdminProvider } from "./AdminContext";
 import LoginModal from "./LoginModal";
 import "./desktop.css";
 
@@ -324,112 +325,114 @@ export default function DesktopShell() {
   };
 
   return (
-    <main
-      className="desktop-scanlines"
-      ref={desktopRef}
-      style={{
-        minHeight: "100dvh", position: "relative",
-        overflow: "hidden", paddingBottom: 30, animation: "boot-fade-in 0.3s ease-out",
-        fontFamily: '"MS Sans Serif", "Chicago", "Segoe UI", sans-serif',
-        ...(wallpaperConfig.type === "color"
-          ? { background: wallpaperConfig.value }
-          : {
-              backgroundImage: `url(${wallpaperConfig.value})`,
-              ...FIT_STYLES[wallpaperConfig.fit],
-            }),
-      }}
-      onContextMenu={handleContextMenu}
-    >
-      {ctxMenu && (
-        <ContextMenu
-          x={ctxMenu.x}
-          y={ctxMenu.y}
-          items={contextItems}
-          onClose={handleCloseCtxMenu}
-        />
-      )}
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: 8, position: "relative", zIndex: 1, width: "fit-content" }}>
-        {DESKTOP_ICONS
-          .filter((icon) => visibleIcons.includes(icon.id))
-          .map((icon) => (
-          <DesktopIcon
-            key={icon.id}
-            icon={icon.icon}
-            label={icon.label}
-            onOpen={() => handleIconOpen(icon.id)}
-            refreshTick={refreshTick}
-            swapButtons={swapButtons}
-            iconSize={iconSize}
+    <AdminProvider>
+      <main
+        className="desktop-scanlines"
+        ref={desktopRef}
+        style={{
+          minHeight: "100dvh", position: "relative",
+          overflow: "hidden", paddingBottom: 30, animation: "boot-fade-in 0.3s ease-out",
+          fontFamily: '"MS Sans Serif", "Chicago", "Segoe UI", sans-serif',
+          ...(wallpaperConfig.type === "color"
+            ? { background: wallpaperConfig.value }
+            : {
+                backgroundImage: `url(${wallpaperConfig.value})`,
+                ...FIT_STYLES[wallpaperConfig.fit],
+              }),
+        }}
+        onContextMenu={handleContextMenu}
+      >
+        {ctxMenu && (
+          <ContextMenu
+            x={ctxMenu.x}
+            y={ctxMenu.y}
+            items={contextItems}
+            onClose={handleCloseCtxMenu}
           />
-        ))}
-      </div>
+        )}
 
-      <Taskbar
-        windows={windows}
-        onStartClick={() => setStartOpen((prev) => !prev)}
-        startOpen={startOpen}
-        onTaskbarClick={handleTaskbarClick}
-        sounds={sounds}
-      />
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: 8, position: "relative", zIndex: 1, width: "fit-content" }}>
+          {DESKTOP_ICONS
+            .filter((icon) => visibleIcons.includes(icon.id))
+            .map((icon) => (
+            <DesktopIcon
+              key={icon.id}
+              icon={icon.icon}
+              label={icon.label}
+              onOpen={() => handleIconOpen(icon.id)}
+              refreshTick={refreshTick}
+              swapButtons={swapButtons}
+              iconSize={iconSize}
+            />
+          ))}
+        </div>
 
-      {startOpen && (
-        <StartMenu
-          programs={programList}
-          onOpen={handleOpenProgram}
-          onShutDown={handleShutDown}
+        <Taskbar
+          windows={windows}
+          onStartClick={() => setStartOpen((prev) => !prev)}
+          startOpen={startOpen}
+          onTaskbarClick={handleTaskbarClick}
           sounds={sounds}
         />
-      )}
 
-      {windows
-        .filter((w) => !w.minimized)
-        .map((win) => (
-          <WindowShell
-            key={win.id}
-            win={win}
-            onFocus={focusWindow}
-            onClose={handleCloseWindow}
-            onMinimize={minimizeWindow}
-            onMaximize={toggleMaximize}
-            onMove={moveWindow}
-            onResize={resizeWindow}
-            isTop={topWindow?.id === win.id}
-          >
-            {renderProgram(win.component)}
-          </WindowShell>
-        ))}
+        {startOpen && (
+          <StartMenu
+            programs={programList}
+            onOpen={handleOpenProgram}
+            onShutDown={handleShutDown}
+            sounds={sounds}
+          />
+        )}
 
-      {showShutDownDialog && (
-        <div style={{
-          position: "fixed", inset: 0, background: "rgba(0,0,0,0.3)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          zIndex: 99999,
-        }}>
-          <div className="win98-window" style={{ width: 320, position: "relative" }}>
-            <div className="win98-titlebar">
-              <span>Shut Down</span>
-            </div>
-            <div style={{ padding: 16, textAlign: "center", color: "#000", fontSize: 11 }}>
-              <p>Are you sure you want to shut down?</p>
-              <div style={{ marginTop: 16, display: "flex", gap: 8, justifyContent: "center" }}>
-                <button className="win98-title-btn" style={{ padding: "4px 16px" }} onClick={handleShutDownConfirm}>OK</button>
-                <button className="win98-title-btn" style={{ padding: "4px 16px" }} onClick={handleShutDownCancel}>Cancel</button>
+        {windows
+          .filter((w) => !w.minimized)
+          .map((win) => (
+            <WindowShell
+              key={win.id}
+              win={win}
+              onFocus={focusWindow}
+              onClose={handleCloseWindow}
+              onMinimize={minimizeWindow}
+              onMaximize={toggleMaximize}
+              onMove={moveWindow}
+              onResize={resizeWindow}
+              isTop={topWindow?.id === win.id}
+            >
+              {renderProgram(win.component)}
+            </WindowShell>
+          ))}
+
+        {showShutDownDialog && (
+          <div style={{
+            position: "fixed", inset: 0, background: "rgba(0,0,0,0.3)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            zIndex: 99999,
+          }}>
+            <div className="win98-window" style={{ width: 320, position: "relative" }}>
+              <div className="win98-titlebar">
+                <span>Shut Down</span>
+              </div>
+              <div style={{ padding: 16, textAlign: "center", color: "#000", fontSize: 11 }}>
+                <p>Are you sure you want to shut down?</p>
+                <div style={{ marginTop: 16, display: "flex", gap: 8, justifyContent: "center" }}>
+                  <button className="win98-title-btn" style={{ padding: "4px 16px" }} onClick={handleShutDownConfirm}>OK</button>
+                  <button className="win98-title-btn" style={{ padding: "4px 16px" }} onClick={handleShutDownCancel}>Cancel</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {showLogin && (
-        <div className={`login-overlay${loginAnimating ? " overlay-fade" : ""}`}>
-          <LoginModal
-            animating={loginAnimating}
-            onSuccess={handleLoginSuccess}
-            onCancel={handleLoginCancel}
-          />
-        </div>
-      )}
-    </main>
+        {showLogin && (
+          <div className={`login-overlay${loginAnimating ? " overlay-fade" : ""}`}>
+            <LoginModal
+              animating={loginAnimating}
+              onSuccess={handleLoginSuccess}
+              onCancel={handleLoginCancel}
+            />
+          </div>
+        )}
+      </main>
+    </AdminProvider>
   );
 }
