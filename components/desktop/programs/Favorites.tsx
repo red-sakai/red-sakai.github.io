@@ -48,6 +48,210 @@ const win98Btn: Record<string, string | number> = {
 
 type FilterKey = "all" | "game" | "manhwa" | "anime";
 
+function AddEditModal({
+  initial,
+  onSave,
+  onCancel,
+}: {
+  initial?: FavoriteEntry;
+  onSave: (entry: FavoriteEntry) => void;
+  onCancel: () => void;
+}) {
+  const [title, setTitle] = useState(initial?.title ?? "");
+  const [category, setCategory] = useState(initial?.category ?? "anime");
+  const [rating, setRating] = useState(initial?.rating ?? 0);
+  const [image, setImage] = useState(initial?.image ?? "");
+  const [thoughts, setThoughts] = useState(initial?.thoughts ?? "");
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  const handleSubmit = () => {
+    if (!title.trim()) {
+      setValidationError("Title is required.");
+      return;
+    }
+    onSave({
+      id: initial?.id ?? crypto.randomUUID(),
+      title: title.trim(),
+      category,
+      image,
+      rating: parseFloat(rating.toString()) || 0,
+      thoughts,
+    });
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.4)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 99999,
+      }}
+      onClick={onCancel}
+    >
+      <div
+        className="win98-window"
+        style={{ width: 380, position: "relative", fontFamily: '"MS Sans Serif", "Segoe UI", sans-serif' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="win98-titlebar" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <span>{initial ? "✏️ Edit Favorite" : "✚ Add Favorite"}</span>
+          <div style={{ marginLeft: "auto", display: "flex", gap: 2 }}>
+            <button className="win98-title-btn" onClick={onCancel} style={{ fontWeight: 700, lineHeight: 1, fontSize: 12 }}>✕</button>
+          </div>
+        </div>
+        <div style={{ padding: 14, color: "#000", fontSize: 11 }}>
+          <div style={{ marginBottom: 10 }}>
+            <label htmlFor="fav-title" style={{ display: "block", marginBottom: 2 }}>Title</label>
+            <input
+              id="fav-title"
+              type="text"
+              value={title}
+              onChange={(e) => { setTitle(e.target.value); setValidationError(null); }}
+              className="win98-field"
+              style={{ width: "100%" }}
+            />
+            {validationError && (
+              <span style={{ color: "#cc0000", fontSize: 10 }}>{validationError}</span>
+            )}
+          </div>
+          <div style={{ marginBottom: 10 }}>
+            <label htmlFor="fav-category" style={{ display: "block", marginBottom: 2 }}>Category</label>
+            <select
+              id="fav-category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="win98-field"
+              style={{ width: "100%" }}
+            >
+              <option value="anime">Anime</option>
+              <option value="manhwa">Manhwa</option>
+              <option value="game">Game</option>
+            </select>
+          </div>
+          <div style={{ marginBottom: 10 }}>
+            <label htmlFor="fav-rating" style={{ display: "block", marginBottom: 2 }}>Rating <span style={{ fontWeight: 400, color: "#666" }}>(0.0 – 10.0)</span></label>
+            <input
+              id="fav-rating"
+              type="number"
+              min="0"
+              max="10"
+              step="0.1"
+              value={rating}
+              onChange={(e) => setRating(parseFloat(e.target.value) || 0)}
+              className="win98-field"
+              style={{ width: 80 }}
+            />
+          </div>
+          <div style={{ marginBottom: 10 }}>
+            <label htmlFor="fav-image" style={{ display: "block", marginBottom: 2 }}>Image URL</label>
+            <input
+              id="fav-image"
+              type="text"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              placeholder="https://example.com/image.jpg"
+              className="win98-field"
+              style={{ width: "100%" }}
+            />
+          </div>
+          <div style={{ marginBottom: 10 }}>
+            <label htmlFor="fav-thoughts" style={{ display: "block", marginBottom: 2 }}>Thoughts</label>
+            <textarea
+              id="fav-thoughts"
+              value={thoughts}
+              onChange={(e) => setThoughts(e.target.value)}
+              className="win98-field"
+              rows={3}
+              style={{ width: "100%", resize: "none" }}
+            />
+          </div>
+          <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="win98-title-btn"
+              style={{ padding: "4px 16px", fontSize: 11 }}
+            >
+              OK
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="win98-title-btn"
+              style={{ padding: "4px 16px", fontSize: 11 }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DeleteConfirmModal({
+  title,
+  onConfirm,
+  onCancel,
+}: {
+  title: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.4)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 99999,
+      }}
+      onClick={onCancel}
+    >
+      <div
+        className="win98-window"
+        style={{ width: 320, position: "relative", fontFamily: '"MS Sans Serif", "Segoe UI", sans-serif' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="win98-titlebar" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <span>Confirm Delete</span>
+          <div style={{ marginLeft: "auto", display: "flex", gap: 2 }}>
+            <button className="win98-title-btn" onClick={onCancel} style={{ fontWeight: 700, lineHeight: 1, fontSize: 12 }}>✕</button>
+          </div>
+        </div>
+        <div style={{ padding: 16, textAlign: "center", color: "#000", fontSize: 11 }}>
+          <p>Are you sure you want to remove {title}?</p>
+          <div style={{ marginTop: 16, display: "flex", gap: 8, justifyContent: "center" }}>
+            <button
+              type="button"
+              onClick={onConfirm}
+              className="win98-title-btn"
+              style={{ padding: "4px 16px", fontSize: 11 }}
+            >
+              Yes
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="win98-title-btn"
+              style={{ padding: "4px 16px", fontSize: 11 }}
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Favorites() {
   const [filter, setFilter] = useState<FilterKey>("all");
   const [selected, setSelected] = useState<FavoriteEntry | null>(null);
@@ -320,7 +524,7 @@ export default function Favorites() {
                   </div>
                   <div style={{ fontSize: 11, lineHeight: 1.5, color: "#333", ...win98Sunken, padding: "6px 8px", minHeight: 50 }}>
                     {selected.thoughts || (
-                      <span style={{ color: "#999", fontStyle: "italic" }}>No thoughts yet. Edit <span style={{ fontStyle: "italic" }}>No thoughts recorded.</span> to add your notes.</span>
+                      <span style={{ color: "#999", fontStyle: "italic" }}>No thoughts recorded.</span>
                     )}
                   </div>
                 </div>
@@ -336,6 +540,27 @@ export default function Favorites() {
             </div>
           </div>
         </div>
+      )}
+
+      {showAddModal && (
+        <AddEditModal
+          onSave={handleAdd}
+          onCancel={() => setShowAddModal(false)}
+        />
+      )}
+      {editingEntry && (
+        <AddEditModal
+          initial={editingEntry}
+          onSave={handleEdit}
+          onCancel={() => setEditingEntry(null)}
+        />
+      )}
+      {deletingEntry && (
+        <DeleteConfirmModal
+          title={deletingEntry.title}
+          onConfirm={() => handleDelete(deletingEntry.id)}
+          onCancel={() => setDeletingEntry(null)}
+        />
       )}
     </div>
   );
