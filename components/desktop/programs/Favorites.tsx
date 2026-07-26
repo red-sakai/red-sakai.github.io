@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import favorites from "@/data/favorites.json";
+import { useState, useEffect } from "react";
+import { useAdmin } from "../AdminContext";
 
 type FavoriteEntry = {
+  id: string;
   title: string;
   category: string;
   image: string;
@@ -50,8 +51,35 @@ type FilterKey = "all" | "game" | "manhwa" | "anime";
 export default function Favorites() {
   const [filter, setFilter] = useState<FilterKey>("all");
   const [selected, setSelected] = useState<FavoriteEntry | null>(null);
+  const { isAdmin } = useAdmin();
+  const [favorites, setFavorites] = useState<FavoriteEntry[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
-  const data = favorites as FavoriteEntry[];
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("favorites");
+      if (stored) {
+        const parsed = JSON.parse(stored) as FavoriteEntry[];
+        setFavorites(parsed);
+      }
+    } catch {
+      setFavorites([]);
+    }
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+    } catch {
+      // Storage full — silently degrade
+    }
+  }, [favorites, hydrated]);
+
+  const data = favorites;
+
+  if (!hydrated) return null;
 
   const filtered = filter === "all"
     ? data
@@ -60,7 +88,7 @@ export default function Favorites() {
   return (
     <div style={{ padding: 8, fontFamily: '"MS Sans Serif", "Segoe UI", sans-serif', height: "100%", display: "flex", flexDirection: "column" }}>
       <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: "#000" }}>
-        ⭐ My Favorites
+        ⭐ My Favorites{isAdmin ? " (Admin)" : ""}
       </div>
 
       <div style={{ fontSize: 11, marginBottom: 12, color: "#666" }}>
@@ -86,16 +114,20 @@ export default function Favorites() {
       <div style={{ flex: 1, overflowY: "auto", ...win98Sunken, padding: 8 }}>
         {filtered.length === 0 ? (
           <div style={{ fontSize: 11, color: "#666", textAlign: "center", padding: 24 }}>
-            No favorites in this category.
+            {filter !== "all"
+              ? "No favorites in this category."
+              : isAdmin
+                ? "No favorites yet. Click '+ Add Favorite' above to add your first entry."
+                : "No favorites to display."}
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 8 }}>
-            {filtered.map((entry, i) => {
+            {filtered.map((entry) => {
               const gradient = categoryGradients[entry.category] ?? "linear-gradient(135deg, #808080, #606060)";
               const emoji = categoryEmoji[entry.category] ?? "⭐";
               return (
                 <div
-                  key={i}
+                  key={entry.id}
                   onClick={() => setSelected(entry)}
                   style={{
                     display: "flex",
@@ -232,7 +264,7 @@ export default function Favorites() {
                   </div>
                   <div style={{ fontSize: 11, lineHeight: 1.5, color: "#333", ...win98Sunken, padding: "6px 8px", minHeight: 50 }}>
                     {selected.thoughts || (
-                      <span style={{ color: "#999", fontStyle: "italic" }}>No thoughts yet. Edit <code style={{ fontSize: 10, background: "#e0e0e0", padding: "1px 3px" }}>app/data/favorites.json</code> to add your notes.</span>
+                      <span style={{ color: "#999", fontStyle: "italic" }}>No thoughts yet. Edit <span style={{ fontStyle: "italic" }}>No thoughts recorded.</span> to add your notes.</span>
                     )}
                   </div>
                 </div>
