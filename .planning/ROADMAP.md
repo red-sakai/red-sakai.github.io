@@ -107,10 +107,20 @@ Plans:
 
 **Goal:** Add an in-app CRUD interface in the retro desktop for managing favorites (anime, manhwa, manga) directly through the UI — no JSON file editing required.
 
+**Plans:** 2 plans
+
 **Success Criteria:**
 
 1. Existing "My Favorites" program upgraded to support Add, Edit, Delete operations via Win98-style dialogs
 2. Favorites persisted in localStorage (not JSON files) so changes survive page reload
 3. Category filtering works for all operations (add/edit within current filter context)
-4. Export option to download updated favorites as JSON (optional convenience)
+4. Export option to download updated favorites as JSON — deferred (not a priority for initial implementation)
 5. `npm run build` succeeds with zero errors
+
+Plans:
+
+**Wave 1**
+- [ ] 07-01-PLAN.md — AdminContext, DesktopShell wrapping, LoginModal admin detection (cross-phase bridge)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] 07-02-PLAN.md — Favorites.tsx CRUD rewrite with localStorage, admin toolbar, AddEditModal, DeleteConfirmModal
