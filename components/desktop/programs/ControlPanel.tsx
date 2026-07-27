@@ -1,19 +1,8 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import type { WallpaperState, ColorSchemeDef } from "@/types/domain";
 import { WALLPAPER_PRESETS } from "@/data/wallpapers-generated";
-
-interface WallpaperState {
-  type: "color" | "preset" | "imported";
-  value: string;
-  fit: "tile" | "center" | "stretch";
-}
-
-interface ColorSchemeDef {
-  id: string;
-  label: string;
-  vars: Record<string, string>;
-}
 
 interface Props {
   soundToggle: () => boolean;

@@ -2,32 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import experienceData from "@/data/experience.json";
+import type { ExperienceCategory, ExperienceItem, OrgGroup } from "@/types/domain";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
-
-type ExperienceCategory = "professional" | "organizational" | "competitive";
-
-type ExperienceItem = {
-  title: string;
-  blurb: string;
-  category: ExperienceCategory;
-  company?: string;
-  organization?: string;
-  competition?: string;
-  orgType?: string;
-  date?: string;
-  placement?: string;
-  tags?: string[];
-  images?: string[];
-  image?: string;
-};
-
-type OrgGroup = {
-  organization: string;
-  orgType: string;
-  positions: { title: string; date?: string; blurb: string }[];
-  tags: string[];
-  images: string[];
-};
 
 const experienceTabs = [
   { key: "organizational" as const, label: "Organizational" },

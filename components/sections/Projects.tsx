@@ -2,29 +2,8 @@
 
 import { useMemo, useState } from "react";
 import projectsData from "@/data/projects.json";
+import type { ProjectCategory, ProjectType, ProjectItem } from "@/types/domain";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
-
-type ProjectCategory = "web" | "security" | "tools" | "learning" | "emergency" | "game" | "bot";
-type ProjectType = "personal" | "commissioned" | "hackathon";
-
-type ProjectLink = {
-	label: string;
-	href: string;
-	type?: "repo" | "demo";
-};
-
-type ProjectItem = {
-	title: string;
-	summary: string;
-	category: ProjectCategory;
-	projectType: ProjectType;
-	stack: string[];
-	image?: string;
-	highlights?: string[];
-	links?: ProjectLink[];
-	status?: "in-progress" | "beta" | "shipped" | "discontinued";
-	period?: string;
-};
 
 const typeFilters: Array<{ key: "all" | ProjectType; label: string }> = [
 	{ key: "all", label: "Show All" },
