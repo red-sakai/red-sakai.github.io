@@ -1,24 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import type { Milestone, SkillGroup, Focus } from "@/types/domain";
 import { NavbarCapsule } from "@/components/sections/NavbarCapsule";
-
-type Milestone = {
-	year: string;
-	title: string;
-	description: string;
-	tags: string[];
-};
-
-type SkillGroup = {
-	title: string;
-	items: string[];
-};
-
-type Focus = {
-	title: string;
-	body: string;
-};
 
 const milestones: Milestone[] = [
 	{

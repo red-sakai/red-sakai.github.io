@@ -3,22 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import type { TerminalEntry, TerminalEntryInput } from "@/types/domain";
 import TerminalNavbar from "@/components/ui/TerminalNavbar";
 import ShapeBlur from "@/components/ui/ShapeBlur";
-
-type TerminalEntryMap = {
-  input: { text: string };
-  output: { text: string };
-  profile: { revealKey?: number };
-};
-
-type TerminalEntry = {
-  [Key in keyof TerminalEntryMap]: { id: number; type: Key } & TerminalEntryMap[Key];
-}[keyof TerminalEntryMap];
-
-type TerminalEntryInput = {
-  [Key in keyof TerminalEntryMap]: { type: Key } & TerminalEntryMap[Key];
-}[keyof TerminalEntryMap];
 
 const COMMAND_LIST = [
   "help",
