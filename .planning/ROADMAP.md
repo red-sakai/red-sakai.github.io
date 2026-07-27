@@ -2,7 +2,7 @@
 
 ## Phase Overview
 
-**4 phases** | **26 requirements mapped** | Phase 1 complete ✓
+**5 phases** | **26 requirements mapped** | Phase 1 complete ✓
 
 | # | Phase | Goal | Requirements | Success Criteria |
 |---|-------|------|--------------|------------------|
@@ -10,6 +10,7 @@
 | 2 | Retro Desktop Mode | 5/5 | Complete   | 2026-07-11 |
 | 3 | Portfolio Desktop Shortcut | Add "My Portfolio" desktop shortcut with pixel-art portfolio viewer | — | 3 |
 | 4 | Desktop Enhancements | Restore full context menu, fix IE, add IE desktop shortcut, clean Start Menu, add Games section with DOS games | DESKTOP-09, DESKTOP-10, DESKTOP-11, DESKTOP-12, DESKTOP-13 | 5 |
+| 6 | Login Screen | Win98-style login modal before desktop access with Jhered OS username and password | — | 4 |
 
 ### Phase 1: Lenis Integration ✅
 
@@ -78,3 +79,25 @@ Plans:
 **Wave 2** *(blocked on Wave 1 completion)*
 
 - [ ] 04-03-PLAN.md — Game Station creation, IE/GS desktop icons, context menu data wiring (DESKTOP-09, DESKTOP-11, DESKTOP-13)
+
+### Phase 6: Login Screen
+
+**Goal:** Add a Windows 98-style login modal that appears before the retro desktop, requiring the user to enter any password (or none) with a readonly "Jhered OS" username and a pixel-art user icon.
+
+**Requirements:** LOGIN-01, LOGIN-02, LOGIN-03, LOGIN-04, LOGIN-05, LOGIN-06, LOGIN-07
+
+**Plans:** 1 plan
+
+**Success Criteria:**
+
+1. GRUB → Desktop Loading (BIOS POST) → Login Screen → DesktopShell renders after login
+2. Login dialog is classic Win98-style: gray raised-border, titlebar, Windows-style bottom branding
+3. Username field shows "Jhered OS" — readonly
+4. Password field accepts any input (blank or anything)
+5. OK button or Enter key proceeds to desktop; Cancel returns to GRUB
+6. Pixel-art user icon displayed on the modal
+7. Login required every time /desktop is visited
+
+Plans:
+
+- [ ] 06-01-PLAN.md — Create LoginModal component, integrate login gate into DesktopShell, add .win98-field CSS class
