@@ -11,7 +11,7 @@
 | 3 | Portfolio Desktop Shortcut | Add "My Portfolio" desktop shortcut with pixel-art portfolio viewer | — | 3 |
 | 4 | Desktop Enhancements | Restore full context menu, fix IE, add IE desktop shortcut, clean Start Menu, add Games section with DOS games | DESKTOP-09, DESKTOP-10, DESKTOP-11, DESKTOP-12, DESKTOP-13 | 5 |
 | 6 | Login Screen | Win98-style login modal before desktop access with Jhered OS username and password | — | 4 |
-| 7 | Favorites Manager | In-app CRUD for anime/manhwa/manga favorites via the retro desktop UI | — | 5 |
+| 7 | Favorites Manager | 2/2 | Complete   | 2026-07-26 |
 
 ### Phase 1: Lenis Integration ✅
 
@@ -107,7 +107,7 @@ Plans:
 
 **Goal:** Add an in-app CRUD interface in the retro desktop for managing favorites (anime, manhwa, manga) directly through the UI — no JSON file editing required.
 
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 **Success Criteria:**
 
@@ -120,7 +120,7 @@ Plans:
 Plans:
 
 **Wave 1**
-- [ ] 07-01-PLAN.md — AdminContext, DesktopShell wrapping, LoginModal admin detection (cross-phase bridge)
+- [x] 07-01-PLAN.md — AdminContext, DesktopShell wrapping, LoginModal admin detection (cross-phase bridge)
 
 **Wave 2** *(blocked on Wave 1 completion)*
-- [ ] 07-02-PLAN.md — Favorites.tsx CRUD rewrite with localStorage, admin toolbar, AddEditModal, DeleteConfirmModal
+- [x] 07-02-PLAN.md — Favorites.tsx CRUD rewrite with localStorage, admin toolbar, AddEditModal, DeleteConfirmModal
