@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useDesktopSounds } from "@/hooks/useDesktopSounds";
+import { ADMIN_SECRET, useAdmin } from "./AdminContext";
 
 interface LoginModalProps {
   onSuccess: () => void;
@@ -23,10 +24,12 @@ const USER_ICON = (
 export default function LoginModal({ onSuccess, onCancel, animating }: LoginModalProps) {
   const [password, setPassword] = useState("");
   const sounds = useDesktopSounds();
+  const { setAdmin } = useAdmin();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     sounds.play("click");
+    setAdmin(password === ADMIN_SECRET);
     try {
       const loginAudio = new Audio("/audio/windows_98_login.mp3");
       loginAudio.volume = 0.5;

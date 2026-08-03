@@ -11,6 +11,7 @@
 | 3 | Portfolio Desktop Shortcut | Add "My Portfolio" desktop shortcut with pixel-art portfolio viewer | — | 3 |
 | 4 | Desktop Enhancements | Restore full context menu, fix IE, add IE desktop shortcut, clean Start Menu, add Games section with DOS games | DESKTOP-09, DESKTOP-10, DESKTOP-11, DESKTOP-12, DESKTOP-13 | 5 |
 | 6 | Login Screen | Win98-style login modal before desktop access with Jhered OS username and password | — | 4 |
+| 7 | Favorites Manager | 2/2 | Complete   | 2026-07-26 |
 
 ### Phase 1: Lenis Integration ✅
 
@@ -101,3 +102,25 @@ Plans:
 Plans:
 
 - [ ] 06-01-PLAN.md — Create LoginModal component, integrate login gate into DesktopShell, add .win98-field CSS class
+
+### Phase 7: Favorites Manager
+
+**Goal:** Add an in-app CRUD interface in the retro desktop for managing favorites (anime, manhwa, manga) directly through the UI — no JSON file editing required.
+
+**Plans:** 2/2 plans complete
+
+**Success Criteria:**
+
+1. Existing "My Favorites" program upgraded to support Add, Edit, Delete operations via Win98-style dialogs
+2. Favorites persisted in localStorage (not JSON files) so changes survive page reload
+3. Category filtering works for all operations (add/edit within current filter context)
+4. Export option to download updated favorites as JSON — deferred (not a priority for initial implementation)
+5. `npm run build` succeeds with zero errors
+
+Plans:
+
+**Wave 1**
+- [x] 07-01-PLAN.md — AdminContext, DesktopShell wrapping, LoginModal admin detection (cross-phase bridge)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [x] 07-02-PLAN.md — Favorites.tsx CRUD rewrite with localStorage, admin toolbar, AddEditModal, DeleteConfirmModal
