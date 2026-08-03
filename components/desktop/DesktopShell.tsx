@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef, type ReactNode } from "react"
 import { useRouter } from "next/navigation";
 import { useWindowManager } from "@/hooks/useWindowManager";
 import { useDesktopSounds } from "@/hooks/useDesktopSounds";
+import type { WallpaperState, ColorSchemeDef } from "@/types/domain";
 import Taskbar from "./Taskbar";
 import StartMenu from "./StartMenu";
 import DesktopIcon from "./DesktopIcon";
@@ -20,18 +21,6 @@ import Favorites from "./programs/Favorites";
 import { AdminProvider } from "./AdminContext";
 import LoginModal from "./LoginModal";
 import "./desktop.css";
-
-interface WallpaperState {
-  type: "color" | "preset" | "imported";
-  value: string;
-  fit: "tile" | "center" | "stretch";
-}
-
-interface ColorSchemeDef {
-  id: string;
-  label: string;
-  vars: Record<string, string>;
-}
 
 const COLOR_SCHEMES: ColorSchemeDef[] = [
   { id: "standard", label: "Windows Standard", vars: { "--titlebar-start": "#000080", "--titlebar-end": "#1084d0", "--taskbar-bg": "#c0c0c0" } },

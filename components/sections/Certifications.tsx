@@ -2,20 +2,8 @@
 
 import Image from "next/image";
 import certificationsData from "@/data/certifications.json";
+import type { Certification } from "@/types/domain";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
-
-type Certification = {
-	title: string;
-	issuer: string;
-	date: string;
-	description: string;
-	credentialUrl?: string;
-	tags?: string[];
-	image?: string;
-	imageAlt?: string;
-	certificateImage?: string;
-	certificateAlt?: string;
-};
 
 export function CertificationsSection() {
 	const { ref, visible } = useRevealOnScroll<HTMLElement>();
