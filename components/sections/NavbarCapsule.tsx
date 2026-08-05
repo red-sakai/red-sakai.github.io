@@ -128,56 +128,36 @@ export function NavbarCapsule({
 
     if (sectionItems.length === 0) return;
 
-    const entriesByHash = new Map<string, IntersectionObserverEntry>();
-    let rafId: number | null = null;
-
     const updateActiveHash = () => {
-      const intersecting = Array.from(entriesByHash.values()).filter((entry) => entry.isIntersecting);
+      const scrollY = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 
-      if (intersecting.length === 0) {
-        if (window.scrollY < 120) {
-          setCurrentHash("");
-        }
+      if (scrollY < 120) {
+        if (currentHashRef.current !== "") setCurrentHash("");
         return;
       }
 
-      intersecting.sort((a, b) => {
-        if (b.intersectionRatio !== a.intersectionRatio) {
-          return b.intersectionRatio - a.intersectionRatio;
-        }
-        return a.boundingClientRect.top - b.boundingClientRect.top;
-      });
-
-      const best = intersecting[0];
-      const targetId = (best.target as HTMLElement).id;
-      const nextHash = targetId ? `#${targetId}` : "";
-      if (nextHash && nextHash !== currentHashRef.current) {
-        setCurrentHash(nextHash);
+      if (scrollY >= maxScroll - 2) {
+        const last = sectionItems[sectionItems.length - 1];
+        if (last && last.hash !== currentHashRef.current) setCurrentHash(last.hash);
+        return;
       }
+
+      const probe = scrollY + window.innerHeight * 0.4;
+      let next = "";
+      for (const item of sectionItems) {
+        const top = item.el.getBoundingClientRect().top + scrollY;
+        if (top <= probe) next = item.hash;
+      }
+      if (next !== currentHashRef.current) setCurrentHash(next);
     };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const targetId = (entry.target as HTMLElement).id;
-          if (!targetId) return;
-          entriesByHash.set(`#${targetId}`, entry);
-        });
-
-        if (rafId !== null) cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(updateActiveHash);
-      },
-      {
-        rootMargin: "-35% 0px -55% 0px",
-        threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
-      }
-    );
-
-    sectionItems.forEach(({ el }) => observer.observe(el));
-
+    updateActiveHash();
+    window.addEventListener("scroll", updateActiveHash, { passive: true });
+    window.addEventListener("resize", updateActiveHash);
     return () => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      observer.disconnect();
+      window.removeEventListener("scroll", updateActiveHash);
+      window.removeEventListener("resize", updateActiveHash);
     };
   }, [currentPath, parsedItems]);
 
@@ -248,13 +228,25 @@ export function NavbarCapsule({
 
   return (
     <nav aria-label="Primary" className={`${className ?? ""} relative`}>
+      <div
+        className="pointer-events-auto rounded-full px-2 py-1"
+        style={{
+          background: isDark
+            ? "linear-gradient(135deg, rgba(15,23,42,0.55), rgba(11,18,32,0.4))"
+            : "linear-gradient(135deg, rgba(255,255,255,0.75), rgba(255,255,255,0.45))",
+          border: isDark ? "1px solid rgba(255,255,255,0.14)" : "1px solid rgba(255,255,255,0.65)",
+          boxShadow: isDark
+            ? "inset 0 1px 0 rgba(255,255,255,0.12), 0 8px 32px rgba(0,0,0,0.35)"
+            : "inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 32px rgba(15,23,42,0.12)",
+          WebkitBackdropFilter: "blur(20px) saturate(180%)",
+          backdropFilter: "blur(20px) saturate(180%)",
+        }}
+      >
       {/* Desktop navigation */}
       <div
         className={
-          "relative hidden items-center gap-2 rounded-full px-2 py-1.5 shadow-sm backdrop-blur-md transition-colors sm:inline-flex " +
-          (isDark
-            ? "border-white/15 bg-white/10 text-white"
-            : "border-black/10 bg-white/80 text-[#0f172a]")
+          "relative hidden items-center gap-2 rounded-full px-2 py-1.5 transition-colors sm:inline-flex " +
+          (isDark ? "text-white" : "text-[#0f172a]")
         }
       >
         <button
@@ -262,10 +254,28 @@ export function NavbarCapsule({
           aria-label="Open boot menu"
           onClick={handleBootloaderClick}
           className={
-            "inline-flex h-9 w-9 items-center justify-center rounded-full border shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
+            "group relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
             (isDark ? "border-white/15 bg-white/5 text-white" : "border-black/10 bg-white text-[#0f172a]")
           }
         >
+          <span
+            aria-hidden
+            className={
+              "pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-lg border px-3 py-1.5 text-xs font-medium shadow-lg opacity-0 transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 " +
+              (isDark ? "border-white/10 bg-white text-[#0b1220]" : "border-black/10 bg-[#0b1220] text-white")
+            }
+          >
+            <span
+              aria-hidden
+              className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 -translate-y-[5px] rotate-45"
+              style={{
+                background: isDark
+                  ? "linear-gradient(135deg, #ffffff, #ffffff)"
+                  : "linear-gradient(135deg, #0b1220, #0b1220)",
+              }}
+            />
+            Would you like to see more? :)
+          </span>
           <svg
             width="18"
             height="18"
@@ -479,6 +489,7 @@ export function NavbarCapsule({
             />
           </span>
         </button>
+      </div>
       </div>
 
       {isMobileMenuOpen && (
