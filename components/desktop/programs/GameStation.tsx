@@ -2,48 +2,54 @@
 
 import { useState } from "react";
 
-interface DOSGame {
+interface Game {
   id: string;
   title: string;
-  archiveIdentifier: string;
   year: string;
+  src: string;
 }
 
-const DOS_GAMES: DOSGame[] = [
+const GAMES: Game[] = [
+  {
+    id: "vice-city",
+    title: "GTA: Vice City",
+    year: "2002",
+    src: "https://vc.quenq.com",
+  },
   {
     id: "doom",
     title: "DOOM (Shareware)",
-    archiveIdentifier: "doom_dos",
     year: "1993",
+    src: "https://archive.org/embed/doom_dos",
   },
   {
     id: "prince-of-persia",
     title: "Prince of Persia",
-    archiveIdentifier: "msdos_Prince_of_Persia_1990",
     year: "1990",
+    src: "https://archive.org/embed/msdos_Prince_of_Persia_1990",
   },
   {
     id: "wolfenstein-3d",
     title: "Wolfenstein 3D",
-    archiveIdentifier: "msdos_Wolfenstein_3D_1992",
     year: "1992",
+    src: "https://archive.org/embed/msdos_Wolfenstein_3D_1992",
   },
   {
     id: "pac-man",
     title: "Pac-Man",
-    archiveIdentifier: "msdos_Pac-Man_1983",
     year: "1983",
+    src: "https://archive.org/embed/msdos_Pac-Man_1983",
   },
   {
     id: "jazz-jackrabbit",
     title: "Jazz Jackrabbit",
-    archiveIdentifier: "msdos_Jazz_Jackrabbit_1994",
     year: "1994",
+    src: "https://archive.org/embed/msdos_Jazz_Jackrabbit_1994",
   },
 ];
 
 export default function GameStation() {
-  const [selectedGame, setSelectedGame] = useState<DOSGame | null>(null);
+  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
   if (selectedGame) {
     return (
@@ -71,7 +77,7 @@ export default function GameStation() {
         </div>
         <div style={{ flex: 1, position: "relative" }}>
           <iframe
-            src={`https://archive.org/embed/${selectedGame.archiveIdentifier}`}
+            src={selectedGame.src}
             style={{ width: "100%", height: "100%", border: "none" }}
             allowFullScreen
             title={selectedGame.title}
@@ -87,9 +93,9 @@ export default function GameStation() {
         Game Station
       </div>
       <div style={{ fontSize: 11, marginBottom: 12, color: "#666", fontFamily: '"MS Sans Serif", "Segoe UI", sans-serif' }}>
-        Select a DOS game to play via archive.org emulation.
+        Select a game to play in your browser.
       </div>
-      {DOS_GAMES.map((game) => (
+      {GAMES.map((game) => (
         <button
           key={game.id}
           onClick={() => setSelectedGame(game)}
