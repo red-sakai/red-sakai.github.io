@@ -120,16 +120,7 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
   return (
     <>
       <div className="pointer-events-none fixed left-0 right-0 top-4 z-[3000] flex w-full justify-center px-4 sm:px-10">
-        <div
-          className="pointer-events-auto rounded-full border px-2 py-1 shadow-lg shadow-black/5 backdrop-blur-xl dark:shadow-black/30"
-          style={{
-            background: isDark ? "rgba(11, 18, 32, 0.78)" : "rgba(255, 255, 255, 0.94)",
-            borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)",
-            WebkitBackdropFilter: "blur(18px)",
-          }}
-        >
-          <NavbarCapsule items={navItems} theme={theme} onThemeToggle={onThemeToggle} />
-        </div>
+        <NavbarCapsule items={navItems} theme={theme} onThemeToggle={onThemeToggle} />
       </div>
 
       <div className="flex flex-1 flex-col gap-10 px-6 pb-12 pt-28 sm:px-10 sm:pt-32 lg:flex-row lg:items-center lg:gap-16 lg:pl-24 lg:pt-36 xl:pl-36">
