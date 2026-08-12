@@ -38,6 +38,11 @@
     "issuer": "ISC2",
     "date": "2026",
     "description": "Demonstrates foundational knowledge of cybersecurity principles, including security operations, networking fundamentals, risk management, incident response, and governance, aligned with industry best practices for entry-level cybersecurity roles.",
+    "credentialUrl": "https://www.credly.com/badges/81b5bc8b-72bd-486b-a8c7-a5f58a48a5ed/public_url",
+    "image": "/images/certifications/certified-in-cybersecurity-cc.1.png",
+    "imageAlt": "ISC2 Certified in Cybersecurity badge",
+    "certificateImage": "/images/certifications/CC.jpg",
+    "certificateAlt": "ISC2 Certified in Cybersecurity certificate",
     "tags": [
       "Risk Management",
       "Incident Reponse",
