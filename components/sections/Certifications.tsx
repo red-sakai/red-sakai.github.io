@@ -1,13 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import certificationsData from "@/data/certifications.json";
 import type { Certification } from "@/types/domain";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
+import { Lightbox } from "@/components/ui/Lightbox";
 
 export function CertificationsSection() {
 	const { ref, visible } = useRevealOnScroll<HTMLElement>();
 	const certifications = certificationsData as Certification[];
+	const [lightbox, setLightbox] = useState<Certification | null>(null);
 
 	return (
 		<section
@@ -61,16 +64,24 @@ export function CertificationsSection() {
 						<p className="cert-neutral text-sm leading-relaxed text-slate-700 dark:text-slate-200/80">{cert.description}</p>
 
 						{cert.certificateImage && (
-							<div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50 shadow-sm dark:border-white/10 dark:bg-white/5">
+							<button
+								type="button"
+								onClick={() => setLightbox(cert)}
+								className="group relative block w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50 text-left shadow-sm transition hover:border-amber-400/70 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
+								aria-label={`Enlarge ${cert.title} certificate`}
+							>
 								<Image
 									src={cert.certificateImage}
 									alt={cert.certificateAlt || `${cert.title} certificate`}
 									width={1200}
 									height={800}
-									className="h-full w-full object-cover"
+									className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
 									priority={false}
 								/>
-							</div>
+								<span className="absolute inset-0 flex items-center justify-center bg-black/0 text-sm font-semibold text-white opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+									Click to enlarge
+								</span>
+							</button>
 						)}
 
 						{Array.isArray(cert.tags) && cert.tags.length > 0 && (
@@ -101,6 +112,15 @@ export function CertificationsSection() {
 					</article>
 				))}
 			</div>
+
+			{lightbox?.certificateImage && (
+				<Lightbox
+					src={lightbox.certificateImage}
+					alt={lightbox.certificateAlt || `${lightbox.title} certificate`}
+					caption={lightbox.title}
+					onClose={() => setLightbox(null)}
+				/>
+			)}
 		</section>
 	);
 }

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import experienceData from "@/data/experience.json";
 import type { ExperienceCategory, ExperienceItem, OrgGroup } from "@/types/domain";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
+import { Lightbox } from "@/components/ui/Lightbox";
 
 const experienceTabs = [
   { key: "organizational" as const, label: "Organizational" },
@@ -14,6 +15,7 @@ const experienceTabs = [
 export function ExperienceSection() {
   const [experienceTab, setExperienceTab] = useState<ExperienceCategory>("organizational");
   const { ref, visible } = useRevealOnScroll<HTMLElement>();
+  const [lightbox, setLightbox] = useState<{ src: string; caption: string } | null>(null);
 
   const items = experienceData as ExperienceItem[];
   const filtered = items.filter((item) => item.category === experienceTab);
@@ -60,7 +62,7 @@ export function ExperienceSection() {
     return "bg-slate-100 text-black border-slate-200 dark:bg-white/10 dark:text-white/80 dark:border-white/15";
   };
 
-  const ImageCarousel = ({ images }: { images: string[] }) => {
+  const ImageCarousel = ({ images, label, onEnlarge }: { images: string[]; label: string; onEnlarge: (src: string) => void }) => {
     const safeImages = images.filter(Boolean);
     const [idx, setIdx] = useState(0);
     const [prevIdx, setPrevIdx] = useState(0);
@@ -108,13 +110,23 @@ export function ExperienceSection() {
           )}
 
           {current ? (
-            <div
-              key={`cur-${idx}`}
-              className={`absolute inset-0 bg-cover bg-center ${hasMultiple ? inClass : ""}`}
-              style={{ backgroundImage: `url(${current})` }}
-              role="img"
-              aria-label="Experience imagery"
-            />
+            <button
+              type="button"
+              onClick={() => onEnlarge(current)}
+              className="group absolute inset-0 block w-full"
+              aria-label={`Enlarge ${label} imagery`}
+            >
+              <div
+                key={`cur-${idx}`}
+                className={`absolute inset-0 bg-cover bg-center ${hasMultiple ? inClass : ""} transition duration-300 group-hover:scale-[1.02]`}
+                style={{ backgroundImage: `url(${current})` }}
+                role="img"
+                aria-label={`${label} imagery`}
+              />
+              <span className="absolute inset-0 flex items-center justify-center bg-black/0 text-sm font-semibold text-white opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+                Click to enlarge
+              </span>
+            </button>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
               Image coming soon
@@ -132,7 +144,11 @@ export function ExperienceSection() {
         className="exp-card relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/85 p-5 shadow-md transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
       >
         <div className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${accentByCategory.organizational}`} aria-hidden />
-        <ImageCarousel images={group.images} />
+        <ImageCarousel
+          images={group.images}
+          label={group.organization}
+          onEnlarge={(src) => setLightbox({ src, caption: group.organization })}
+        />
 
         <div className="flex flex-col items-center text-center gap-1">
           <p className="exp-neutral text-xs font-semibold uppercase tracking-[0.16em] text-slate-800 dark:text-slate-300">{group.organization}</p>
@@ -181,7 +197,11 @@ export function ExperienceSection() {
         className="exp-card relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/85 p-5 shadow-md transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
       >
         <div className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${accentByCategory[experienceTab]}`} aria-hidden />
-        <ImageCarousel images={item.images ?? (item.image ? [item.image] : [])} />
+        <ImageCarousel
+          images={item.images ?? (item.image ? [item.image] : [])}
+          label={entityLabel(item)}
+          onEnlarge={(src) => setLightbox({ src, caption: entityLabel(item) })}
+        />
 
         <div className="flex flex-col items-center text-center gap-1">
           <h3 className="exp-neutral text-lg font-semibold leading-snug text-slate-900 dark:text-white">{item.title}</h3>
@@ -270,6 +290,15 @@ export function ExperienceSection() {
           ? renderOrganizationalCards()
           : renderDefaultCards()}
       </div>
+
+      {lightbox && (
+        <Lightbox
+          src={lightbox.src}
+          alt={`${lightbox.caption} imagery`}
+          caption={lightbox.caption}
+          onClose={() => setLightbox(null)}
+        />
+      )}
     </section>
   );
 }

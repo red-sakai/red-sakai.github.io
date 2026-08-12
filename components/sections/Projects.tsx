@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import projectsData from "@/data/projects.json";
 import type { ProjectCategory, ProjectType, ProjectItem } from "@/types/domain";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
+import { Lightbox } from "@/components/ui/Lightbox";
 
 const typeFilters: Array<{ key: "all" | ProjectType; label: string }> = [
 	{ key: "all", label: "Show All" },
@@ -50,6 +51,7 @@ export function ProjectsSection() {
 	const [stackFiltersSelected, setStackFiltersSelected] = useState<string[]>([]);
 	const [typeFilter, setTypeFilter] = useState<"all" | ProjectType>("all");
 	const { ref, visible } = useRevealOnScroll<HTMLElement>();
+	const [lightbox, setLightbox] = useState<ProjectItem | null>(null);
 
 	const projects = useMemo(() => projectsData as ProjectItem[], []);
 	const filtered = useMemo(() => {
@@ -139,14 +141,22 @@ export function ProjectsSection() {
 						<div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${accentByCategory[project.category]}`} aria-hidden />
 
 						{project.image && (
-							<div className="relative overflow-hidden rounded-xl border border-slate-200/60 bg-slate-100 dark:border-white/10 dark:bg-white/5">
+							<button
+								type="button"
+								onClick={() => setLightbox(project)}
+								className="group relative block w-full overflow-hidden rounded-xl border border-slate-200/60 bg-slate-100 dark:border-white/10 dark:bg-white/5"
+								aria-label={`Enlarge ${project.title} preview`}
+							>
 								<div
-									className="aspect-video w-full bg-cover bg-center"
+									className="aspect-video w-full bg-cover bg-center transition duration-300 group-hover:scale-[1.02]"
 									style={{ backgroundImage: `url(${project.image})` }}
 									role="img"
 									aria-label={`${project.title} preview`}
 								/>
-							</div>
+								<span className="absolute inset-0 flex items-center justify-center bg-black/0 text-sm font-semibold text-white opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+									Click to enlarge
+								</span>
+							</button>
 						)}
 
 						<div className="flex items-start justify-between gap-3">
@@ -212,6 +222,15 @@ export function ProjectsSection() {
 					</article>
 				)}
 			</div>
+
+			{lightbox?.image && (
+				<Lightbox
+					src={lightbox.image}
+					alt={`${lightbox.title} preview`}
+					caption={lightbox.title}
+					onClose={() => setLightbox(null)}
+				/>
+			)}
 		</section>
 	);
 }
