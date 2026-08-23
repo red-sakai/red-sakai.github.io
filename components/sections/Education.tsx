@@ -2,6 +2,21 @@ import Image from "next/image";
 import educationData from "@/data/education.json";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 
+function TagRow({ tags }: { tags: string[] }) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
+      {tags.map((tag, idx) => (
+        <span key={tag} className="inline-flex items-center gap-2">
+          {tag}
+          {idx < tags.length - 1 && (
+            <span aria-hidden className="text-slate-300 dark:text-white/20">/</span>
+          )}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export function EducationSection() {
   const { ref } = useRevealOnScroll<HTMLElement>();
 
@@ -9,87 +24,69 @@ export function EducationSection() {
     <section
       id="education"
       ref={ref}
-      className={
-        "scroll-mt-28 rounded-3xl p-6 transition-all duration-700 will-change-transform text-black dark:text-white " +
-        "opacity-100 translate-y-0 bg-transparent shadow-none backdrop-blur-0"
-      }
+      className="scroll-mt-28 space-y-8 will-change-transform"
     >
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 text-center">
+      <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center">
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.3em] text-amber-600">Education</p>
-          <h2 className="edu-neutral text-2xl font-semibold text-[#0f172a] sm:text-3xl dark:text-white">Building from classroom to real systems</h2>
-          <p className="edu-neutral text-base leading-relaxed text-[#111827] dark:text-slate-200/80">
+          <p className="text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-500">Education</p>
+          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Building from classroom to real systems</h2>
+          <p className="mx-auto max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-300/90">
             Two tracks that shaped how I work: rigorous STEM foundations in high school, and computer engineering with a security lens in college.
           </p>
         </div>
+      </div>
 
-        <div className="w-full space-y-4 text-left">
-          {educationData.map((edu) => (
-            <article
-              key={edu.school}
-              className="edu-card group relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white p-6 shadow-lg transition hover:-translate-y-1.5 hover:shadow-2xl text-[#0f172a] dark:border-white/10 dark:bg-white/10 dark:text-white"
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 text-left">
+        {educationData.map((edu, index) => (
+          <article
+            key={edu.school}
+            className="group relative overflow-hidden rounded-lg border border-slate-200 bg-white p-6 transition-colors duration-300 hover:border-slate-400/70 sm:p-7 dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white/20"
+          >
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 w-full translate-x-full overflow-hidden transition-transform duration-700 ease-out group-hover:translate-x-0 sm:w-1/2"
+              aria-hidden
             >
-              <div className={`absolute inset-y-0 left-0 w-2 bg-gradient-to-b ${edu.accent}`} aria-hidden />
-
-              <div
-                className="pointer-events-none absolute inset-y-0 right-0 w-2/3 sm:w-1/2 translate-x-full overflow-hidden transition-transform duration-700 ease-out group-hover:translate-x-0"
-                aria-hidden
-              >
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{
-                    backgroundImage: edu.logo ? `url(${edu.logo})` : undefined,
-                    backgroundColor: edu.logo ? undefined : "rgba(255,255,255,0.9)",
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-l from-white via-white/85 to-transparent dark:from-[#0b1220] dark:via-[#0b1220]/85" />
-                <div className="relative flex h-full items-center justify-center">
-                  <div className="flex h-24 w-24 items-center justify-center rounded-3xl border border-white/70 bg-white/90 shadow-xl shadow-black/10 backdrop-blur-md transition-transform duration-500 group-hover:scale-105 dark:border-white/20 dark:bg-white/10 dark:shadow-black/40">
-                    {edu.logo ? (
-                      <Image
-                        src={edu.logo}
-                        alt={`${edu.school} logo`}
-                        width={64}
-                        height={64}
-                        className="h-16 w-16 object-contain drop-shadow"
-                      />
-                    ) : (
-                      <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-black dark:text-slate-200">
-                        Logo
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-3 text-[#0f172a] dark:text-white">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-1.5">
-                    <p className="edu-neutral text-lg font-semibold leading-tight text-[#0f172a] dark:text-slate-50">{edu.title}</p>
-                    <p className="edu-neutral text-base font-semibold text-blue-700 dark:text-blue-300">{edu.school}</p>
-                  </div>
-                  <span className="edu-meta rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-[#0f172a] shadow-sm dark:bg-white/10 dark:text-white/80">
-                    {edu.years}
+              <div className="absolute inset-0 bg-gradient-to-l from-white via-white/90 to-transparent dark:from-[#0b1220] dark:via-[#0b1220]/90" />
+              <div className="relative flex h-full items-center justify-end pr-10 sm:justify-center sm:pr-6">
+                {edu.logo ? (
+                  <Image
+                    src={edu.logo}
+                    alt=""
+                    width={768}
+                    height={768}
+                    className="h-[85%] w-auto max-w-[70%] object-contain transition-transform duration-500 group-hover:scale-105 sm:max-w-[55%]"
+                  />
+                ) : (
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+                    Logo
                   </span>
-                </div>
-                <p className="edu-meta flex items-center gap-2 text-sm font-medium text-[#111827] dark:text-slate-300">
-                  <span aria-hidden>📍</span>
-                  {edu.location}
-                </p>
-                <p className="edu-blurb text-base leading-relaxed text-[#0f172a] dark:text-slate-200/85">{edu.blurb}</p>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {edu.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="edu-tag rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-[#0f172a] shadow-sm dark:border-white/10 dark:bg-white/10 dark:text-white"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                )}
               </div>
-            </article>
-          ))}
-        </div>
+            </div>
+
+            <div className="relative flex min-w-0 flex-1 flex-col gap-2.5">
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+                {String(index + 1).padStart(2, "0")} · {edu.years}
+              </p>
+
+              <h3 className="text-lg font-semibold leading-snug tracking-tight">{edu.title}</h3>
+
+              <p className="text-sm font-medium text-blue-700 dark:text-blue-300">{edu.school}</p>
+
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+                {edu.location}
+              </p>
+
+              <p className="max-w-2xl pt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300/90">
+                {edu.blurb}
+              </p>
+
+              <div className="pt-2">
+                <TagRow tags={edu.tags} />
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   );

@@ -49,5 +49,55 @@
       "Security Operations",
       "Network Security"
     ]
+  },
+  {
+    "title": "Certified Cybersecurity Professional",
+    "issuer": "Appkademiya",
+    "date": "2026",
+    "description": "Practical, hands-on training across core cybersecurity domains: network defense, threat and vulnerability management, security operations, and incident handling using industry tools and frameworks.",
+    "credentialUrl": "https://www.appkademiya.online/verify/CERT-CCP-CYBERSECURITY-PROFESSIONAL-20260810-78BEE259A7A0",
+    "image": "/images/certifications/appkademiya_logo.jpg",
+    "imageAlt": "Appkademiya Certified Cybersecurity Professional badge",
+    "certificateImage": "/images/certifications/ccp_appkademiya.png",
+    "certificateAlt": "Appkademiya Certified Cybersecurity Professional certificate",
+    "tags": [
+      "Risk Management",
+      "Incident Reponse",
+      "Security Operations",
+      "Network Security"
+    ]
+  },
+  {
+    "title": "Certified Web Penetration Tester",
+    "issuer": "Appkademiya",
+    "date": "2026",
+    "description": "Covers web application penetration testing end to end: reconnaissance, vulnerability assessment, exploitation of common web vulnerabilities aligned with the OWASP Top 10, and professional report writing.",
+    "credentialUrl": "https://www.appkademiya.online/verify/CERT-CERTIFIED-WEB-PENETRATION-TESTER-CWPT-20260820-6F50E828F856",
+    "image": "/images/certifications/appkademiya_logo.jpg",
+    "imageAlt": "Appkademiya Certified Web Penetration Tester badge",
+    "certificateImage": "/images/certifications/cwpt_appkademiya.png",
+    "certificateAlt": "Appkademiya Certified Web Penetration Tester certificate",
+    "tags": [
+      "Penetration Testing",
+      "OWASP",
+      "Web Security",
+      "Vulnerability Assessment"
+    ]
+  },
+  {
+    "title": "ISO 27001:2022 Internal Auditor",
+    "issuer": "Quality Asia",
+    "date": "2026",
+    "description": "Trained to plan, conduct, and report internal audits of Information Security Management Systems (ISMS) against ISO/IEC 27001:2022 requirements, including gathering audit evidence and driving corrective actions.",
+    "image": "/images/certifications/quality_asia_logo.png",
+    "imageAlt": "Quality Asia ISO 27001:2022 Internal Auditor badge",
+    "certificateImage": "/images/certifications/iso_27001_quality_asia.png",
+    "certificateAlt": "Quality Asia ISO 27001:2022 Internal Auditor certificate",
+    "tags": [
+      "ISMS",
+      "ISO 27001",
+      "Internal Audit",
+      "Compliance"
+    ]
   }
 ]

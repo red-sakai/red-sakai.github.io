@@ -7,117 +7,157 @@ import type { Certification } from "@/types/domain";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 import { Lightbox } from "@/components/ui/Lightbox";
 
+function TagRow({ tags }: { tags: string[] }) {
+	return (
+		<div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
+			{tags.map((tag, idx) => (
+				<span key={tag} className="inline-flex items-center gap-2">
+					{tag}
+					{idx < tags.length - 1 && (
+						<span aria-hidden className="text-slate-300 dark:text-white/20">/</span>
+					)}
+				</span>
+			))}
+		</div>
+	);
+}
+
 export function CertificationsSection() {
 	const { ref, visible } = useRevealOnScroll<HTMLElement>();
 	const certifications = certificationsData as Certification[];
-	const [lightbox, setLightbox] = useState<Certification | null>(null);
+	const [lightbox, setLightbox] = useState<{ images: string[]; index: number; alt: string } | null>(null);
+
+	const openImage = (cert: Certification, kind: "badge" | "certificate") => {
+		const src = kind === "badge" ? cert.image : cert.certificateImage;
+		if (!src) return;
+		const alt =
+			(kind === "badge" ? cert.imageAlt : cert.certificateAlt) ?? `${cert.title} ${kind}`;
+		setLightbox({ images: [src], index: 0, alt });
+	};
 
 	return (
 		<section
 			id="certifications"
 			ref={ref}
 			className={
-				"scroll-mt-28 space-y-6 transition-all duration-700 will-change-transform " +
+				"scroll-mt-28 space-y-8 transition-all duration-700 will-change-transform " +
 				(visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")
 			}
 		>
 			<div className="flex flex-col items-center gap-3 text-center">
-				<p className="cert-accent text-xs uppercase tracking-[0.3em] text-amber-600">Certifications</p>
-				<h2 className="cert-neutral text-2xl font-semibold sm:text-3xl">Proof of practice</h2>
-				<p className="cert-neutral max-w-3xl text-base leading-relaxed text-slate-800 dark:text-slate-200/80">
+				<p className="text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-500">Certifications</p>
+				<h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Proof of practice</h2>
+				<p className="mx-auto max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-300/90">
 					Credentials that back up the security-first, build-fast mindset. Each one represents hands-on labs, graded assessments, and scenario work.
 				</p>
 			</div>
 
 			<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-				{certifications.map((cert) => (
+				{certifications.map((cert, index) => (
 					<article
-						key={cert.title}
-						className="cert-card relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/85 p-5 text-center shadow-md transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
+						key={`${cert.issuer}-${cert.title}-${index}`}
+						className="group relative flex flex-col gap-4 rounded-lg border border-slate-200 bg-white p-5 transition-colors duration-300 hover:border-slate-400/70 sm:p-6 dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white/20"
 					>
-						<div className="pointer-events-none absolute inset-x-10 top-0 h-1.5 rounded-b-full bg-gradient-to-r from-amber-400 via-orange-400 to-pink-400" aria-hidden />
-
-						{cert.image ? (
-							<div className="mx-auto h-16 w-16 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-white/10 dark:bg-white/10">
-								<Image
-									src={cert.image}
-									alt={cert.imageAlt || `${cert.title} badge`}
-									width={64}
-									height={64}
-									className="h-full w-full object-contain"
-								/>
+						<div className="flex items-start justify-between gap-3">
+							<div
+								role={cert.image ? "button" : undefined}
+								tabIndex={cert.image ? 0 : undefined}
+								aria-label={cert.image ? `View ${cert.title} badge fullscreen` : undefined}
+								onClick={cert.image ? () => openImage(cert, "badge") : undefined}
+								onKeyDown={
+									cert.image
+										? (event) => {
+											if (event.key === "Enter" || event.key === " ") {
+												event.preventDefault();
+												openImage(cert, "badge");
+											}
+										}
+										: undefined
+								}
+								className={`flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-md border border-slate-200 bg-white p-1.5 transition-colors duration-300 focus-visible:outline-none group-hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.04] dark:group-hover:border-white/20 ${
+									cert.image ? "cursor-zoom-in" : ""
+								}`}
+							>
+								{cert.image ? (
+									<Image
+										src={cert.image}
+										alt={cert.imageAlt || `${cert.title} badge`}
+										width={48}
+										height={48}
+										className="h-full w-full object-contain"
+									/>
+								) : (
+									<span className="font-mono text-[11px] uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+										N/A
+									</span>
+								)}
 							</div>
-						) : (
-							<div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-dashed border-slate-300 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:border-white/20 dark:text-white/70">
-								Badge
-							</div>
-						)}
-
-						<div className="flex flex-col items-center gap-1">
-							<p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700 dark:text-amber-300">{cert.issuer}</p>
-							<h3 className="cert-neutral text-lg font-semibold text-slate-900 dark:text-white">{cert.title}</h3>
-							<span className="cert-neutral rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-900 shadow-sm dark:bg-white/10 dark:text-white/85">
-								{cert.date}
+							<span className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+								{String(index + 1).padStart(2, "0")} · {cert.date}
 							</span>
 						</div>
 
-						<p className="cert-neutral text-sm leading-relaxed text-slate-700 dark:text-slate-200/80">{cert.description}</p>
+						<div className="flex flex-col gap-1">
+							<p className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-amber-600 dark:text-amber-400">
+								{cert.issuer}
+							</p>
+							<h3 className="text-lg font-semibold leading-snug tracking-tight">{cert.title}</h3>
+						</div>
+
+						<p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300/90">{cert.description}</p>
 
 						{cert.certificateImage && (
-							<button
-								type="button"
-								onClick={() => setLightbox(cert)}
-								className="group relative block w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50 text-left shadow-sm transition hover:border-amber-400/70 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
-								aria-label={`Enlarge ${cert.title} certificate`}
+							<div
+								role="button"
+								tabIndex={0}
+								aria-label={cert.certificateAlt || `View ${cert.title} certificate fullscreen`}
+								onClick={() => openImage(cert, "certificate")}
+								onKeyDown={(event) => {
+									if (event.key === "Enter" || event.key === " ") {
+										event.preventDefault();
+										openImage(cert, "certificate");
+									}
+								}}
+								className="group/cert relative cursor-zoom-in overflow-hidden rounded-md border border-slate-200/80 bg-slate-50 focus-visible:outline-none dark:border-white/10 dark:bg-white/[0.04]"
 							>
 								<Image
 									src={cert.certificateImage}
 									alt={cert.certificateAlt || `${cert.title} certificate`}
 									width={1200}
 									height={800}
-									className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+									className="h-full w-full object-cover"
 									priority={false}
 								/>
-								<span className="absolute inset-0 flex items-center justify-center bg-black/0 text-sm font-semibold text-white opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+								<span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/0 text-sm font-semibold text-white opacity-0 transition group-hover/cert:bg-black/40 group-hover/cert:opacity-100">
 									Click to enlarge
 								</span>
-							</button>
-						)}
-
-						{Array.isArray(cert.tags) && cert.tags.length > 0 && (
-							<div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-								{cert.tags.map((tag) => (
-									<span
-										key={tag}
-										className="cert-tag rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-900 shadow-sm dark:border-white/10 dark:bg-white/10 dark:text-white/90"
-									>
-										{tag}
-									</span>
-								))}
 							</div>
 						)}
 
-						{cert.credentialUrl && (
-							<div className="flex justify-center pt-1">
+						<div className="mt-auto flex flex-col gap-4 pt-1">
+							{Array.isArray(cert.tags) && cert.tags.length > 0 && <TagRow tags={cert.tags} />}
+
+							{cert.credentialUrl && (
 								<a
 									href={cert.credentialUrl}
 									target="_blank"
 									rel="noreferrer"
-									className="inline-flex items-center justify-center rounded-full bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow-md transition hover:translate-y-[-1px] hover:bg-amber-400"
+									className="group/link inline-flex w-fit items-center gap-1.5 border-t border-slate-100 pt-3 font-mono text-xs font-medium uppercase tracking-[0.12em] text-slate-600 transition-colors hover:text-blue-700 dark:border-white/5 dark:text-slate-300 dark:hover:text-blue-300"
 								>
 									View credential
+									<span aria-hidden className="transition-transform duration-300 group-hover/link:translate-x-0.5">→</span>
 								</a>
-							</div>
-						)}
+							)}
+						</div>
 					</article>
 				))}
 			</div>
 
-			{lightbox?.certificateImage && (
+			{lightbox && (
 				<Lightbox
-					src={lightbox.certificateImage}
-					alt={lightbox.certificateAlt || `${lightbox.title} certificate`}
-					caption={lightbox.title}
+					images={lightbox.images}
+					index={lightbox.index}
+					alt={lightbox.alt}
 					onClose={() => setLightbox(null)}
 				/>
 			)}

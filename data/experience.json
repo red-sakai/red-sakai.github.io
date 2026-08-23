@@ -34,12 +34,26 @@
     ]
   },
   {
+    "title": "Vice President for Technology",
+    "blurb": "Spearheads technology initiatives, manages technical infrastructure, and drives student-led innovation across the organization as the primary technical lead for ICPEP SE - PUP Manila.",
+    "category": "organizational",
+    "organization": "ICPEP SE - PUP Manila",
+    "orgType": "Leadership",
+    "date": "AUG 2026 - PRESENT",
+    "tags": ["Leadership", "Programming", "Mentorship", "Web Development"],
+    "images": [
+      "/images/organizational/icpep/icpep-logo.jpg",
+      "/images/organizational/icpep/icpep1.jpg",
+      "/images/organizational/icpep/icpep2.png"
+    ]
+  },
+  {
     "title": "Head of Engineering",
     "blurb": "Leading technical teams, overseeing engineering projects, and guiding members in developing practical engineering and problem-solving skills.",
     "category": "organizational",
     "organization": "ICPEP SE - PUP Manila",
     "orgType": "Leadership",
-    "date": "SEP 2025 - Present",
+    "date": "SEP 2025 - AUG 2026",
     "tags": ["Leadership", "Programming", "Mentorship", "Web Development"],
     "images": [
       "/images/organizational/icpep/icpep-logo.jpg",
@@ -53,7 +67,7 @@
     "category": "organizational",
     "organization": "Google Developer Groups",
     "orgType": "Membership",
-    "date": "FEB 2026 - PRESENT",
+    "date": "FEB 2026 - AUG 2026",
     "tags": ["Cybersecurity", "Incident Response", "Identity and Access Management"],
     "images": [
       "/images/organizational/gdg/gdg-logo.jpg"
@@ -101,7 +115,7 @@
     "category": "organizational",
     "organization": "CyberPH",
     "orgType": "Membership",
-    "date": "JAN 2026 - Present",
+    "date": "JAN 2026 - AUG 2026",
     "tags": ["Cybersecurity", "Research"],
     "images": [
       "/images/organizational/cyberph/cyberph-logo.jpg"
@@ -162,6 +176,30 @@
     ]
   },
   {
+    "title": "Fullstack Developer",
+    "blurb": "Developed eSumbong, a mobile platform for compliance where it focuses on handling complaints much easier.",
+    "category": "competitive",
+    "competition": "InnOlympics 2026",
+    "placement": "TOP 10",
+    "date": "APRIL 2026",
+    "tags": ["Fullstack", "Flutter"],
+    "images": [
+      "/images/competitive/innolympics/innolympics_pitching.jpg"
+    ]
+  },
+  {
+    "title": "Fullstack Developer",
+    "blurb": "Developed Rover, a business centered AI-model where it can be your everyday partner to view current business statuses",
+    "category": "competitive",
+    "competition": "Zero Vector Hackathon",
+    "placement": "1st Place",
+    "date": "JULY 2026",
+    "tags": ["Fullstack", "Business Model"],
+    "images": [
+      "/images/competitive/zero-vector/zero_vector.jpg"
+    ]
+  },
+  {
     "title": "Frontend Developer",
     "blurb": "Developed QuestBoard, a gamified project management tool with the goal to improve productivity.",
     "category": "competitive",
@@ -177,15 +215,39 @@
   },
   {
     "title": "Software Engineer Intern",
-    "blurb": "Developed custom modules for multiple clients of the company using the Odoo framework utilizing my knowledge in software engineering.",
+    "blurb": "Developed and maintained custom modules for multiple clients using the Odoo framework, applying software engineering principles and best practices throughout the software development lifecycle.",
     "category": "professional",
     "company": "Achieve Without Borders",
     "orgType": "Internship",
     "date": "June 2026 - August 2026",
     "tags": ["Python", "PostgreSQL", "Docker", "Odoo"],
     "images": [
-      "/images/professional/awb-logo.png",
-      "/images/professional/awb-picture1.jpeg"
+      "/images/professional/awb/awb-logo.png",
+      "/images/professional/awb/awb-picture1.jpeg"
+    ]
+  },
+  {
+    "title": "Cybersecurity Analyst Intern",
+    "blurb": "Performed vulnerability assessments and penetration testing using industry-standard security tools to identify and validate security vulnerabilities in web applications. Assisted in analyzing findings and improving the overall security posture of client systems.",
+    "category": "professional",
+    "company": "RSG Cybersecurity",
+    "orgType": "Internship",
+    "date": "Aug 2026 - Present",
+    "tags": ["Qualys", "Vulnerability Assessment", "Penetration Testing", "Nmap", "Wireshark"],
+    "images": [
+      "/images/professional/rsg/rsg.jpg"
+    ]
+  },
+  {
+    "title": "Fullstack Engineer",
+    "blurb": "Developed and maintained web applications using modern fullstack technologies while following software engineering and SDLC practices. Conducted vulnerability assessments and penetration testing to ensure the security and reliability of applications.",
+    "category": "professional",
+    "company": "Agama",
+    "orgType": "Contract",
+    "date": "Apr 2026 - Present",
+    "tags": ["Next.js", "Supabase", "Godot", "GDScript"],
+    "images": [
+      "/images/professional/agama/agama.jpg"
     ]
   }
 ]

@@ -56,7 +56,7 @@ const WALLPAPER_PAGE_SIZE = 24;
 
 export default function ControlPanel({
   soundToggle, onClose,
-  onWallpaperChange, currentWallpaper: legacyWallpaper,
+  onWallpaperChange,
   wallpaperConfig: configProp, onWallpaperConfigChange,
   colorScheme = "standard", onColorSchemeChange,
   doubleClickSpeed = 400, onMouseSpeedChange,
@@ -94,6 +94,7 @@ export default function ControlPanel({
         }
       }
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalImported(imported);
   }, []);
 
