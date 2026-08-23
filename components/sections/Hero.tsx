@@ -2,18 +2,19 @@
 
 import type { CSSProperties, Dispatch, SetStateAction } from "react";
 import { useEffect, useRef, useState } from "react";
+import type { SiteTheme } from "@/lib/theme";
 import { NavbarCapsule } from "./NavbarCapsule";
 
 type NavItem = { label: string; href: string };
 
 type HeroProps = {
   navItems: NavItem[];
-  theme: "light" | "dark";
-  onThemeToggle: Dispatch<SetStateAction<"light" | "dark">>;
+  theme: SiteTheme;
+  onThemeToggle: Dispatch<SetStateAction<SiteTheme>>;
 };
 
 export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
-  const isDark = theme === "dark";
+  const isDark = theme !== "light";
 
   const baseModelClass =
     "absolute inset-0 block h-full w-full transition-transform transition-opacity duration-[2000ms] ease-out";
@@ -21,34 +22,44 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
   const ON_SCREEN = "translate-x-[0vw] translate-y-0 opacity-100";
   const OFF_NORTHEAST = "translate-x-[180vw] -translate-y-[140vh] opacity-0 pointer-events-none";
   const OFF_SOUTHWEST = "-translate-x-[180vw] translate-y-[140vh] opacity-0 pointer-events-none";
+  const OFF_NORTHWEST = "-translate-x-[180vw] -translate-y-[140vh] opacity-0 pointer-events-none";
 
   const [sunAnim, setSunAnim] = useState(ON_SCREEN);
   const [moonAnim, setMoonAnim] = useState(OFF_SOUTHWEST);
+  const [cloudAnim, setCloudAnim] = useState(OFF_NORTHWEST);
 
   const sunRef = useRef<HTMLElement | null>(null);
   const moonRef = useRef<HTMLElement | null>(null);
+  const cloudRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (isDark) {
-      requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (theme === "dark") {
+        setCloudAnim(OFF_NORTHWEST);
         setSunAnim(ON_SCREEN);
         setMoonAnim(OFF_SOUTHWEST);
         requestAnimationFrame(() => {
           setSunAnim(OFF_NORTHEAST);
           setMoonAnim(ON_SCREEN);
         });
-      });
-    } else {
-      requestAnimationFrame(() => {
+      } else if (theme === "rain") {
+        setSunAnim(OFF_NORTHEAST);
+        setMoonAnim(OFF_SOUTHWEST);
+        setCloudAnim(OFF_NORTHWEST);
+        requestAnimationFrame(() => {
+          setCloudAnim(ON_SCREEN);
+        });
+      } else {
         setMoonAnim(ON_SCREEN);
         setSunAnim(OFF_NORTHEAST);
+        setCloudAnim(OFF_NORTHWEST);
         requestAnimationFrame(() => {
           setMoonAnim(OFF_SOUTHWEST);
           setSunAnim(ON_SCREEN);
         });
-      });
-    }
-  }, [isDark]);
+      }
+    });
+  }, [theme]);
 
   useEffect(() => {
     const attachPause = (el: (HTMLElement & { autoRotate?: boolean }) | null) => {
@@ -79,10 +90,12 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
 
     const cleanupSun = attachPause(sunRef.current);
     const cleanupMoon = attachPause(moonRef.current);
+    const cleanupCloud = attachPause(cloudRef.current);
 
     return () => {
       cleanupSun?.();
       cleanupMoon?.();
+      cleanupCloud?.();
     };
   }, []);
 
@@ -117,6 +130,13 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
         filter: "drop-shadow(0 0 18px rgba(175, 195, 230, 0.9)) drop-shadow(0 0 44px rgba(160, 185, 225, 0.4))",
       };
 
+  const cloudGlowStyle: CSSProperties =
+    theme === "rain"
+      ? {
+          filter: "drop-shadow(0 0 30px rgba(148, 187, 255, 0.85)) drop-shadow(0 0 84px rgba(96, 150, 255, 0.5))",
+        }
+      : {};
+
   return (
     <>
       <div className="pointer-events-none fixed left-0 right-0 top-4 z-[3000] flex w-full justify-center px-4 sm:px-10">
@@ -131,7 +151,7 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
           </h1>
           <p
             className="text-lg sm:text-xl leading-relaxed text-justify dark:text-slate-100"
-            style={{ color: isDark ? "#f8fafc" : "#000000" }}
+            style={{ color: theme === "light" ? "#000000" : "#f8fafc" }}
           >
             A Computer Engineering student with a strong interest in software development and cybersecurity. I enjoy building practical, user-focused applications using modern web technologies, while continuously sharpening my problem-solving and algorithmic skills. I’m passionate about learning, experimenting, and turning ideas into secure, efficient solutions.
           </p>
@@ -188,6 +208,23 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
               style={{
                 ...baseModelSurfaceStyle,
                 ...moonGlowStyle,
+              }}
+            />
+            {/* @ts-expect-error Custom element is declared globally */}
+            <model-viewer
+              ref={cloudRef}
+              src="/3d-models/cloud_lightning.glb"
+              alt="Thunderstorm cloud with lightning"
+              camera-controls
+              disable-zoom
+              auto-rotate
+              interaction-prompt="none"
+              exposure="1"
+              shadow-intensity="0"
+              className={`${baseModelClass} ${cloudAnim}`}
+              style={{
+                ...baseModelSurfaceStyle,
+                ...cloudGlowStyle,
               }}
             />
           </div>

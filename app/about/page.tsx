@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { Milestone, SkillGroup, Focus } from "@/types/domain";
 import { NavbarCapsule } from "@/components/sections/NavbarCapsule";
+import type { SiteTheme } from "@/lib/theme";
 
 const milestones: Milestone[] = [
 	{
@@ -51,8 +52,8 @@ const focuses: Focus[] = [
 ];
 
 export default function AboutPage() {
-	const [theme, setTheme] = useState<"light" | "dark">("light");
-	const isDark = theme === "dark";
+	const [theme, setTheme] = useState<SiteTheme>("light");
+	const isDark = theme !== "light";
 
 	const accent = useMemo(() => (isDark ? "from-cyan-400 to-blue-500" : "from-amber-400 to-orange-500"), [isDark]);
 	const cardBg = isDark ? "bg-white/5 border-white/10" : "bg-slate-50 border-slate-200";

@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import { CertificationsSection } from "@/components/sections/Certifications";
 import { EducationSection } from "@/components/sections/Education";
@@ -8,6 +7,10 @@ import { ExperienceSection } from "@/components/sections/Experience";
 import { Footer } from "@/components/sections/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { ProjectsSection } from "@/components/sections/Projects";
+import { JournalWidget } from "@/components/ui/JournalWidget";
+import { SkyBackdrop } from "@/components/ui/SkyBackdrop";
+import type { SiteTheme } from "@/lib/theme";
+import { themeBackground } from "@/lib/theme";
 
 function hexToRgba(hex: string, alpha: number): string {
   const value = hex.replace("#", "");
@@ -38,20 +41,24 @@ function mixHex(start: string, end: string, t: number): string {
 }
 
 export default function Home() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-  const isDark = theme === "dark";
+  const [theme, setTheme] = useState<SiteTheme>("light");
+  const isDark = theme !== "light";
   const audioPlayedRef = useRef(false);
 
   useEffect(() => {
     const root = document.documentElement;
-    if (isDark) {
+    if (theme === "rain") {
+      root.classList.add("dark", "rain");
+      root.style.colorScheme = "dark";
+    } else if (theme === "dark") {
+      root.classList.remove("rain");
       root.classList.add("dark");
       root.style.colorScheme = "dark";
     } else {
-      root.classList.remove("dark");
+      root.classList.remove("dark", "rain");
       root.style.colorScheme = "light";
     }
-  }, [isDark]);
+  }, [theme]);
 
   useEffect(() => {
     if (audioPlayedRef.current) return;
@@ -72,7 +79,7 @@ export default function Home() {
 
   const [showPrompt, setShowPrompt] = useState(true);
 
-  const [bgColor, setBgColor] = useState(isDark ? "#0b1220" : "#ffffff");
+  const [bgColor, setBgColor] = useState(() => themeBackground(theme));
   const didMountRef = useRef(false);
   const rafRef = useRef<number | null>(null);
   const previousBgColorRef = useRef(bgColor);
@@ -101,7 +108,7 @@ export default function Home() {
     }
 
     const from = previousBgColorRef.current;
-    const to = isDark ? "#0b1220" : "#ffffff";
+    const to = themeBackground(theme);
     const duration = 550;
     const start = performance.now();
 
@@ -121,45 +128,10 @@ export default function Home() {
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
-  }, [isDark]);
+  }, [theme]);
 
   const gradientMask = `linear-gradient(90deg, ${bgColor} 0%, ${hexToRgba(bgColor, 0.92)} 45%, ${hexToRgba(bgColor, 0)} 75%)`;
-  const foreground = isDark ? "#f8fafc" : "#0f172a";
-
-  const [starField, setStarField] = useState<string>("");
-
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      if (!isDark) {
-        setStarField("");
-        return;
-      }
-
-      const stars = Array.from({ length: 42 }).map(() => {
-        const size = (Math.random() * 0.8 + 0.3).toFixed(2);
-        const blur = (Math.random() * 1.8 + 0.4).toFixed(2);
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
-        const opacity = (0.45 + Math.random() * 0.45).toFixed(2);
-
-        return `radial-gradient(${size}px ${size}px at ${x.toFixed(2)}% ${y.toFixed(2)}%, rgba(255,255,255,${opacity}) 0, rgba(255,255,255,0) ${blur}px)`;
-      });
-
-      setStarField(stars.join(", "));
-    });
-
-    return () => cancelAnimationFrame(raf);
-  }, [isDark]);
-
-  const starLayerStyle: CSSProperties | undefined = isDark && starField
-    ? {
-        backgroundImage: starField,
-        backgroundSize: "100% 100%",
-        mixBlendMode: "screen" as CSSProperties["mixBlendMode"],
-        opacity: 0.85,
-        animation: "starTwinkle 9s ease-in-out infinite alternate",
-      }
-    : undefined;
+  const foreground = theme === "light" ? "#0f172a" : "#f8fafc";
 
   return (
     <main
@@ -179,13 +151,7 @@ export default function Home() {
         style={{ background: gradientMask }}
       />
 
-      {isDark && starLayerStyle?.backgroundImage && (
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden
-          style={starLayerStyle}
-        />
-      )}
+      <SkyBackdrop theme={theme} />
 
       <div className="relative z-10 flex min-h-screen flex-col">
         <Hero navItems={navItems} theme={theme} onThemeToggle={setTheme} />
@@ -203,7 +169,9 @@ export default function Home() {
         </div>
       </div>
 
-      <Footer />
+      <Footer theme={theme} />
+
+      <JournalWidget />
 
       {showPrompt && (
         <div
