@@ -70,6 +70,25 @@ export type Certification = {
   certificateAlt?: string;
 };
 
+export type JournalBlock =
+  | { type: "text"; text: string }
+  | {
+      type: "image";
+      src: string;
+      alt?: string;
+      caption?: string;
+      width?: number;
+      height?: number;
+    };
+
+export type JournalEntry = {
+  date: string;
+  title: string;
+  entry?: string;
+  content?: JournalBlock[];
+  mood?: string;
+};
+
 export type Milestone = {
   year: string;
   title: string;

@@ -11,6 +11,7 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import type { SiteTheme } from "@/lib/theme";
 
 export type NavbarCapsuleItem = {
   label: string;
@@ -20,8 +21,8 @@ export type NavbarCapsuleItem = {
 type NavbarCapsuleProps = {
   items?: NavbarCapsuleItem[];
   className?: string;
-  theme?: "light" | "dark";
-  onThemeToggle?: (next: "light" | "dark") => void;
+  theme?: SiteTheme;
+  onThemeToggle?: (next: SiteTheme) => void;
 };
 
 const defaultItems: NavbarCapsuleItem[] = [
@@ -66,7 +67,8 @@ export function NavbarCapsule({
   const pathname = usePathname();
   const router = useRouter();
   const currentPath = normalizePathname(pathname);
-  const isDark = theme === "dark";
+  const isDark = theme !== "light";
+  const isRain = theme === "rain";
   const [currentHash, setCurrentHash] = useState<string>("");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Array<HTMLAnchorElement | null>>([]);
@@ -215,7 +217,17 @@ export function NavbarCapsule({
     return () => window.removeEventListener("resize", onResize);
   }, [activeIndex, hoverIndex, moveIndicatorToIndex, parsedItems.length]);
 
-  const knobPositionClass = isDark ? "translate-x-[36px]" : "translate-x-0";
+  const nextTheme: SiteTheme = isRain ? "light" : isDark && !isRain ? "rain" : "dark";
+  const knobPositionClass = isRain
+    ? "translate-x-[72px]"
+    : isDark
+    ? "translate-x-[36px]"
+    : "translate-x-0";
+  const knobBackground = isRain
+    ? "linear-gradient(135deg, #60a5fa, #2563eb)"
+    : isDark
+    ? "linear-gradient(135deg, #4b5563, #111827)"
+    : "linear-gradient(135deg, #fbbf24, #f59e0b)";
 
   const handleBootloaderClick = useCallback(() => {
     if (isShuttingDown) return;
@@ -353,39 +365,74 @@ export function NavbarCapsule({
 
         <button
           type="button"
-          aria-label={isDark ? "Activate light mode" : "Activate dark mode"}
-          aria-pressed={isDark}
-          onClick={() => onThemeToggle?.(isDark ? "light" : "dark")}
+          aria-label={`Switch to ${nextTheme} mode`}
+          onClick={() => onThemeToggle?.(nextTheme)}
           className={
-            "relative inline-flex h-9 w-20 items-center overflow-hidden rounded-full px-2 text-sm font-medium shadow-sm transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
+            "relative inline-flex h-9 w-[124px] items-center overflow-hidden rounded-full px-2 text-sm font-medium shadow-sm transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
             (isDark ? "border border-white/20" : "border border-black/10")
           }
           style={{
-            background: isDark
+            background: isRain
+              ? "linear-gradient(135deg, #24344d, #16273f)"
+              : isDark
               ? "linear-gradient(135deg, #111827, #0b1220)"
               : "linear-gradient(135deg, #f5f5f5, #dcdcdc)",
           }}
         >
           <span className="relative z-10 flex flex-1 items-center justify-center text-[#d97706] dark:text-white/70">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={isDark ? "opacity-50" : "opacity-100"}>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={!isDark ? "opacity-100" : "opacity-40"}
+            >
               <circle cx="12" cy="12" r="4" />
               <path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.66-7.66-1.41 1.41M7.75 16.25l-1.41 1.41m0-13.66 1.41 1.41m9.5 9.5 1.41 1.41" />
             </svg>
           </span>
           <span className="relative z-10 flex flex-1 items-center justify-center text-[#334155] dark:text-white">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={isDark ? "opacity-100" : "opacity-70"}>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={theme === "dark" ? "opacity-100" : "opacity-40"}
+            >
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </span>
+          <span className="relative z-10 flex flex-1 items-center justify-center text-[#2563eb] dark:text-sky-300">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={isRain ? "opacity-100" : "opacity-40"}
+            >
+              <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+              <path d="M16 14v6" />
+              <path d="M8 14v6" />
+              <path d="M12 16v6" />
             </svg>
           </span>
 
           <span
             aria-hidden
             className={`absolute inset-y-1 left-1 w-9 rounded-full shadow-lg transition-transform duration-300 ease-out ${knobPositionClass}`}
-            style={{
-              background: isDark
-                ? "linear-gradient(135deg, #4b5563, #111827)"
-                : "linear-gradient(135deg, #fbbf24, #f59e0b)",
-            }}
+            style={{ background: knobBackground }}
           />
         </button>
       </div>
@@ -420,39 +467,74 @@ export function NavbarCapsule({
 
         <button
           type="button"
-          aria-label={isDark ? "Activate light mode" : "Activate dark mode"}
-          aria-pressed={isDark}
-          onClick={() => onThemeToggle?.(isDark ? "light" : "dark")}
+          aria-label={`Switch to ${nextTheme} mode`}
+          onClick={() => onThemeToggle?.(nextTheme)}
           className={
-            "relative inline-flex h-10 w-20 items-center overflow-hidden rounded-full px-2 text-sm font-medium shadow-sm transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
+            "relative inline-flex h-10 w-[124px] items-center overflow-hidden rounded-full px-2 text-sm font-medium shadow-sm transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 " +
             (isDark ? "border border-white/20" : "border border-black/10")
           }
           style={{
-            background: isDark
+            background: isRain
+              ? "linear-gradient(135deg, #24344d, #16273f)"
+              : isDark
               ? "linear-gradient(135deg, #111827, #0b1220)"
               : "linear-gradient(135deg, #f5f5f5, #dcdcdc)",
           }}
         >
           <span className="relative z-10 flex flex-1 items-center justify-center text-[#d97706] dark:text-white/70">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={isDark ? "opacity-50" : "opacity-100"}>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={!isDark ? "opacity-100" : "opacity-40"}
+            >
               <circle cx="12" cy="12" r="4" />
               <path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.66-7.66-1.41 1.41M7.75 16.25l-1.41 1.41m0-13.66 1.41 1.41m9.5 9.5 1.41 1.41" />
             </svg>
           </span>
           <span className="relative z-10 flex flex-1 items-center justify-center text-[#334155] dark:text-white">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={isDark ? "opacity-100" : "opacity-70"}>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={theme === "dark" ? "opacity-100" : "opacity-40"}
+            >
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </span>
+          <span className="relative z-10 flex flex-1 items-center justify-center text-[#2563eb] dark:text-sky-300">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={isRain ? "opacity-100" : "opacity-40"}
+            >
+              <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+              <path d="M16 14v6" />
+              <path d="M8 14v6" />
+              <path d="M12 16v6" />
             </svg>
           </span>
 
           <span
             aria-hidden
             className={`absolute inset-y-1 left-1 w-9 rounded-full shadow-lg transition-transform duration-300 ease-out ${knobPositionClass}`}
-            style={{
-              background: isDark
-                ? "linear-gradient(135deg, #4b5563, #111827)"
-                : "linear-gradient(135deg, #fbbf24, #f59e0b)",
-            }}
+            style={{ background: knobBackground }}
           />
         </button>
 
