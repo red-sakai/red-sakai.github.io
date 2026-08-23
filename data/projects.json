@@ -57,6 +57,44 @@
     ]
   },
   {
+    "title": "eSumbong",
+    "summary": "A streamlined mobile governance platform designed to help barangays and local LGUs efficiently record, manage, and resolve community complaints for improved local compliance.",
+    "category": "web",
+    "projectType": "hackathon",
+    "status": "shipped",
+    "period": "2026",
+    "stack": ["Flutter", "Firebase"],
+    "image": "/images/projects/esumbong/esumbong.png",
+    "highlights": [
+      "Provides an accessible mobile interface for citizens to submit and track community complaints directly to local officials.",
+      "Automates grievance routing to help barangays and LGUs manage, resolve, and monitor compliance efficiently.",
+      "Strengthens local governance transparency by creating a verifiable, centralized record of community issues."
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "https://github.com/red-sakai/eSumbong", "type": "repo" },
+      { "label": "Live Demo", "href": "#", "type": "demo" }
+    ]
+  },
+  {
+    "title": "Tanikala",
+    "summary": "A community-driven, predictive early-warning platform that pairs verified field scout reports with weather dispersal data to alert smallholder farmers of pest threats through existing analog barangay networks.",
+    "category": "web",
+    "projectType": "hackathon",
+    "status": "shipped",
+    "period": "2026",
+    "stack": ["Flutter", "Supabase"],
+    "image": "/images/projects/tanikala/tanikala.png",
+    "highlights": [
+      "Mobilizes volunteer barangay scouts and technicians to standardize pest detection through crop damage patterns via SMS and mobile web.",
+      "Uses open-source weather and wind data to forecast pest migration vectors before regional outbreaks spread.",
+      "Reaches smallholder farmers without smartphones by broadcasting verified alerts through analog channels like barangay loudspeakers and sari-sari stores."
+    ],
+    "links": [
+      { "label": "GitHub Repository", "href": "#", "type": "repo" },
+      { "label": "Live Demo", "href": "#", "type": "demo" }
+    ]
+  },
+  {
     "title": "Algohub",
     "summary": "Gamified way of learning data structures and algorithms. Earn achievements and enjoy algohub.",
     "category": "learning",
@@ -111,25 +149,6 @@
     "links": [
       { "label": "GitHub Repository", "href": "#", "type": "repo" },
       { "label": "Live Demo", "href": "https://batchmail2.vercel.app/", "type": "demo" }
-    ]
-  },
-  {
-    "title": "Connexa",
-    "summary": "Event management and RSVP platform where users can use this in order to get updated with live events happening with organizations inside PUP.",
-    "category": "web",
-    "projectType": "personal",
-    "status": "discontinued",
-    "period": "2025",
-    "stack": ["Next.js"],
-    "image": "/images/projects/connexa/connexa.png",
-    "highlights": [
-      "Event hub for PUP orgs to publish updates",
-      "RSVP and announcements for live campus events",
-      "Keeps members informed on what is happening"
-    ],
-    "links": [
-      { "label": "GitHub Repository", "href": "#", "type": "repo" },
-      { "label": "Live Demo", "href": "#", "type": "demo" }
     ]
   },
   {
@@ -190,25 +209,6 @@
     ]
   },
   {
-    "title": "Pixie",
-    "summary": "An AI interviewer for organizations in PUP where it can converse via voice chat and live follow up questions feedback.",
-    "category": "web",
-    "projectType": "personal",
-    "status": "in-progress",
-    "period": "2025",
-    "stack": ["Next.js", "PostgreSQL", "Supabase", "AI Integrated"],
-    "image": "/images/projects/pixie/pixie.png",
-    "highlights": [
-      "AI interviewer that runs voice-based screenings",
-      "Live follow-up questions with immediate feedback",
-      "Designed for PUP org interview workflows"
-    ],
-    "links": [
-      { "label": "GitHub Repository", "href": "https://github.com/red-sakai/Pixie", "type": "repo" },
-      { "label": "Live Demo", "href": "#", "type": "demo" }
-    ]
-  },
-  {
     "title": "Static Mind",
     "summary": "A game made using Unity Engine and C#, you suddenly wake up in a dark room where you are suddenly being experimented on by Dr. Red. Find a way out before you lose your sanity.",
     "category": "game",
@@ -224,25 +224,6 @@
     ],
     "links": [
       { "label": "GitHub Repository", "href": "#", "type": "repo" },
-      { "label": "Live Demo", "href": "#", "type": "demo" }
-    ]
-  },
-  {
-    "title": "Shelldon",
-    "summary": "A discord bot used in CyberPH PUP's discord server as well as CyberPH main discord server. Shelldon is a digital assistant for the server and manages announcements, members, and roles.",
-    "category": "bot",
-    "projectType": "personal",
-    "status": "shipped",
-    "period": "2025",
-    "stack": ["JavaScript"],
-    "image": "/images/projects/shelldon/shelldon.png",
-    "highlights": [
-      "Discord bot assistant for CyberPH servers",
-      "Automates announcements and member management",
-      "Handles roles and server housekeeping"
-    ],
-    "links": [
-      { "label": "GitHub Repository", "href": "https://github.com/red-sakai/shelldon", "type": "repo" },
       { "label": "Live Demo", "href": "#", "type": "demo" }
     ]
   }
