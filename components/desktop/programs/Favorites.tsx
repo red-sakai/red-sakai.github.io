@@ -284,6 +284,7 @@ export default function Favorites() {
       const stored = localStorage.getItem("favorites");
       if (stored) {
         const parsed = JSON.parse(stored) as FavoriteEntry[];
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setFavorites(parsed);
       }
     } catch {

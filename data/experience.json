@@ -34,12 +34,26 @@
     ]
   },
   {
+    "title": "Vice President for Technology",
+    "blurb": "Spearheads technology initiatives, manages technical infrastructure, and drives student-led innovation across the organization as the primary technical lead for ICPEP SE - PUP Manila.",
+    "category": "organizational",
+    "organization": "ICPEP SE - PUP Manila",
+    "orgType": "Leadership",
+    "date": "AUG 2026 - PRESENT",
+    "tags": ["Leadership", "Programming", "Mentorship", "Web Development"],
+    "images": [
+      "/images/organizational/icpep/icpep-logo.jpg",
+      "/images/organizational/icpep/icpep1.jpg",
+      "/images/organizational/icpep/icpep2.png"
+    ]
+  },
+  {
     "title": "Head of Engineering",
     "blurb": "Leading technical teams, overseeing engineering projects, and guiding members in developing practical engineering and problem-solving skills.",
     "category": "organizational",
     "organization": "ICPEP SE - PUP Manila",
     "orgType": "Leadership",
-    "date": "SEP 2025 - Present",
+    "date": "SEP 2025 - AUG 2026",
     "tags": ["Leadership", "Programming", "Mentorship", "Web Development"],
     "images": [
       "/images/organizational/icpep/icpep-logo.jpg",
@@ -53,7 +67,7 @@
     "category": "organizational",
     "organization": "Google Developer Groups",
     "orgType": "Membership",
-    "date": "FEB 2026 - PRESENT",
+    "date": "FEB 2026 - AUG 2026",
     "tags": ["Cybersecurity", "Incident Response", "Identity and Access Management"],
     "images": [
       "/images/organizational/gdg/gdg-logo.jpg"
@@ -101,7 +115,7 @@
     "category": "organizational",
     "organization": "CyberPH",
     "orgType": "Membership",
-    "date": "JAN 2026 - Present",
+    "date": "JAN 2026 - AUG 2026",
     "tags": ["Cybersecurity", "Research"],
     "images": [
       "/images/organizational/cyberph/cyberph-logo.jpg"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import projectsData from "@/data/projects.json";
 import type { ProjectType, ProjectItem } from "@/types/domain";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
@@ -64,9 +64,37 @@ function TagRow({ tags }: { tags: string[] }) {
 export function ProjectsSection() {
 	const [stackFiltersSelected, setStackFiltersSelected] = useState<string[]>([]);
 	const [typeFilter, setTypeFilter] = useState<"all" | ProjectType>("all");
+	const [stackMenuOpen, setStackMenuOpen] = useState(false);
+	const stackMenuRef = useRef<HTMLDivElement>(null);
 	const [lightbox, setLightbox] = useState<{ images: string[]; index: number; alt: string } | null>(null);
 	const { ref, visible } = useRevealOnScroll<HTMLElement>();
-	const [lightbox, setLightbox] = useState<ProjectItem | null>(null);
+
+	useEffect(() => {
+		if (!stackMenuOpen) return;
+		const onPointerDown = (event: MouseEvent) => {
+			if (stackMenuRef.current && !stackMenuRef.current.contains(event.target as Node)) {
+				setStackMenuOpen(false);
+			}
+		};
+		const onKey = (event: KeyboardEvent) => {
+			if (event.key === "Escape") setStackMenuOpen(false);
+		};
+		document.addEventListener("mousedown", onPointerDown);
+		document.addEventListener("keydown", onKey);
+		return () => {
+			document.removeEventListener("mousedown", onPointerDown);
+			document.removeEventListener("keydown", onKey);
+		};
+	}, [stackMenuOpen]);
+
+	const toggleStackFilter = (key: string) => {
+		setStackFiltersSelected((prev) =>
+			prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+		);
+	};
+
+	const stackLabel = (key: string) =>
+		stackFilters.find((f) => f.key === key)?.label ?? key;
 
 	const openPreview = (project: ProjectItem) => {
 		if (project.image) {
@@ -105,54 +133,134 @@ export function ProjectsSection() {
 					</p>
 				</div>
 
-				<div className="flex flex-wrap justify-center gap-2 pt-1">
-					{typeFilters.map((item) => (
-						<button
-							key={item.key}
-							type="button"
-							onClick={() => setTypeFilter(item.key)}
-							className={`${filterBase} ${typeFilter === item.key ? filterActive : filterInactive}`}
-						>
-							{item.label}
-						</button>
-					))}
-				</div>
-
-				<div className="flex flex-wrap justify-center gap-2">
-					{stackFilters.map((item) => {
-						const isShowAll = item.key === "all";
-						const isActive = isShowAll ? stackFiltersSelected.length === 0 : stackFiltersSelected.includes(item.key);
-						return (
+				<div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+					<div className="inline-flex rounded-md border border-slate-200 p-1 dark:border-white/10">
+						{typeFilters.map((item) => (
 							<button
 								key={item.key}
 								type="button"
-								onClick={() => {
-									if (isShowAll) {
-										setStackFiltersSelected([]);
-										return;
-									}
-									setStackFiltersSelected((prev) => {
-										if (prev.includes(item.key)) return prev.filter((k) => k !== item.key);
-										return [...prev, item.key];
-									});
-								}}
-								className={`${filterBase} ${isActive ? filterActive : filterInactive}`}
+								onClick={() => setTypeFilter(item.key)}
+								className={`rounded-[5px] px-4 py-1.5 font-mono text-xs font-medium uppercase tracking-[0.12em] transition-colors duration-200 ${
+									typeFilter === item.key
+										? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
+										: "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+								}`}
 							>
 								{item.label}
 							</button>
-						);
-					})}
+						))}
+					</div>
+
+					<div className="relative" ref={stackMenuRef} data-lenis-prevent>
+						<button
+							type="button"
+							aria-haspopup="listbox"
+							aria-expanded={stackMenuOpen}
+							onClick={() => setStackMenuOpen((open) => !open)}
+							className={`${filterBase} inline-flex items-center gap-2 ${
+								stackFiltersSelected.length > 0 ? filterActive : filterInactive
+							} ${stackMenuOpen ? "border-slate-400 dark:border-white/30" : ""}`}
+						>
+							Tech stack
+							{stackFiltersSelected.length > 0 && (
+								<span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-white/25 px-1 text-[10px] leading-none dark:bg-slate-900/20">
+									{stackFiltersSelected.length}
+								</span>
+							)}
+							<span
+								aria-hidden
+								className={`text-[10px] transition-transform duration-200 ${stackMenuOpen ? "rotate-180" : ""}`}
+							>
+								▼
+							</span>
+						</button>
+
+						{stackMenuOpen && (
+							<div className="absolute left-1/2 z-20 mt-2 w-60 -translate-x-1/2 rounded-lg border border-slate-200 bg-white p-2 shadow-xl shadow-slate-900/10 dark:border-white/10 dark:bg-slate-900 dark:shadow-black/40">
+								<div className="flex items-center justify-between gap-2 px-2 pb-2 pt-1">
+									<span className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+										Filter by stack
+									</span>
+									{stackFiltersSelected.length > 0 && (
+										<button
+											type="button"
+											onClick={() => setStackFiltersSelected([])}
+											className="font-mono text-[10px] uppercase tracking-[0.12em] text-slate-500 underline decoration-slate-300 underline-offset-2 transition-colors hover:text-blue-700 dark:text-slate-400 dark:decoration-white/25 dark:hover:text-blue-300"
+										>
+											Clear
+										</button>
+									)}
+								</div>
+								<div className="terminal-scrollbar max-h-64 overscroll-contain overflow-y-auto">
+									{stackFilters
+										.filter((item) => item.key !== "all")
+										.map((item) => {
+											const isActive = stackFiltersSelected.includes(item.key);
+											return (
+												<button
+													key={item.key}
+													type="button"
+													aria-pressed={isActive}
+													onClick={() => toggleStackFilter(item.key)}
+													className={`flex w-full items-center justify-between gap-3 rounded-md px-2 py-1.5 text-left font-mono text-[11px] uppercase tracking-[0.12em] transition-colors ${
+														isActive
+															? "text-slate-900 dark:text-white"
+															: "text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
+													}`}
+												>
+													{item.label}
+													<span
+														aria-hidden
+														className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-[3px] border ${
+															isActive
+																? "border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900"
+																: "border-slate-300 dark:border-white/25"
+														}`}
+													>
+														{isActive && (
+															<svg viewBox="0 0 10 10" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+																<path d="M1.5 5.5l2.5 2.5L8.5 2.5" strokeLinecap="round" strokeLinejoin="round" />
+															</svg>
+														)}
+													</span>
+												</button>
+											);
+										})}
+								</div>
+							</div>
+						)}
+					</div>
 				</div>
+
+				{stackFiltersSelected.length > 0 && (
+					<div className="flex flex-wrap items-center justify-center gap-2">
+						{stackFiltersSelected.map((key) => (
+							<button
+								key={key}
+								type="button"
+								aria-label={`Remove ${stackLabel(key)} filter`}
+								onClick={() => toggleStackFilter(key)}
+								className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-slate-600 transition-colors hover:border-red-400 hover:text-red-600 dark:border-white/20 dark:text-slate-300 dark:hover:border-red-400/70 dark:hover:text-red-400"
+							>
+								{stackLabel(key)}
+								<span aria-hidden>×</span>
+							</button>
+						))}
+					</div>
+				)}
+
+				<p className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+					{filtered.length} {filtered.length === 1 ? "project" : "projects"}
+				</p>
 			</div>
 
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{filtered.map((project) => (
+				{filtered.map((project, index) => (
 					<article
-						key={project.title}
+						key={`${project.category}-${project.title}-${index}`}
 						className="group relative flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white transition-colors duration-300 hover:border-slate-400/70 dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white/20"
 					>
 						{project.image && (
-<<<<<<< HEAD
 							<div
 								role="button"
 								tabIndex={0}
@@ -164,28 +272,18 @@ export function ProjectsSection() {
 										openPreview(project);
 									}
 								}}
-								className="cursor-zoom-in overflow-hidden border-b border-slate-100 bg-slate-50 focus-visible:outline-none dark:border-white/5 dark:bg-white/[0.04]"
+								className="group/preview relative cursor-zoom-in overflow-hidden border-b border-slate-100 bg-slate-50 focus-visible:outline-none dark:border-white/5 dark:bg-white/[0.04]"
 							>
 								<div
 									className="aspect-video w-full bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-=======
-							<button
-								type="button"
-								onClick={() => setLightbox(project)}
-								className="group relative block w-full overflow-hidden rounded-xl border border-slate-200/60 bg-slate-100 dark:border-white/10 dark:bg-white/5"
-								aria-label={`Enlarge ${project.title} preview`}
-							>
-								<div
-									className="aspect-video w-full bg-cover bg-center transition duration-300 group-hover:scale-[1.02]"
->>>>>>> d4e91d235450c9afff59410ccce368b10da8c92d
 									style={{ backgroundImage: `url(${project.image})` }}
 									role="img"
 									aria-label={`${project.title} preview`}
 								/>
-								<span className="absolute inset-0 flex items-center justify-center bg-black/0 text-sm font-semibold text-white opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+								<span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/0 text-sm font-semibold text-white opacity-0 transition group-hover/preview:bg-black/40 group-hover/preview:opacity-100">
 									Click to enlarge
 								</span>
-							</button>
+							</div>
 						)}
 
 						<div className="flex flex-1 flex-col gap-3 p-5 sm:p-6">
@@ -250,19 +348,11 @@ export function ProjectsSection() {
 				)}
 			</div>
 
-<<<<<<< HEAD
 			{lightbox && (
 				<Lightbox
 					images={lightbox.images}
 					index={lightbox.index}
 					alt={lightbox.alt}
-=======
-			{lightbox?.image && (
-				<Lightbox
-					src={lightbox.image}
-					alt={`${lightbox.title} preview`}
-					caption={lightbox.title}
->>>>>>> d4e91d235450c9afff59410ccce368b10da8c92d
 					onClose={() => setLightbox(null)}
 				/>
 			)}

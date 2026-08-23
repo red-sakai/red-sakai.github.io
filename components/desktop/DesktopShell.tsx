@@ -74,7 +74,6 @@ export default function DesktopShell() {
 
   const desktopRef = useRef<HTMLDivElement>(null);
   const [startOpen, setStartOpen] = useState(false);
-  const [showBoot, setShowBoot] = useState(false);
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number } | null>(null);
   const [refreshTick, setRefreshTick] = useState(0);
   const [showShutDownDialog, setShowShutDownDialog] = useState(false);
@@ -103,6 +102,7 @@ export default function DesktopShell() {
   useEffect(() => {
     try {
       const wp = localStorage.getItem("desktop-wallpaper");
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (wp) setWallpaperConfig(JSON.parse(wp));
     } catch {}
     try {

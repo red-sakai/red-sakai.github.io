@@ -1,6 +1,5 @@
 "use client";
 
-<<<<<<< HEAD
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
@@ -9,11 +8,13 @@ export function Lightbox({
   images,
   index,
   alt,
+  caption,
   onClose,
 }: {
   images: string[];
   index: number;
   alt: string;
+  caption?: string;
   onClose: () => void;
 }) {
   const total = images.length;
@@ -54,8 +55,18 @@ export function Lightbox({
       aria-modal="true"
       aria-label={alt}
       onClick={onClose}
+      data-lenis-prevent
       className="fixed inset-0 z-[4000] flex items-center justify-center bg-slate-950/90 p-6 backdrop-blur-sm animate-[lightbox-in_0.25s_ease-out]"
     >
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/5 text-xl text-white/70 transition-colors duration-200 hover:border-white/50 hover:bg-white/15 hover:text-white focus-visible:outline-none sm:right-8 sm:top-8"
+      >
+        <span aria-hidden>×</span>
+      </button>
+
       <div
         className="relative flex flex-col items-center gap-4"
         onClick={(event) => event.stopPropagation()}
@@ -65,12 +76,17 @@ export function Lightbox({
           alt={`${alt} (${current + 1}/${total})`}
           width={1600}
           height={1600}
-          className="max-h-[78vh] w-auto max-w-[85vw] object-contain"
+          className="max-h-[74vh] w-auto max-w-[85vw] object-contain"
         />
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/60">
-          {hasMultiple ? `${String(current + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")} · ` : ""}
-          Click outside the image or press Esc to close
-        </p>
+        <div className="flex flex-col items-center gap-1">
+          {caption && (
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-white/80">{caption}</p>
+          )}
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/60">
+            {hasMultiple ? `${String(current + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")} · ` : ""}
+            Click outside the image or press Esc to close
+          </p>
+        </div>
       </div>
 
       {hasMultiple && (
@@ -102,62 +118,4 @@ export function Lightbox({
     </div>,
     document.body
   );
-=======
-import { useEffect } from "react";
-import { createPortal } from "react-dom";
-import Image from "next/image";
-
-type LightboxProps = {
-	src: string;
-	alt: string;
-	caption?: string;
-	onClose: () => void;
-};
-
-export function Lightbox({ src, alt, caption, onClose }: LightboxProps) {
-	useEffect(() => {
-		const onKey = (event: KeyboardEvent) => {
-			if (event.key === "Escape") onClose();
-		};
-		window.addEventListener("keydown", onKey);
-		return () => window.removeEventListener("keydown", onKey);
-	}, [onClose]);
-
-	return createPortal(
-		<div
-			className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-8"
-			role="dialog"
-			aria-modal="true"
-			aria-label={alt}
-			onClick={onClose}
-		>
-			<button
-				type="button"
-				onClick={onClose}
-				className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
-				aria-label="Close"
-			>
-				×
-			</button>
-			<figure
-				className="max-h-full max-w-4xl overflow-hidden rounded-xl shadow-[0_0_60px_rgba(0,0,0,0.6)]"
-				onClick={(event) => event.stopPropagation()}
-			>
-				<Image
-					src={src}
-					alt={alt}
-					width={1600}
-					height={1067}
-					className="max-h-[85vh] w-auto object-contain"
-				/>
-				{caption && (
-					<figcaption className="bg-slate-900 px-4 py-2 text-center text-sm text-slate-300">
-						{caption} — click anywhere to close
-					</figcaption>
-				)}
-			</figure>
-		</div>,
-		document.body
-	);
->>>>>>> d4e91d235450c9afff59410ccce368b10da8c92d
 }
