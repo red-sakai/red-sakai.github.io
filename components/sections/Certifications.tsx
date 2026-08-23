@@ -1,39 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import Image from "next/image";
 import certificationsData from "@/data/certifications.json";
 import type { Certification } from "@/types/domain";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 import { Lightbox } from "@/components/ui/Lightbox";
 
-function TagRow({ tags }: { tags: string[] }) {
-	return (
-		<div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
-			{tags.map((tag, idx) => (
-				<span key={tag} className="inline-flex items-center gap-2">
-					{tag}
-					{idx < tags.length - 1 && (
-						<span aria-hidden className="text-slate-300 dark:text-white/20">/</span>
-					)}
-				</span>
-			))}
-		</div>
-	);
-}
-
 export function CertificationsSection() {
 	const { ref, visible } = useRevealOnScroll<HTMLElement>();
 	const certifications = certificationsData as Certification[];
-	const [lightbox, setLightbox] = useState<{ images: string[]; index: number; alt: string } | null>(null);
-
-	const openImage = (cert: Certification, kind: "badge" | "certificate") => {
-		const src = kind === "badge" ? cert.image : cert.certificateImage;
-		if (!src) return;
-		const alt =
-			(kind === "badge" ? cert.imageAlt : cert.certificateAlt) ?? `${cert.title} ${kind}`;
-		setLightbox({ images: [src], index: 0, alt });
-	};
+	const [lightbox, setLightbox] = useState<Certification | null>(null);
 
 	return (
 		<section
@@ -107,28 +84,24 @@ export function CertificationsSection() {
 						<p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300/90">{cert.description}</p>
 
 						{cert.certificateImage && (
-							<div
-								role="button"
-								tabIndex={0}
-								aria-label={cert.certificateAlt || `View ${cert.title} certificate fullscreen`}
-								onClick={() => openImage(cert, "certificate")}
-								onKeyDown={(event) => {
-									if (event.key === "Enter" || event.key === " ") {
-										event.preventDefault();
-										openImage(cert, "certificate");
-									}
-								}}
-								className="cursor-zoom-in overflow-hidden rounded-md border border-slate-200/80 bg-slate-50 focus-visible:outline-none dark:border-white/10 dark:bg-white/[0.04]"
+							<button
+								type="button"
+								onClick={() => setLightbox(cert)}
+								className="group relative block w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50 text-left shadow-sm transition hover:border-amber-400/70 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
+								aria-label={`Enlarge ${cert.title} certificate`}
 							>
 								<Image
 									src={cert.certificateImage}
 									alt={cert.certificateAlt || `${cert.title} certificate`}
 									width={1200}
 									height={800}
-									className="h-full w-full object-cover"
+									className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
 									priority={false}
 								/>
-							</div>
+								<span className="absolute inset-0 flex items-center justify-center bg-black/0 text-sm font-semibold text-white opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+									Click to enlarge
+								</span>
+							</button>
 						)}
 
 						<div className="mt-auto flex flex-col gap-4 pt-1">
@@ -150,11 +123,11 @@ export function CertificationsSection() {
 				))}
 			</div>
 
-			{lightbox && (
+			{lightbox?.certificateImage && (
 				<Lightbox
-					images={lightbox.images}
-					index={lightbox.index}
-					alt={lightbox.alt}
+					src={lightbox.certificateImage}
+					alt={lightbox.certificateAlt || `${lightbox.title} certificate`}
+					caption={lightbox.title}
 					onClose={() => setLightbox(null)}
 				/>
 			)}

@@ -37,6 +37,7 @@ export function ExperienceSection() {
   const [experienceTab, setExperienceTab] = useState<ExperienceCategory>("organizational");
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number; alt: string } | null>(null);
   const { ref, visible } = useRevealOnScroll<HTMLElement>();
+  const [lightbox, setLightbox] = useState<{ src: string; caption: string } | null>(null);
 
   const items = experienceData as ExperienceItem[];
   const filtered = items.filter((item) => item.category === experienceTab);
@@ -69,7 +70,19 @@ export function ExperienceSection() {
     return item.competition ?? "Competition TBD";
   };
 
+<<<<<<< HEAD
   const ImageCarousel = ({ images, alt }: { images: string[]; alt: string }) => {
+=======
+  const orgBadgeClass = (orgTypeRaw: string | undefined) => {
+    const orgType = (orgTypeRaw || "").toLowerCase();
+    if (orgType === "leadership") return "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-500/15 dark:text-amber-200 dark:border-amber-500/30";
+    if (orgType === "membership") return "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-500/15 dark:text-blue-200 dark:border-blue-500/30";
+    if (orgType === "volunteering") return "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-200 dark:border-emerald-500/30";
+    return "bg-slate-100 text-black border-slate-200 dark:bg-white/10 dark:text-white/80 dark:border-white/15";
+  };
+
+  const ImageCarousel = ({ images, label, onEnlarge }: { images: string[]; label: string; onEnlarge: (src: string) => void }) => {
+>>>>>>> d4e91d235450c9afff59410ccce368b10da8c92d
     const safeImages = images.filter(Boolean);
     const [idx, setIdx] = useState(0);
     const [prevIdx, setPrevIdx] = useState(0);
@@ -137,6 +150,7 @@ export function ExperienceSection() {
           )}
 
           {current ? (
+<<<<<<< HEAD
             <div
               key={`cur-${idx}`}
               className={`absolute inset-0 bg-cover bg-center ${hasMultiple ? inClass : ""}`}
@@ -144,6 +158,25 @@ export function ExperienceSection() {
               role="img"
               aria-label={`${alt} imagery`}
             />
+=======
+            <button
+              type="button"
+              onClick={() => onEnlarge(current)}
+              className="group absolute inset-0 block w-full"
+              aria-label={`Enlarge ${label} imagery`}
+            >
+              <div
+                key={`cur-${idx}`}
+                className={`absolute inset-0 bg-cover bg-center ${hasMultiple ? inClass : ""} transition duration-300 group-hover:scale-[1.02]`}
+                style={{ backgroundImage: `url(${current})` }}
+                role="img"
+                aria-label={`${label} imagery`}
+              />
+              <span className="absolute inset-0 flex items-center justify-center bg-black/0 text-sm font-semibold text-white opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+                Click to enlarge
+              </span>
+            </button>
+>>>>>>> d4e91d235450c9afff59410ccce368b10da8c92d
           ) : (
             <div className="absolute inset-0 flex items-center justify-center font-mono text-[11px] uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
               Image coming soon
@@ -156,8 +189,21 @@ export function ExperienceSection() {
 
   const renderOrganizationalCards = () =>
     orgGroups.map((group) => (
+<<<<<<< HEAD
       <article key={group.organization} className={cardClass}>
         <ImageCarousel images={group.images} alt={group.organization} />
+=======
+      <article
+        key={group.organization}
+        className="exp-card relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/85 p-5 shadow-md transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
+      >
+        <div className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${accentByCategory.organizational}`} aria-hidden />
+        <ImageCarousel
+          images={group.images}
+          label={group.organization}
+          onEnlarge={(src) => setLightbox({ src, caption: group.organization })}
+        />
+>>>>>>> d4e91d235450c9afff59410ccce368b10da8c92d
 
         {group.orgType && (
           <p className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-amber-600 dark:text-amber-400">
@@ -186,9 +232,23 @@ export function ExperienceSection() {
     ));
 
   const renderDefaultCards = () =>
+<<<<<<< HEAD
     filtered.map((item, index) => (
       <article key={item.title} className={cardClass}>
         <ImageCarousel images={item.images ?? (item.image ? [item.image] : [])} alt={item.title} />
+=======
+    filtered.map((item) => (
+      <article
+        key={item.title}
+        className="exp-card relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/85 p-5 shadow-md transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
+      >
+        <div className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${accentByCategory[experienceTab]}`} aria-hidden />
+        <ImageCarousel
+          images={item.images ?? (item.image ? [item.image] : [])}
+          label={entityLabel(item)}
+          onEnlarge={(src) => setLightbox({ src, caption: entityLabel(item) })}
+        />
+>>>>>>> d4e91d235450c9afff59410ccce368b10da8c92d
 
         <p className={kickerClass}>
           {String(index + 1).padStart(2, "0")} · {entityLabel(item)}
@@ -262,9 +322,15 @@ export function ExperienceSection() {
 
       {lightbox && (
         <Lightbox
+<<<<<<< HEAD
           images={lightbox.images}
           index={lightbox.index}
           alt={lightbox.alt}
+=======
+          src={lightbox.src}
+          alt={`${lightbox.caption} imagery`}
+          caption={lightbox.caption}
+>>>>>>> d4e91d235450c9afff59410ccce368b10da8c92d
           onClose={() => setLightbox(null)}
         />
       )}

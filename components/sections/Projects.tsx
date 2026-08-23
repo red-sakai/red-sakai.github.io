@@ -66,6 +66,7 @@ export function ProjectsSection() {
 	const [typeFilter, setTypeFilter] = useState<"all" | ProjectType>("all");
 	const [lightbox, setLightbox] = useState<{ images: string[]; index: number; alt: string } | null>(null);
 	const { ref, visible } = useRevealOnScroll<HTMLElement>();
+	const [lightbox, setLightbox] = useState<ProjectItem | null>(null);
 
 	const openPreview = (project: ProjectItem) => {
 		if (project.image) {
@@ -151,6 +152,7 @@ export function ProjectsSection() {
 						className="group relative flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white transition-colors duration-300 hover:border-slate-400/70 dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white/20"
 					>
 						{project.image && (
+<<<<<<< HEAD
 							<div
 								role="button"
 								tabIndex={0}
@@ -166,11 +168,24 @@ export function ProjectsSection() {
 							>
 								<div
 									className="aspect-video w-full bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+=======
+							<button
+								type="button"
+								onClick={() => setLightbox(project)}
+								className="group relative block w-full overflow-hidden rounded-xl border border-slate-200/60 bg-slate-100 dark:border-white/10 dark:bg-white/5"
+								aria-label={`Enlarge ${project.title} preview`}
+							>
+								<div
+									className="aspect-video w-full bg-cover bg-center transition duration-300 group-hover:scale-[1.02]"
+>>>>>>> d4e91d235450c9afff59410ccce368b10da8c92d
 									style={{ backgroundImage: `url(${project.image})` }}
 									role="img"
 									aria-label={`${project.title} preview`}
 								/>
-							</div>
+								<span className="absolute inset-0 flex items-center justify-center bg-black/0 text-sm font-semibold text-white opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+									Click to enlarge
+								</span>
+							</button>
 						)}
 
 						<div className="flex flex-1 flex-col gap-3 p-5 sm:p-6">
@@ -235,11 +250,19 @@ export function ProjectsSection() {
 				)}
 			</div>
 
+<<<<<<< HEAD
 			{lightbox && (
 				<Lightbox
 					images={lightbox.images}
 					index={lightbox.index}
 					alt={lightbox.alt}
+=======
+			{lightbox?.image && (
+				<Lightbox
+					src={lightbox.image}
+					alt={`${lightbox.title} preview`}
+					caption={lightbox.title}
+>>>>>>> d4e91d235450c9afff59410ccce368b10da8c92d
 					onClose={() => setLightbox(null)}
 				/>
 			)}
