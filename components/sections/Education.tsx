@@ -26,11 +26,11 @@ export function EducationSection() {
       ref={ref}
       className="scroll-mt-28 space-y-8 will-change-transform"
     >
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6">
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-500">Education</p>
-          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Building from classroom to real systems</h2>
-          <p className="mx-auto max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-300/90">
+          <p data-reveal className="font-mono text-xs text-amber-700 dark:text-amber-500">01 / Education</p>
+          <h2 data-reveal className="text-2xl font-semibold tracking-tight sm:text-3xl">Building from classroom to real systems</h2>
+          <p data-reveal className="max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-300/90">
             Two tracks that shaped how I work: rigorous STEM foundations in high school, and computer engineering with a security lens in college.
           </p>
         </div>

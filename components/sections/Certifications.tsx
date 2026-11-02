@@ -23,7 +23,7 @@ function TagRow({ tags }: { tags: string[] }) {
 }
 
 export function CertificationsSection() {
-	const { ref, visible } = useRevealOnScroll<HTMLElement>();
+	const { ref } = useRevealOnScroll<HTMLElement>();
 	const certifications = certificationsData as Certification[];
 	const [lightbox, setLightbox] = useState<{ images: string[]; index: number; alt: string } | null>(null);
 
@@ -39,15 +39,12 @@ export function CertificationsSection() {
 		<section
 			id="certifications"
 			ref={ref}
-			className={
-				"scroll-mt-28 space-y-8 transition-all duration-700 will-change-transform " +
-				(visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")
-			}
+			className="scroll-mt-28 space-y-8 will-change-transform"
 		>
-			<div className="flex flex-col items-center gap-3 text-center">
-				<p className="text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-500">Certifications</p>
-				<h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Proof of practice</h2>
-				<p className="mx-auto max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-300/90">
+			<div className="flex flex-col gap-3">
+				<p data-reveal className="font-mono text-xs text-amber-700 dark:text-amber-500">04 / Certifications</p>
+				<h2 data-reveal className="text-2xl font-semibold tracking-tight sm:text-3xl">Proof of practice</h2>
+				<p data-reveal className="max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-300/90">
 					Credentials that back up the security-first, build-fast mindset. Each one represents hands-on labs, graded assessments, and scenario work.
 				</p>
 			</div>

@@ -70,8 +70,13 @@ export type Certification = {
   certificateAlt?: string;
 };
 
+// `text`, `quote` and list items accept inline `code` and [label](https://…) links.
 export type JournalBlock =
   | { type: "text"; text: string }
+  | { type: "heading"; text: string }
+  | { type: "quote"; text: string; cite?: string }
+  | { type: "list"; items: string[]; ordered?: boolean }
+  | { type: "code"; code: string; lang?: string }
   | {
       type: "image";
       src: string;
@@ -87,6 +92,8 @@ export type JournalEntry = {
   entry?: string;
   content?: JournalBlock[];
   mood?: string;
+  kind?: "diary" | "writeup";
+  tags?: string[];
 };
 
 export type Milestone = {

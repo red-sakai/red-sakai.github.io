@@ -6,23 +6,47 @@ import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 import type { SiteTheme } from "@/lib/theme";
 import { mulberry32 } from "@/lib/rand";
 
-function bladePath(seed: number, maxPeak: number, step: number): string {
+function bladePath(
+  seed: number,
+  maxPeak: number,
+  step: number,
+  width: number
+): string {
   const rng = mulberry32(seed);
   let d = "M0 60";
-  for (let x = 0; x < 1200; x += step) {
+  for (let x = 0; x < width; x += step) {
     const peak = 14 + rng() * maxPeak;
     const tipX = x + step * (0.3 + rng() * 0.4);
     const bend = tipX + (rng() * 8 - 4);
     d += ` Q${bend.toFixed(1)} ${(60 - peak * 1.3).toFixed(1)} ${tipX.toFixed(1)} ${(60 - peak).toFixed(1)}`;
     d += ` Q${(tipX + 3).toFixed(1)} ${(60 - peak * 0.5).toFixed(1)} ${(x + step).toFixed(0)} 60`;
   }
-  return `${d} L1200 60 Z`;
+  return `${d} L${width} 60 Z`;
 }
 
+const GRASS_SEGMENTS = 6;
+const SEG_WIDTH_PCT = 100 / GRASS_SEGMENTS;
+
 export function Footer({ theme = "light" }: { theme?: SiteTheme }) {
-  const { ref, visible } = useRevealOnScroll<HTMLElement>();
-  const backBlades = useMemo(() => bladePath(2025, 40, 17), []);
-  const frontBlades = useMemo(() => bladePath(7777, 26, 13), []);
+  const { ref } = useRevealOnScroll<HTMLElement>();
+  const backSegs = useMemo(
+    () =>
+      Array.from({ length: GRASS_SEGMENTS }, (_, i) => ({
+        d: bladePath(2025 + i * 13, 40, 17, 200),
+        delay: -(i * 0.45),
+        dur: 2.4 + (i % 3) * 0.3,
+      })),
+    []
+  );
+  const frontSegs = useMemo(
+    () =>
+      Array.from({ length: GRASS_SEGMENTS }, (_, i) => ({
+        d: bladePath(7777 + i * 29, 26, 13, 200),
+        delay: -(0.3 + i * 0.38),
+        dur: 1.9 + ((i + 1) % 3) * 0.25,
+      })),
+    []
+  );
   const lampOn = theme !== "light";
   const rainFlickerClass = theme === "rain" ? "lamp-flicker" : "";
 
@@ -53,10 +77,7 @@ export function Footer({ theme = "light" }: { theme?: SiteTheme }) {
     <footer
       id="footer"
       ref={ref}
-      className={
-        "relative z-10 mt-6 scroll-mt-28 transition-all duration-700 will-change-transform " +
-        (visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")
-      }
+      className="relative z-10 mt-6 scroll-mt-28 will-change-transform"
     >
       <div
         aria-hidden
@@ -136,18 +157,49 @@ export function Footer({ theme = "light" }: { theme?: SiteTheme }) {
         </svg>
       </div>
 
-      <div className="footer-grass" aria-hidden>
-        <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
-          <path d={backBlades} fill="var(--grass-back)" />
-          <path d={frontBlades} fill="var(--grass-front)" />
-        </svg>
+      <div
+        className={`footer-grass${theme === "rain" ? " grass-wind" : ""}`}
+        aria-hidden
+      >
+        {backSegs.map((seg, i) => (
+          <div
+            key={`b-${i}`}
+            className="footer-grass-seg grass-sway-back"
+            style={{
+              left: `calc(${i * SEG_WIDTH_PCT}% - ${i === 0 ? 0 : 8}px)`,
+              width: `calc(${SEG_WIDTH_PCT + 0.2}% + ${i === 0 ? 0 : 8}px)`,
+              animationDelay: `${seg.delay}s`,
+              animationDuration: `${seg.dur}s`,
+            }}
+          >
+            <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+              <path d={seg.d} fill="var(--grass-back)" />
+            </svg>
+          </div>
+        ))}
+        {frontSegs.map((seg, i) => (
+          <div
+            key={`f-${i}`}
+            className="footer-grass-seg grass-sway-front"
+            style={{
+              left: `calc(${i * SEG_WIDTH_PCT}% - ${i === 0 ? 0 : 8}px)`,
+              width: `calc(${SEG_WIDTH_PCT + 0.2}% + ${i === 0 ? 0 : 8}px)`,
+              animationDelay: `${seg.delay}s`,
+              animationDuration: `${seg.dur}s`,
+            }}
+          >
+            <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+              <path d={seg.d} fill="var(--grass-front)" />
+            </svg>
+          </div>
+        ))}
       </div>
 
       <div className="footer-ground">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-12 sm:px-10 lg:px-6">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.3em] text-lime-300">Contact</p>
+              <p className="font-mono text-xs text-lime-300">05 / Contact</p>
               <h2 className="text-2xl font-semibold sm:text-3xl text-amber-50">Let&apos;s collaborate</h2>
               <p className="text-sm leading-relaxed text-amber-100/85">
                 Need a resilient prototype, a security-minded review, or a teammate who documents as they build? I would love to help.

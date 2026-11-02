@@ -67,7 +67,7 @@ export function ProjectsSection() {
 	const [stackMenuOpen, setStackMenuOpen] = useState(false);
 	const stackMenuRef = useRef<HTMLDivElement>(null);
 	const [lightbox, setLightbox] = useState<{ images: string[]; index: number; alt: string } | null>(null);
-	const { ref, visible } = useRevealOnScroll<HTMLElement>();
+	const { ref } = useRevealOnScroll<HTMLElement>();
 
 	useEffect(() => {
 		if (!stackMenuOpen) return;
@@ -119,21 +119,18 @@ export function ProjectsSection() {
 		<section
 			id="projects"
 			ref={ref}
-			className={
-				"scroll-mt-28 space-y-8 transition-all duration-700 will-change-transform " +
-				(visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")
-			}
+			className="scroll-mt-28 space-y-8 will-change-transform"
 		>
-			<div className="flex flex-col items-center gap-4 text-center">
+			<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
 				<div className="space-y-2">
-					<p className="text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-500">Projects</p>
-					<h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Featured work</h2>
-					<p className="mx-auto max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-300/90">
+					<p data-reveal className="font-mono text-xs text-amber-700 dark:text-amber-500">03 / Projects</p>
+					<h2 data-reveal className="text-2xl font-semibold tracking-tight sm:text-3xl">Featured work</h2>
+					<p data-reveal className="max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-300/90">
 						Security-minded builds, study projects, and shipped experiments.
 					</p>
 				</div>
 
-				<div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+				<div data-reveal className="flex flex-wrap items-center gap-3 pt-1">
 					<div className="inline-flex rounded-md border border-slate-200 p-1 dark:border-white/10">
 						{typeFilters.map((item) => (
 							<button

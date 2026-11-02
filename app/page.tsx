@@ -179,19 +179,18 @@ export default function Home() {
           aria-hidden
         >
           <div
-            className="flex flex-col items-center gap-1 px-4 py-2 text-xs font-medium uppercase tracking-[0.3em]"
+            className="flex flex-col items-center gap-1 px-4 py-2 text-sm font-medium"
             style={{
               color: isDark ? "rgba(255,255,255,0.78)" : "rgba(15,23,42,0.7)",
               background: "transparent",
               boxShadow: "none",
               borderRadius: 0,
               border: "none",
-              animation: "floatPulse 3.8s ease-in-out infinite",
             }}
           >
-            <a href="#about" className="pointer-events-auto text-current">
+            <a href="#education" className="pointer-events-auto text-current">
               <span>Learn More</span>
-              <span style={{ letterSpacing: "0.1em", fontSize: "0.9rem" }} aria-hidden>
+              <span aria-hidden>
                 ↓
               </span>
             </a>

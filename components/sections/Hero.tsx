@@ -2,8 +2,14 @@
 
 import type { CSSProperties, Dispatch, SetStateAction } from "react";
 import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
 import type { SiteTheme } from "@/lib/theme";
 import { NavbarCapsule } from "./NavbarCapsule";
+
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
 type NavItem = { label: string; href: string };
 
@@ -31,6 +37,29 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
   const sunRef = useRef<HTMLElement | null>(null);
   const moonRef = useRef<HTMLElement | null>(null);
   const cloudRef = useRef<HTMLElement | null>(null);
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const modelsRef = useRef<HTMLDivElement | null>(null);
+
+  useGSAP(() => {
+    const intro = gsap.utils.toArray<HTMLElement>("[data-hero-intro]");
+    gsap.set(intro, { visibility: "visible" });
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const title = SplitText.create("[data-hero-title]", { type: "words", mask: "words" });
+    gsap.timeline({ defaults: { ease: "power3.out" } })
+      .from("[data-hero-eyebrow]", { y: 12, autoAlpha: 0, duration: 0.5 })
+      .from(title.words, { yPercent: 110, duration: 0.9, stagger: 0.07 }, "-=0.25")
+      .from("[data-hero-copy]", { y: 18, autoAlpha: 0, duration: 0.8 }, "-=0.55")
+      .from("[data-hero-cta] > a", { y: 14, autoAlpha: 0, duration: 0.6, stagger: 0.08, clearProps: "all" }, "-=0.5")
+      .from(modelsRef.current, { autoAlpha: 0, scale: 0.9, duration: 1.4 }, 0.15);
+
+    // The sky object drifts slower than the page as the hero scrolls out.
+    gsap.to(modelsRef.current, {
+      yPercent: -16,
+      ease: "none",
+      scrollTrigger: { trigger: heroRef.current, start: "top top", end: "bottom top", scrub: true },
+    });
+  }, { scope: heroRef });
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -114,28 +143,15 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
     "--progress-mask": "none",
   };
 
-  const sunGlowStyle: CSSProperties = isDark
-    ? {
-        filter: "drop-shadow(0 0 36px rgba(255, 198, 120, 0.95)) drop-shadow(0 0 96px rgba(255, 170, 70, 0.55))",
-      }
-    : {
-        filter: "drop-shadow(0 0 28px rgba(255, 200, 120, 0.9)) drop-shadow(0 0 72px rgba(255, 190, 120, 0.45))",
-      };
+  // Glow is a static gradient painted behind the canvas; a CSS drop-shadow filter on an
+  // auto-rotating model re-blurs the whole canvas every frame.
+  const glow = (rgb: string, strength: number): CSSProperties => ({
+    background: `radial-gradient(closest-side, rgba(${rgb}, ${strength}) 0%, rgba(${rgb}, ${strength * 0.4}) 45%, rgba(${rgb}, 0) 75%)`,
+  });
 
-  const moonGlowStyle: CSSProperties = isDark
-    ? {
-        filter: "drop-shadow(0 0 28px rgba(185, 210, 255, 0.95)) drop-shadow(0 0 80px rgba(140, 175, 255, 0.55))",
-      }
-    : {
-        filter: "drop-shadow(0 0 18px rgba(175, 195, 230, 0.9)) drop-shadow(0 0 44px rgba(160, 185, 225, 0.4))",
-      };
-
-  const cloudGlowStyle: CSSProperties =
-    theme === "rain"
-      ? {
-          filter: "drop-shadow(0 0 30px rgba(148, 187, 255, 0.85)) drop-shadow(0 0 84px rgba(96, 150, 255, 0.5))",
-        }
-      : {};
+  const sunGlowStyle = glow("255, 190, 100", isDark ? 0.65 : 0.6);
+  const moonGlowStyle = glow("160, 190, 255", isDark ? 0.45 : 0.3);
+  const cloudGlowStyle = theme === "rain" ? glow("120, 165, 255", 0.4) : {};
 
   return (
     <>
@@ -143,38 +159,39 @@ export function Hero({ navItems, theme, onThemeToggle }: HeroProps) {
         <NavbarCapsule items={navItems} theme={theme} onThemeToggle={onThemeToggle} />
       </div>
 
-      <div className="flex flex-1 flex-col gap-10 px-6 pb-12 pt-28 sm:px-10 sm:pt-32 lg:flex-row lg:items-center lg:gap-16 lg:pl-24 lg:pt-36 xl:pl-36">
-        <section className="flex-1 max-w-3xl space-y-4 lg:space-y-6 lg:pl-16 xl:pl-24">
-          <p className="text-sm uppercase tracking-[0.35em] text-amber-600/90">Hi, I&apos;m</p>
-          <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
+      <div ref={heroRef} className="flex flex-1 flex-col gap-10 px-6 pb-12 pt-28 sm:px-10 sm:pt-32 lg:flex-row lg:items-center lg:gap-16 lg:pl-24 lg:pt-36 xl:pl-36">
+        <section data-hero-intro className="flex-1 max-w-3xl space-y-4 lg:space-y-6 lg:pl-16 xl:pl-24">
+          <p data-hero-eyebrow className="font-mono text-sm text-amber-700 dark:text-amber-500">Hi, I&apos;m</p>
+          <h1 data-hero-title className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             Jhered Miguel Republica
           </h1>
           <p
-            className="text-lg sm:text-xl leading-relaxed text-justify dark:text-slate-100"
+            data-hero-copy
+            className="max-w-[62ch] text-lg sm:text-xl leading-relaxed dark:text-slate-100"
             style={{ color: theme === "light" ? "#000000" : "#f8fafc" }}
           >
             A Computer Engineering student with a strong interest in software development and cybersecurity. I enjoy building practical, user-focused applications using modern web technologies, while continuously sharpening my problem-solving and algorithmic skills. I’m passionate about learning, experimenting, and turning ideas into secure, efficient solutions.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+          <div data-hero-cta className="flex flex-wrap items-center gap-3 pt-2">
             <a
               href="/JHERED_MIGUEL_REPUBLICA.pdf"
               download="JHERED_MIGUEL_REPUBLICA.pdf"
-              className="inline-flex items-center gap-2 rounded-full border border-amber-500 bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-900 shadow-md backdrop-blur-sm transition hover:-translate-y-[1px] hover:bg-amber-400 hover:border-amber-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60"
+              className="inline-flex items-center gap-2 rounded-md border border-amber-500 bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-900 transition-colors hover:border-amber-400 hover:bg-amber-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60"
             >
-              View Curriculum Vitae
+              Download CV
             </a>
             <a
-              href="mailto:jhered@example.com"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-500/40 px-5 py-3 text-sm font-semibold text-current backdrop-blur-sm transition hover:-translate-y-[1px] hover:border-slate-500/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+              href="mailto:jheredmiguelrepublica14@gmail.com"
+              className="inline-flex items-center gap-2 rounded-md border border-slate-500/40 px-5 py-3 text-sm font-semibold text-current transition-colors hover:border-slate-500/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
             >
-              Let&apos;s Collaborate
+              Email me
             </a>
           </div>
         </section>
 
         <div className="relative flex-1 min-h-[60vh] lg:min-h-[75vh]">
-          <div className="absolute inset-0 translate-x-[0vw] sm:translate-x-[0vw] lg:translate-x-[0vw] pointer-events-auto">
+          <div ref={modelsRef} data-hero-intro className="absolute inset-0 pointer-events-auto">
             {/* @ts-expect-error Custom element is declared globally */}
             <model-viewer
               ref={sunRef}

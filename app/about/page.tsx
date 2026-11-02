@@ -222,7 +222,7 @@ export default function AboutPage() {
 						</div>
 						<div className="flex flex-wrap gap-3">
 							<a
-								href="mailto:jhered@example.com"
+								href="mailto:jheredmiguelrepublica14@gmail.com"
 								className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3 text-sm font-semibold text-slate-900 shadow-lg transition hover:scale-[1.01]"
 							>
 								Start a conversation
